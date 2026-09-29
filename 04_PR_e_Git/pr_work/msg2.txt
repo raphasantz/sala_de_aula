@@ -1,0 +1,25 @@
+feat(apps-nuvem): AulaViva v2 (PI-I e LP2) — login, retomada, entregas
+
+O quê: novo build dos apps de nuvem apps-nuvem/AulaViva_pi1_index.html
+e apps-nuvem/AulaViva_lp2_index.html (mesmos nomes/caminhos do v1).
+
+Por quê: ajustes pedidos pela professora: (1) tela de login/cadastro
+com senha e nome único; (2) nome completo no topo; (3) botão 🏠 home;
+(4) 📤 Entregar + Minhas entregas (txt/doc/docx/pdf/odt ≤ 12 MB);
+(5) retomada automática de onde parou; (6) 🎯 Ir para (mapa);
+(7) FIX do bug das alternativas vazias — alternativas com tags HTML
+(ex.: "<head>") sumiam ao renderizar; agora aparecem como texto
+(escape rich(), tags de formatação básicas preservadas).
+
+FIX CRÍTICO incluído: o gerador tinha um bug case-sensitive que fazia
+a LP2 sair com DISC="pi1" — os alunos da LP2 sincronizariam na turma
+da PI-I (cookie, painel e materiais misturados). Aqui cada app já
+sai com a disciplina certa (pi1/lp2).
+
+Onde: API relativa ../aulaviva/api.php (convenção do v1 — funciona em
+ngrok, domínio ou localhost); botão 👩‍ Painel (visível só p/ ADM
+"Juh" em modo nuvem) aponta para Painel_Professor_{pi1,lp2}.html.
+
+Notas: zero localStorage na versão de nuvem (sessão via cookie
+httpOnly); responsivo 640px e Modo Turma (641–900px) preservados;
+JSON embutido com "<" escapado (</script> não quebra a página).

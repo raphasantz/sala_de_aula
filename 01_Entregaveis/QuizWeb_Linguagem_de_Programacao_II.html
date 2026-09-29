@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizWeb — Programação para Internet I</title>
+<style>
+  :root{
+    --roxo:#46178f; --roxo2:#33106b; --fundo:#f2f2f9;
+    --verm:#e21b3c; --azul:#1368ce; --amar:#ffa602; --verde:#26890c;
+    --tinta:#201a35; --cinza:#6b6880; --branco:#fff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+       background:var(--fundo); color:var(--tinta); min-height:100vh}
+  .wrap{max-width:1000px; margin:0 auto; padding:18px 16px 40px}
+  header.topo{background:var(--roxo); color:#fff; padding:16px 0 14px; text-align:center;
+              box-shadow:0 3px 0 var(--roxo2)}
+  header.topo h1{font-size:26px; letter-spacing:.5px}
+  header.topo p{font-size:12.5px; opacity:.85; margin-top:2px}
+  .card{background:#fff; border-radius:14px; padding:18px; box-shadow:0 2px 10px rgba(30,20,80,.08);
+        margin-top:16px}
+  h2.sec{font-size:19px; color:var(--roxo); margin:22px 4px 10px}
+  .grid-modos{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:16px}
+  .modo{border:none; border-radius:16px; padding:22px 18px; text-align:left; color:#fff; cursor:pointer;
+        font-family:inherit; transition:transform .12s}
+  .modo:hover{transform:translateY(-3px)}
+  .modo h3{font-size:20px; margin-bottom:6px}
+  .modo p{font-size:13px; opacity:.92; line-height:1.45}
+  .modo.solo{background:linear-gradient(135deg,#7a2ff0,#46178f)}
+  .modo.turma{background:linear-gradient(135deg,#e21b3c,#a3122b)}
+  .modo.lista{background:linear-gradient(135deg,#1368ce,#0b4a94)}
+  .linha{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:8px 0}
+  .btn{border:none; border-radius:10px; padding:11px 20px; font-size:15px; font-weight:700;
+       cursor:pointer; font-family:inherit; background:var(--roxo); color:#fff}
+  .btn.secund{background:#e7e2f7; color:var(--roxo)}
+  .btn.verde{background:var(--verde)}
+  .btn.amarelo{background:var(--amar); color:#3a2700}
+  .btn:disabled{opacity:.45; cursor:default}
+  .item-lista{display:flex; justify-content:space-between; gap:10px; align-items:center;
+              background:#fff; border:2px solid #eceaf6; border-radius:12px; padding:11px 14px;
+              margin:7px 0; cursor:pointer; transition:border-color .12s}
+  .item-lista:hover{border-color:var(--roxo)}
+  .item-lista .tt{font-weight:700; font-size:14.5px}
+  .item-lista .sub{font-size:12px; color:var(--cinza)}
+  .badge{background:var(--roxo); color:#fff; font-size:11px; font-weight:700; border-radius:20px;
+         padding:3px 10px; white-space:nowrap}
+  .badge.rec{background:var(--verde)}
+  /* ---- quiz ---- */
+  .barra-topo{display:flex; justify-content:space-between; align-items:center; margin:14px 2px 10px;
+              font-size:13.5px; font-weight:700; color:var(--cinza)}
+  .timerbox{background:var(--roxo); color:#fff; border-radius:10px; padding:5px 14px; font-size:16px}
+  .timerbar{height:8px; background:#e3e0f0; border-radius:6px; overflow:hidden; margin:6px 0 14px}
+  .timerbar i{display:block; height:100%; background:var(--amar); width:100%; transition:width .25s linear}
+  .pergunta{background:#fff; border-radius:16px; padding:22px 20px; font-size:21px; font-weight:700;
+            line-height:1.35; box-shadow:0 2px 10px rgba(30,20,80,.08); min-height:96px}
+  .opcoes{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px}
+  @media(max-width:720px){.opcoes{grid-template-columns:1fr}}
+  .op{border:none; border-radius:12px; padding:16px 16px 16px 58px; position:relative; color:#fff;
+      font-size:16.5px; font-weight:600; text-align:left; cursor:pointer; font-family:inherit;
+      line-height:1.3; min-height:64px}
+  .op .forma{position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:24px}
+  .op.c0{background:var(--verm)} .op.c1{background:var(--azul)}
+  .op.c2{background:var(--amar); color:#3a2700} .op.c3{background:var(--verde)}
+  .op:disabled{cursor:default}
+  .op.certa{outline:5px solid #0e5c00; outline-offset:-5px}
+  .op.errada{outline:5px solid #7d0018; outline-offset:-5px; opacity:.85}
+  .feedback{border-radius:14px; padding:16px 18px; margin-top:14px; color:#fff; font-size:15.5px}
+  .feedback.ok{background:var(--verde)} .feedback.erro{background:var(--verm)}
+  .feedback b{display:block; font-size:18px; margin-bottom:4px}
+  .placar{display:flex; gap:16px; font-weight:800; font-size:15px; color:var(--roxo)}
+  /* ---- turma ---- */
+  .turma .pergunta{font-size:30px; padding:30px 26px}
+  .turma .op{font-size:22px; min-height:84px; padding-left:66px}
+  .turma .op .forma{font-size:30px}
+  .times{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .time{background:#fff; border:3px solid var(--roxo); color:var(--roxo); border-radius:12px;
+        padding:8px 16px; font-weight:800; cursor:pointer; font-size:16px; font-family:inherit}
+  .time span{background:var(--roxo); color:#fff; border-radius:16px; padding:1px 10px; margin-left:8px}
+  .time.lead{background:var(--amar); border-color:#b57500; color:#3a2700}
+  .time.lead span{background:#3a2700}
+  input[type=text]{width:100%; border:2px solid #d9d4ee; border-radius:10px; padding:11px 13px;
+                   font-size:15px; font-family:inherit}
+  .nota{font-size:12.5px; color:var(--cinza); margin-top:8px; line-height:1.5}
+  .podio{ text-align:center; padding:10px 0 4px }
+  .podio .p1{font-size:34px}
+  .rev{background:#fff; border-radius:10px; padding:10px 13px; margin:7px 0; font-size:13.5px;
+       border-left:6px solid #ccc}
+  .rev.ok{border-color:var(--verde)} .rev.erro{border-color:var(--verm)}
+  .rev b{font-size:14px}
+  footer{ text-align:center; font-size:11.5px; color:var(--cinza); padding:18px 0 8px }
+</style>
+</head>
+<body>
+<header class="topo">
+  <h1>🎯 QuizWeb · Programação para Internet I</h1>
+  <p>Curso Técnico em Informática · Turma 2/2026 · funciona 100% offline</p>
+</header>
+<div class="wrap" id="app"></div>
+<footer>Material da disciplina — quizzes por aula, testes rápidos de módulo e modelos de prova.
+Sem internet, sem login, sem mensalidade. 🙂</footer>
+<script>
+const DATA = {"aulas": [{"n": 1, "mod": 1, "t": "Ambientação e primeiro programa VB6", "qs": [["Os três pilares da programação estruturada são:", ["entrada, processamento e saída", "sequência, seleção e repetição", "variáveis, tipos e funções", "telas, relatórios e bancos"], 1, "Sequência executa em ordem; seleção decide (If/Select); repetição repete (For/Do)."], ["No VB6, quem RETORNA valor é:", ["a Sub", "a Function", "o Module", "o Label"], 1, "Function devolve resultado; Sub executa ações."], ["O padrão de pastas do curso é:", ["tudo na área de trabalho", "LP2\\S01..S24 + PROJETO, sem acentos", "uma pasta por arquivo", "pastas com espaços"], 1, "Caminhos simples evitam bugs no VB6 e facilitam backup."]]}, {"n": 2, "mod": 2, "t": "SGBD — instalação e configuração", "qs": [["SGBD é o software que:", ["compila o VB6", "armazena, organiza e controla o acesso aos dados", "desenha telas", "imprime cupons"], 1, "Exemplos: MySQL, PostgreSQL, SQL Server, Access."], ["Para listar os bancos do servidor MySQL usamos:", ["SHOW DATABASES;", "LIST BANKS;", "SELECT * FROM bancos;", "DIR /B;"], 0, "Comando de administração do cliente MySQL."], ["O comando que cria um banco novo é:", ["NEW DATABASE escola;", "CREATE DATABASE escola;", "MAKE escola;", "INSERT DATABASE escola;"], 1, "DDL: CREATE DATABASE nome;"]]}, {"n": 3, "mod": 2, "t": "SGBD — conexão", "qs": [["Na string de conexão, Server indica:", ["o banco ativo", "o endereço do servidor (ex.: localhost)", "o driver", "a senha"], 1, "Server = onde o SGBD está; Database = qual banco."], ["On Error GoTo Falha + Err.Description servem para:", ["ignorar erros de sintaxe", "tratar falhas em tempo de execução com mensagem útil", "reiniciar o MySQL", "compilar sem erros"], 1, "Desvia para o rótulo e detalha o erro ocorrido."], ["Ao terminar de usar o banco, o programa deve:", ["deixar cn aberto", "chamar cn.Close", "desinstalar o driver", "reiniciar a IDE"], 1, "Conexão aberta consome recurso do servidor."]]}, {"n": 4, "mod": 3, "t": "SQL — fundamentos", "qs": [["CREATE TABLE pertence à família:", ["DML", "DDL", "DCL", "TCL"], 1, "DDL define estrutura; DML manipula dados."], ["PRIMARY KEY AUTO_INCREMENT garante:", ["id único gerado pelo servidor", "nome sem repetição", "ordenação automática", "backup automático"], 0, "Chave primária única, não nula, numerada automaticamente."], ["O SELECT mínimo para ver nome e nota é:", ["SELECT nome, nota FROM alunos;", "GET nome nota DE alunos;", "SHOW nome nota;", "PRINT nome, nota;"], 0, "SELECT colunas FROM tabela;"]]}, {"n": 5, "mod": 3, "t": "SQL — manipulação", "qs": [["UPDATE sem WHERE:", ["altera só a primeira linha", "altera TODAS as linhas", "dá erro", "não faz nada"], 1, "Por isso: SELECT de conferência com o mesmo WHERE antes."], ["No VB6, enviamos SQL ao servidor com:", ["cn.Execute", "Printer.Print", "MsgBox", "FreeFile"], 0, "Connection.Execute; consultas retornam Recordset."], ["Textos em SQL usam:", ["aspas duplas", "aspas simples", "crases", "parênteses"], 1, "'Ana Silva' — aspas simples; aspas duplas são do VB6."]]}, {"n": 6, "mod": 4, "t": "SQL — consultas e filtros", "qs": [["Para nomes que começam com 'A':", ["WHERE nome = 'A'", "WHERE nome LIKE 'A%'", "WHERE nome STARTS 'A'", "WHERE LEFT nome A"], 1, "LIKE com curinga %."], ["COUNT(*) com GROUP BY curso retorna:", ["total geral", "quantidade por curso", "só o número de cursos", "média por curso"], 1, "Agregação calculada dentro de cada grupo."], ["ORDER BY nota DESC lista:", ["crescente", "decrescente (maiores primeiro)", "por inserção", "aleatório"], 1, "DESC = decrescente."]]}, {"n": 7, "mod": 5, "t": "Programação estruturada", "qs": [["Menu com opções fixas 1/2/3 fica mais legível com:", ["If aninhados", "Select Case", "Do Until", "While...Wend"], 1, "Select Case compara um valor com casos fixos."], ["Do While testa a condição:", ["depois do bloco", "antes de cada volta", "só no final", "nunca"], 1, "Pode executar zero vezes se começar falsa."], ["Sentinela é:", ["um erro de disco", "valor combinado que encerra a leitura (ex.: -1)", "uma Function", "um tipo de Print"], 1, "Padrão de leitura até sentinela."]]}, {"n": 8, "mod": 6, "t": "Vetores", "qs": [["Dim notas(1 To 10) As Single cria:", ["10 variáveis soltas", "vetor com posições 1 a 10", "matriz 10×10", "registro com 10 campos"], 1, "Array unidimensional com índices explícitos."], ["Para percorrer o vetor, o acesso usa:", ["índice fixo notas(1)", "a variável do laço notas(i)", "sempre notas(0)", "InputBox"], 1, "Índice variável permite o percurso."], ["Maior/menor devem ser inicializados com:", ["0", "10", "o primeiro elemento", "-1"], 2, "Garante corretude para qualquer faixa de valores."]]}, {"n": 9, "mod": 6, "t": "Matrizes", "qs": [["Na varredura de matriz, o laço externo percorre:", ["colunas", "linhas", "diagonais", "índices aleatórios"], 1, "Externo = linhas (i); interno = colunas (j)."], ["'Subscript out of range' indica:", ["índice fora dos limites declarados", "variável não declarada", "divisão por zero", "arquivo fechado"], 0, "Ex.: m(4,1) em matriz 3×4."], ["Para somar POR LINHA, o acumulador deve zerar:", ["antes dos dois laços", "dentro do laço de linhas, antes do de colunas", "depois de tudo", "no módulo"], 1, "Um acumulador por grupo de soma."]]}, {"n": 10, "mod": 7, "t": "Registros", "qs": [["Public Type Aluno ... End Type define:", ["um formulário", "um registro (tipo estruturado)", "um banco", "uma consulta"], 1, "Campos de tipos diferentes sob um nome."], ["O acesso à nota do i-ésimo aluno é:", ["turma.nota(i)", "turma(i).nota", "nota(turma,i)", "turma[i].nota()"], 1, "Índice do vetor, ponto, campo."], ["Um vetor de registros equivale a:", ["uma coluna", "uma tabela em memória", "um índice", "um backup"], 1, "Cada registro = linha; o vetor = conjunto de linhas."]]}, {"n": 11, "mod": 8, "t": "Strings", "qs": [["Mid$(\"LINGUAGEM\", 3, 4) retorna:", ["LING", "NGUA", "GUAG", "AGEM"], 1, "Posição 3, quatro caracteres: N G U A."], ["InStr retorna 0 quando:", ["acha no início", "não encontra o trecho", "texto vazio", "texto numérico"], 1, "0 = não achou; >0 = posição inicial."], ["Para tirar espaços das pontas:", ["Trim$", "Mid$", "Left$", "UCase$"], 0, "Trim$ corta esquerda e direita."]]}, {"n": 12, "mod": 9, "t": "Modularização", "qs": [["O retorno de uma Function é atribuído:", ["à palavra Return", "ao próprio nome da Function", "a uma global", "ao ByRef"], 1, "Media = (n1+n2)/2."], ["ByVal significa:", ["cópia local (original protegido)", "a própria variável do chamador", "parâmetro opcional", "retorno duplo"], 0, "Declare ByVal por segurança (padrão VB6 é ByRef)."], ["Function pura, no padrão do curso:", ["usa MsgBox", "só recebe parâmetros e retorna", "imprime com Print", "grava arquivo"], 1, "I/O fica com quem chama."]]}, {"n": 13, "mod": 10, "t": "Arquivos e textos", "qs": [["Para acrescentar sem apagar, abre-se com:", ["For Output", "For Append", "For Input", "For Random"], 1, "Append posiciona no fim do arquivo."], ["EOF(n) é True quando:", ["abriu o arquivo", "chegou ao fim da leitura", "deu erro de disco", "arquivo vazio"], 1, "Condição de parada do Do While."], ["FreeFile devolve:", ["número de arquivo livre", "memória livre", "tamanho do arquivo", "data de criação"], 0, "Evita conflito de #n entre arquivos abertos."]]}, {"n": 14, "mod": 10, "t": "Arquivos + dados", "qs": [["Split(linha, \";\") devolve:", ["texto único", "vetor de campos", "só o 1º campo", "um Type"], 1, "partes(0), partes(1)..."], ["Antes de abrir para leitura, verificar existência com:", ["Dir(caminho) <> \"\"", "EOF(caminho)", "Len(caminho)", "FreeFile"], 0, "Evita erro de arquivo inexistente."], ["Exportar com Format(nota, \"0.0\") garante:", ["número padronizado no arquivo", "criptografia", "compressão", "ordenação"], 0, "Round-trip íntegro entre exportar e importar."]]}, {"n": 15, "mod": 11, "t": "Cliente/Servidor (ADO)", "qs": [["Sem rs.MoveNext no Do While Not rs.EOF:", ["pula linhas", "laço infinito", "fecha o rs", "erro de sintaxe"], 1, "O ponteiro não avança."], ["rs!nota lê:", ["o nome da coluna", "o valor do campo na linha atual", "todas as linhas", "o total"], 1, "Campo da linha corrente do Recordset."], ["Aspas simples dentro de texto que vira SQL são escapadas:", ["duplicando ('')", "removendo", "trocando por \"", "com \\ "], 0, "'' representa aspa literal no SQL."]]}, {"n": 16, "mod": 11, "t": "Cliente/Servidor — prática", "qs": [["Validar no cliente antes do SQL serve para:", ["acelerar o servidor", "evitar comandos inválidos/perigosos", "substituir On Error", "economizar RAM"], 1, "Defesa em camadas."], ["Exclusões devem ser confirmadas com:", ["MsgBox vbYesNo", "Print", "InputBox vazio", "Label"], 0, "Confirmação explícita antes do DELETE."], ["Após incluir/alterar/excluir, a ListBox deve:", ["ser limpa e esquecida", "ser atualizada (refresh)", "virar arquivo", "fechar o form"], 1, "Refresh mantém a tela coerente com o banco."]]}, {"n": 17, "mod": 12, "t": "Backup", "qs": [["O comando de backup do MySQL é:", ["mysql --copy", "mysqldump banco > arq.sql", "BACKUP TABLE", "cn.Backup"], 1, "Gera script .sql com estrutura + dados."], ["Nomes de backup devem ter:", ["data (banco_YYYY-MM-DD)", "só o nome do banco", "senha embutida", "extensão .exe"], 0, "Ordena sozinho e identifica a geração."], ["Manter gerações (avô-pai-filho) protege contra:", ["falta de espaço", "cópias corrompidas/desastres tardios", "senhas fracas", "vírus"], 1, "Se a última cópia falha, a anterior salva."]]}, {"n": 18, "mod": 12, "t": "Recuperação", "qs": [["Para restaurar usa-se:", ["mysqldump < arq", "mysql banco < arq.sql", "RESTORE arq", "cn.Restore"], 1, "O cliente mysql executa o script no banco."], ["Restaurar primeiro em banco de teste:", ["treina SQL", "não arrisca a produção na validação", "acelera o dump", "economiza disco"], 1, "Valida arquivo e procedimento com segurança."], ["Validação pós-restauro inclui:", ["SHOW TABLES + COUNT(*) + amostras", "só tamanho do arquivo", "reiniciar o serviço", "abrir no Notepad"], 0, "Conferência estrutural e de conteúdo."]]}, {"n": 19, "mod": 13, "t": "Relatórios", "qs": [["Alinhamento de colunas em relatório de texto:", ["Space apenas", "Tab(n) e String(n,\"-\")", "MsgBox", "Printer.Page"], 1, "Tab posiciona; String separa blocos."], ["Sem Printer.EndDoc:", ["imprime na hora", "o job fica retido", "cancela", "imprime em dobro"], 1, "EndDoc fecha e despacha o documento."], ["Fonte para colunas fecharem na impressora:", ["proporcional", "monoespaçada (Courier New)", "itálica", "decorativa"], 1, "Largura fixa por caractere."]]}, {"n": 20, "mod": 13, "t": "Documentos fiscais", "qs": [["Os itens do cupom do nosso sistema vêm:", ["texto fixo no código", "do banco via Recordset", "de um .bmp", "do Clipboard"], 1, "Saída de dados: SQL alimenta o layout."], ["Um documento fiscal identifica:", ["só o total", "emitente, numeração, data, itens e totais", "só o cliente", "o programador"], 1, "Blocos obrigatórios mesmo no modelo didático."], ["Totais e valores no cupom usam:", ["Str sem formato", "Format(v, \"0.00\")", "Val", "Len"], 1, "Aparência profissional e conferência fácil."]]}, {"n": 21, "mod": 14, "t": "Disco de instalação", "qs": [["O Package & Deployment Wizard gera:", ["o banco", "o pacote de instalação (setup + dependentes)", "o relatório", "o backup"], 1, "Empacota exe, runtimes, dados e atalhos."], ["Senha/servidor de conexão ficam em:", ["compilados no exe", "config.ini lido em execução", "título do form", "Registry"], 1, "Mesmo pacote serve a ambientes diferentes."], ["O teste de instalação acontece em:", ["máquina do desenvolvedor", "máquina/conta limpa", "qualquer uma", "só no papel"], 1, "Revela dependência esquecida no pacote."]]}, {"n": 22, "mod": 14, "t": "Recursos gráficos", "qs": [["No VB6, os recursos gráficos da ementa (herança DOS) vivem no:", ["Printer", "PictureBox", "ListBox", "Timer"], 1, "Line/Circle/PSet com coordenadas e cores."], ["Retângulo PREENCHIDO no PictureBox:", ["Line com B", "Line com BF", "Circle BF", "PSet B"], 1, "B = borda; BF = box filled."], ["PSet desenha:", ["um ponto", "um círculo", "uma linha", "um texto"], 0, "Ondas e texturas nascem de laços com PSet."]]}, {"n": 23, "mod": 15, "t": "Integração do projeto", "qs": [["O checklist de integração do projeto cobra:", ["só telas", "banco+CRUD+módulos+arquivos+relatório+pacote", "só relatório", "só backup"], 1, "Todas as camadas do semestre juntas."], ["Congelar escopo na semana 23 é:", ["não testar", "não adicionar funções novas; pendências viram 'versão 2'", "parar de programar", "adiar a prova"], 1, "Entrega e apresentação confiáveis."], ["Funções de regra no projeto ficam em:", ["dentro dos botões", "Modules (.bas) reutilizáveis", "no banco", "no instalador"], 1, "Formulário orquestra; módulos sabem fazer."]]}, {"n": 24, "mod": 15, "t": "Consolidação e avaliação final", "qs": [["Na demonstração, barrar uma entrada inválida ao vivo prova:", ["bug", "que a validação funciona", "lentidão", "falta de teste"], 1, "Erro tratado é qualidade demonstrada."], ["A prova final escrita (30 pts) é:", ["em duplas com consulta", "individual e cumulativa", "oral", "só projeto"], 1, "Conforme o Plano de Ensino; +10 pts do projeto."], ["O pacote entregue inclui:", ["só o exe", "exe+dependentes+config.ini+atalhos", "banco com senhas", "fontes crus"], 1, "Distribuição profissional e configurável."]]}], "modulos": [{"n": 1, "t": "Ambientação e linguagem de programação estruturada", "qs": [["Programação estruturada se apoia em três estruturas:", ["entrada, processamento e saída", "sequência, seleção e repetição", "variáveis, constantes e funções", "telas, relatórios e bancos"], 1, "Sequência executa em ordem; seleção decide; repetição repete blocos."], ["No ambiente do curso (S), quem conversa diretamente com o MySQL a partir do VB6 é:", ["o objeto Printer", "o driver ODBC + biblioteca ADO", "o Package & Deployment Wizard", "o explorador de arquivos"], 1, "ODBC faz a ponte VB6↔MySQL; ADO envia SQL e recebe Recordset."], ["Um Sub difere de uma Function porque:", ["Sub retorna valor", "Function retorna valor", "Sub só roda em Modules", "não há diferença"], 1, "Function devolve resultado ao chamador; Sub apenas executa ações."], ["O padrão de organização de pastas adotado no curso é:", ["tudo na área de trabalho", "LP2\\S01..S24 + PROJETO, sem acentos/espaços", "uma pasta por aluno no pendrive", "pastas com nome das disciplinas por extenso"], 1, "Caminhos simples evitam bugs no VB6 e facilitam backup/entrega."], ["Para converter o texto do InputBox em número usamos:", ["Str()", "Val()", "Mid()", "Len()"], 1, "Val converte string em número; Str faz o caminho inverso."]]}, {"n": 2, "t": "SGBD: instalação, configuração e conexão", "qs": [["Um SGBD existe para:", ["substituir o sistema operacional", "armazenar, organizar e controlar o acesso aos dados", "compilar programas VB6", "desenhar formulários"], 1, "É o gerente dos dados: criação, consulta, segurança e integridade."], ["O comando que lista os bancos do servidor é:", ["LIST ALL;", "SHOW DATABASES;", "SELECT BANKS;", "DIR /B;"], 1, "SHOW DATABASES; no cliente MySQL."], ["Na string de conexão, o parâmetro Database indica:", ["o nome do driver", "o banco selecionado ao conectar", "a porta do servidor", "o nome do formulário"], 1, "Server = onde; Database = qual banco; Uid/Pwd = quem."], ["On Error GoTo Falha serve para:", ["apagar erros do código", "desviar a execução para um rótulo quando ocorrer erro", "impedir erros de sintaxe", "reiniciar o programa"], 1, "Tratamento de erro em tempo de execução; Err.Description detalha."], ["Ao terminar de usar o banco, o programa deve:", ["deixar a conexão aberta para a próxima vez", "fechar a conexão (cn.Close)", "desinstalar o driver", "reiniciar o MySQL"], 1, "Conexão aberta consome recurso do servidor; feche sempre."]]}, {"n": 3, "t": "SQL: fundamentos e manipulação de dados", "qs": [["CREATE TABLE pertence a qual família do SQL?", ["DML", "DDL", "DCL", "TCL"], 1, "DDL define estrutura; DML manipula dados."], ["PRIMARY KEY AUTO_INCREMENT garante:", ["valores duplicados permitidos", "identificador único gerado automaticamente", "ordenação alfabética", "criptografia da coluna"], 1, "Chave única, não nula, numerada pelo servidor."], ["UPDATE sem WHERE:", ["altera a primeira linha", "altera todas as linhas da tabela", "dá erro de sintaxe", "não faz nada"], 1, "Sem filtro, o comando vale para todas as linhas — por isso o SELECT de conferência antes."], ["No VB6, enviamos um comando SQL ao servidor com:", ["cn.Execute", "Printer.Print", "Form_Load", "MsgBox"], 0, "Connection.Execute; consultas devolvem Recordset."], ["Strings em SQL são escritas com:", ["aspas duplas", "aspas simples", "crases", "sem aspas"], 1, "'Ana Silva' — aspas simples; aspas duplas são do VB6."]]}, {"n": 4, "t": "SQL — consultas e filtros", "qs": [["Para filtrar nomes que começam com ‘A’:", ["WHERE nome = 'A'", "WHERE nome LIKE 'A%'", "WHERE nome IN 'A'", "WHERE LEFT(nome) = A"], 1, "LIKE com curinga % casa padrões de texto."], ["ORDER BY nota DESC exibe:", ["das menores para as maiores", "das maiores para as menores", "em ordem de inserção", "aleatoriamente"], 1, "DESC = decrescente; ASC (padrão) = crescente."], ["COUNT(*) com GROUP BY curso retorna:", ["o total geral de alunos", "a quantidade de alunos por curso", "o número de cursos existentes apenas", "a média por curso"], 1, "Agregação calculada dentro de cada grupo definido pelo GROUP BY."], ["BETWEEN 5 AND 7 equivale a:", ["nota > 5 AND nota < 7", "nota >= 5 AND nota <= 7", "nota IN (5,7)", "nota = 5 OR nota = 7"], 1, "BETWEEN inclui as pontas (fechado nos extremos)."], ["No VB6, o resultado de um SELECT chega como:", ["MsgBox", "Recordset (ADO)", "arquivo .txt", "Printer"], 1, "ADODB.Recordset percorrido com Do While Not rs.EOF."]]}, {"n": 5, "t": "Programação estruturada no VB6", "qs": [["Para um menu com opções fixas 1, 2 e 3, a estrutura mais legível é:", ["If aninhados", "Select Case", "Do Until", "For"], 1, "Select Case compara um valor com casos fixos — menus ficam limpos."], ["Do While repete:", ["sempre ao menos uma vez", "enquanto a condição for verdadeira (teste antes)", "até a condição virar verdadeira", "um número fixo de voltas"], 1, "Testa antes de cada volta; pode executar zero vezes."], ["Um laço infinito geralmente acontece por:", ["excesso de comentários", "variável de controle que nunca torna a condição falsa", "usar Print dentro do laço", "declarar Dim dentro do laço"], 1, "Sem avanço/saída, a condição nunca muda — Ctrl+Break e corrija."], ["Sentinela é:", ["um erro de execução", "um valor combinado que encerra a leitura (ex.: -1)", "uma variável global", "um tipo de laço"], 1, "Padrão de leitura até sentinela com Do While."], ["Val(InputBox(...)) serve para:", ["exibir texto", "converter o texto digitado em número", "validar senha", "fechar a janela"], 1, "InputBox retorna String; Val converte para número."]]}, {"n": 6, "t": "Vetores e matrizes", "qs": [["Dim v(1 To 5) As Integer cria:", ["5 variáveis chamadas v1..v5", "um vetor com posições 1 a 5", "uma matriz 5×5", "um vetor de textos"], 1, "Array unidimensional com índices explícitos de 1 a 5."], ["Para percorrer todo o vetor, o índice usado no acesso deve ser:", ["fixo (v(1))", "a variável do laço (v(i))", "sempre 0", "um InputBox"], 1, "Índice variável é o que permite o percurso com For."], ["Na varredura de matriz, o laço EXTERNO normalmente percorre:", ["as colunas", "as linhas", "as diagonais", "os índices aleatórios"], 1, "Externo = linhas (i); interno = colunas (j)."], ["‘Subscript out of range’ significa:", ["variável não declarada", "índice fora dos limites declarados", "divisão por zero", "arquivo não encontrado"], 1, "Acessar m(4,1) em matriz 3×4, por exemplo."], ["Para achar o maior valor de um vetor de notas (que podem ser negativas), inicialize maior com:", ["0", "10", "o primeiro elemento do vetor", "um número aleatório"], 2, "Iniciar no 1º elemento garante corretude para qualquer faixa."]]}, {"n": 7, "t": "Registros: agrupando informações relacionadas", "qs": [["Public Type Aluno ... End Type define:", ["um formulário", "um tipo estruturado (registro)", "um banco de dados", "uma Function"], 1, "Registro: campos de tipos diferentes sob um nome."], ["O acesso ao campo nota do i-ésimo aluno de um vetor de registros é:", ["turma.nota(i)", "turma(i).nota", "nota.turma(i)", "turma[i,nota]"], 1, "Primeiro o índice do vetor, depois o ponto e o campo."], ["Um vetor de registros equivale, no mundo do banco, a:", ["uma coluna", "uma tabela em memória (conjunto de linhas)", "um índice", "uma view"], 1, "Cada registro = linha; o vetor = conjunto de linhas."], ["String * 40 em um Type significa:", ["texto de até 40 caracteres com tamanho fixo", "40 strings diferentes", "texto ilimitado", "número de 40 dígitos"], 0, "Campo de tamanho fixo — útil em arquivos de registro fixo."], ["Para somar o valor total do estoque (preco × estoque) percorrendo um vetor de Produtos, usamos:", ["um laço com acumulador: total = total + p(i).preco * p(i).estoque", "SUM(preco) como no SQL", "Print p.preco * p.estoque sem laço", "Count(p)"], 0, "Em memória, agregações são laços com acumulador — no banco, SQL."]]}, {"n": 8, "t": "Variáveis do tipo String", "qs": [["Mid$(\"LINGUAGEM\", 3, 4) retorna:", ["\"LING\"", "\"NGUA\"", "\"GUAG\"", "\"AGEM\""], 1, "Começa na posição 3 e pega 4 caracteres: N G U A."], ["InStr retorna 0 quando:", ["encontra no início", "não encontra o trecho", "o texto está vazio de espaços", "o texto é numérico"], 1, "0 = não achou; >0 = posição inicial do trecho."], ["Para remover espaços das pontas de um texto digitado:", ["Trim$", "Mid$", "Left$", "Replace$ com \" \""], 0, "Trim$ corta espaços à esquerda e à direita."], ["No VB6, as posições de String contam a partir de:", ["0", "1", "-1", "depende do Option Base"], 1, "Funções de texto iniciam em 1."], ["Format(7.25, \"0.00\") produz:", ["7,25 como texto formatado", "725", "7.250000", "erro"], 0, "Saída legível com duas casas — padrão de relatórios."]]}, {"n": 9, "t": "Modularização: Sub, Function e Modules", "qs": [["O valor de retorno de uma Function no VB6 é atribuído:", ["à palavra Return", "ao próprio nome da Function", "a uma variável global obrigatória", "ao parâmetro ByRef sempre"], 1, "Media = (n1+n2)/2 — o nome da Function recebe o retorno."], ["ByVal significa que o parâmetro:", ["é a própria variável do chamador", "recebe uma cópia (original protegido)", "deve ser numérico", "é opcional"], 1, "Cópia local; por segurança, declare ByVal explicitamente."], ["Modules .bas com rotinas Public servem para:", ["guardar telas", "compartilhar regras entre formulários do projeto", "substituir o banco de dados", "compilar mais rápido"], 1, "Camada de regras reutilizável em todo o projeto."], ["Uma Function ‘pura’, no padrão do curso:", ["usa MsgBox para pedir dados", "não conversa com o usuário: só recebe e retorna", "imprime com Print", "grava arquivo"], 1, "Entrada por parâmetros, saída por retorno; I/O fica com quem chama."], ["Variável declarada dentro de uma Sub é:", ["global", "local à execução da Sub", "pública do módulo", "estática permanente"], 1, "Escopo local: nasce e morre a cada chamada."]]}, {"n": 10, "t": "Arquivos e textos como transferência de dados", "qs": [["Para ACRESCENTAR linhas sem apagar o conteúdo existente, abre-se com:", ["For Output", "For Input", "For Append", "For Random"], 2, "Append posiciona no fim; Output recria vazio."], ["EOF(n) retorna True quando:", ["o arquivo foi aberto", "a leitura chegou ao fim do arquivo", "houve erro de disco", "o arquivo está vazio de linhas válidas"], 1, "Fim de arquivo — condição de parada do Do While."], ["FreeFile serve para:", ["liberar memória", "obter um número de arquivo livre", "apagar o arquivo", "fechar todos os arquivos"], 1, "Evita conflito de #n com outros arquivos abertos."], ["Split(linha, \";\") devolve:", ["um texto único", "um vetor com os campos separados por ;", "o primeiro campo apenas", "um registro Type"], 1, "Array de partes: partes(0), partes(1)..."], ["Esquecer o Close após gravação pode causar:", ["nada, o VB6 fecha sozinho sempre", "perda de dados e arquivo travado", "conversão errada de tipos", "erro de sintaxe"], 1, "Buffer não descarregado/arquivo bloqueado — feche sempre."]]}, {"n": 11, "t": "Manipulação de dados Cliente/Servidor (ADO)", "qs": [["Sem rs.MoveNext dentro do Do While Not rs.EOF, o programa:", ["pula a primeira linha", "entra em laço infinito", "fecha o Recordset", "dá erro de sintaxe"], 1, "O ponteiro não avança: EOF nunca chega."], ["rs!nota lê:", ["o nome da coluna", "o valor do campo nota da linha atual", "a primeira linha inteira", "o total de linhas"], 1, "Acesso ao campo da linha corrente do Recordset."], ["Para escapar uma aspa simples dentro de um texto que vai virar SQL:", ["duplica a aspa ('')", "remove a aspa", "troca por aspas duplas", "usa \\ ' "], 0, "Em SQL, '' representa uma aspa literal dentro do texto."], ["cn.Execute de um UPDATE devolve:", ["um Recordset com as linhas alteradas", "nada de tabela; afeta linhas no banco", "um arquivo temporário", "um MsgBox automático"], 1, "Manipulação não retorna Recordset; consulta retorna."], ["Validar no cliente antes de enviar SQL serve para:", ["deixar o banco mais rápido", "evitar comandos inválidos/perigosos e mensagens ruins", "substituir o On Error", "economizar memória"], 1, "Defesa em camadas: cliente valida, servidor protege, erro tratado."]]}, {"n": 12, "t": "Backup e recuperação de banco de dados", "qs": [["mysqldump banco > arquivo.sql produz:", ["um banco novo", "um arquivo com estrutura + dados em SQL", "um backup binário criptografado", "um relatório em PDF"], 1, "Texto SQL reproduzível em qualquer servidor MySQL."], ["Para restaurar o conteúdo do arquivo no banco:", ["mysqldump < arquivo", "mysql banco < arquivo.sql", "RESTORE FILE arquivo", "cn.Execute(arquivo)"], 1, "O cliente mysql executa o script .sql dentro do banco indicado."], ["Validar uma recuperação inclui:", ["só olhar o tamanho do arquivo", "SHOW TABLES + contagens + amostras conferidas", "reiniciar o servidor", "abrir o .sql no Bloco de Notas"], 1, "Conferência estrutural e de conteúdo após o restauro."], ["Manter várias gerações de backup (avô-pai-filho) protege contra:", ["falta de espaço", "cópias corrompidas ou desastres descobertos tardiamente", "senhas fracas", "vírus de tela"], 1, "Se a cópia de ontem está ruim, a de quinta-feira salva."], ["Restaurar primeiro em banco de TESTE serve para:", ["treinar SQL", "não arriscar o banco de produção durante a validação", "acelerar o mysqldump", "economizar disco"], 1, "Valida o arquivo e o procedimento sem tocar em dados reais."]]}, {"n": 13, "t": "Relatórios, impressão e documentos fiscais", "qs": [["Para alinhar colunas em relatórios de texto usamos:", ["Space( ) apenas", "Tab(n) e String(n, \"-\")", "MsgBox", "Printer.Page"], 1, "Tab posiciona colunas; String desenha separadores."], ["Sem Printer.EndDoc, o trabalho de impressão:", ["sai imediatamente", "fica retido/no buffer sem despachar", "é cancelado", "imprime em dobro"], 1, "EndDoc fecha o documento e envia à fila."], ["Para colunas fecharem em impressora real, a fonte deve ser:", ["proporcional (Arial)", "monoespaçada (Courier New)", "itálica", "decorativa"], 1, "Largura fixa por caractere = colunas alinhadas."], ["Os itens de um cupom ‘de verdade’ no nosso sistema vêm:", ["digitados fixos no código", "do banco, via Recordset", "de um arquivo .bmp", "do Clipboard"], 1, "Saída de dados: SQL + Recordset alimentam o layout."], ["Um relatório gerencial típico termina com:", ["somente os detalhes", "totais/contagens/médias de fechamento", "o código SQL", "a string de conexão"], 1, "Rodapé de fechamento dá a leitura gerencial do conjunto."]]}, {"n": 14, "t": "Disco de instalação e recursos gráficos", "qs": [["O Package & Deployment Wizard gera:", ["o banco de dados", "o pacote/disco de instalação (setup + dependentes)", "o relatório fiscal", "o backup do MySQL"], 1, "Empacota exe, runtimes, dados e atalhos para distribuição."], ["Senha/servidor de conexão devem ficar:", ["compilados no .exe", "em arquivo de configuração lido em tempo de execução", "no título do formulário", "no Registry sem documentação"], 1, "Config.ini parametrizável: mesmo pacote em ambientes diferentes."], ["No PictureBox, o método que desenha um retângulo preenchido usa:", ["Box F", "BF no final do Line", "Fill automaticamente", "Rect()"], 1, "Line (x1,y1)-(x2,y2), cor, BF (B = borda, BF = preenchido)."], ["PSet serve para:", ["desenhar um ponto na coordenada", "imprimir texto", "limpar a tela", "mover o formulário"], 0, "Ponto único — ondas e texturas nascem de laços com PSet."], ["Testar a instalação em máquina/conta limpa serve para:", ["ganhar tempo", "garantir que o pacote leva todas as dependências", "economizar licença", "validar o banco"], 1, "Ambiente limpo revela dependência esquecida no pacote."]]}, {"n": 15, "t": "Projeto integrador e consolidação final", "qs": [["O checklist de integração do projeto exige, entre outros:", ["somente telas bonitas", "banco + CRUD + módulos + arquivos + relatório + pacote", "apenas o relatório", "somente backup"], 1, "Integração é o nome do jogo: todas as camadas do semestre."], ["Congelar escopo na semana 23 significa:", ["não testar mais", "não acrescentar funcionalidades novas; pendências viram ‘versão 2’", "parar de programar", "adiar a apresentação"], 1, "Escopo fechado = entrega e apresentação confiáveis."], ["Na demonstração, mostrar uma entrada inválida sendo barrada prova:", ["que o programa tem bugs", "que a validação funciona", "que o banco está lento", "que faltou teste"], 1, "Erro tratado ao vivo é demonstração de qualidade, não defeito."], ["A prova final (30 pts) é:", ["em duplas com consulta", "escrita, individual e cumulativa", "oral", "só do projeto"], 1, "Conforme o Plano de Ensino; os 10 pts restantes são do projeto."], ["O pacote de instalação entregue deve incluir:", ["somente o .exe", "exe + dependentes + config.ini parametrizável + atalhos", "o banco com senhas compiladas", "os fontes sem compilar"], 1, "Distribuição profissional: instalável e configurável por ambiente."]]}], "provas": [{"id": "A1", "t": "Modelo A1 — Parte A (Web e HTML)", "qs": [["Um SGBD (Sistema Gerenciador de Banco de Dados) é:", ["Um editor de textos para dados.", "Um software que armazena, organiza e controla o acesso aos dados (ex.: MySQL).", "Uma linguagem de programação estruturada.", "Um periférico de armazenamento."], 1, "SGBD gerencia criação, consulta, alteração e segurança dos dados."], ["A string de conexão em ADO serve para:", ["Definir a cor do formulário.", "Informar driver, servidor, banco e credenciais para abrir a conexão.", "Criar as tabelas do banco automaticamente.", "Compilar o programa VB6."], 1, "Driver/Servidor/Database/Uid/Pwd: tudo que a conexão precisa."], ["Para INSERIR uma linha nova em uma tabela usamos:", ["SELECT", "UPDATE", "INSERT", "ALTER"], 2, "INSERT INTO tabela (cols) VALUES (...). UPDATE altera; SELECT consulta."], ["A cláusula que FILTRA linhas de um SELECT é:", ["ORDER BY", "WHERE", "GROUP BY", "VALUES"], 1, "WHERE define a condição; ORDER BY ordena o resultado."], ["Em VB6, Dim v(1 To 5) As Integer declara:", ["Uma matriz 5×5", "Um vetor com 5 posições (1 a 5)", "Um registro com 5 campos", "5 variáveis soltas"], 1, "Vetor (array unidimensional) com índices de 1 a 5."], ["Após usar um arquivo aberto com Open ... For Output, é obrigatório:", ["Delete #1", "Close #1", "Print #1", "Reset #1"], 1, "Close libera o arquivo e garante a gravação completa."]]}, {"id": "A2", "t": "Modelo A2 — conceituais", "qs": [["Em VB6, uma Function diferencia-se de uma Sub porque:", ["não recebe parâmetros.", "retorna um valor ao chamador.", "só pode ficar em formulários.", "executa mais rápido."], 1, "Function devolve valor (retorno); Sub executa ações sem retornar."], ["Para ACRESCENTAR linhas ao final de um arquivo texto existente, abre-se com:", ["For Output", "For Input", "For Append", "For Random"], 2, "Append preserva o conteúdo e grava no fim; Output recria o arquivo vazio."], ["No modelo Cliente/Servidor com banco de dados:", ["o banco roda no formulário do VB6.", "a aplicação (cliente) envia comandos SQL e o SGBD (servidor) processa e responde.", "o servidor não valida nada.", "ODBC é o nome do banco de dados."], 1, "Cliente requisita (ADO/ODBC), servidor SGBD executa e devolve resultados."], ["Mid$(\"LINGUAGEM\", 3, 4) retorna:", ["\"LING\"", "\"NGUA\"", "\"GUAG\"", "\"AGEM\""], 1, "Mid$(texto, início, quantidade): posições 3 a 6 = N, G, U, A."]]}, {"id": "A3", "t": "Modelo A3 — conceituais", "qs": [["Backup e recuperação de banco de dados servem, respectivamente, para:", ["acelerar consultas e indexar tabelas.", "gerar cópia de segurança dos dados e restaurá-los após perda/falha.", "criptografar senhas e criar usuários.", "imprimir relatórios e excluir tabelas."], 1, "Backup = cópia (ex.: mysqldump); recuperação = restaurar a cópia e validar."], ["No VB6, o objeto usado para enviar saída formatada à impressora é:", ["PictureBox", "Printer", "ListBox", "Timer"], 1, "Printer.Print / Printer.EndDoc; PictureBox é para recursos gráficos em tela."], ["O Package & Deployment Wizard do VB6 é usado para:", ["depurar erros de sintaxe.", "gerar o pacote/disco de instalação do programa.", "criar o banco de dados.", "desenhar formulários."], 1, "Ele empacota executável, DLLs e dependências para distribuição/instalação."], ["Uma matriz Dim m(1 To 3, 1 To 4) As Double possui quantos elementos?", ["7", "12", "34", "43"], 1, "3 linhas × 4 colunas = 12 células."], ["Modularizar um programa significa:", ["colocar todo o código em um único formulário.", "dividir o programa em partes (Sub/Function/Modules) reutilizáveis e organizadas.", "usar apenas variáveis globais.", "compilar em DOS."], 1, "Modularização = coesão, reuso e manutenção facilitada."]]}]};
+const FORMAS = ["▲","◆","●","■"];
+const K = "quizweb_Programacao_para_Internet_I";
+const app = document.getElementById("app");
+let st = null;          // estado da partida
+let timerId = null;
+
+function store(k, v){ try{ if(v===undefined) return localStorage.getItem(K+k);
+  localStorage.setItem(K+k, v); }catch(e){ return null; } }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ---------------- telas ---------------- */
+function telaHome(){
+  pararTimer();
+  app.innerHTML = `
+   <div class="grid-modos">
+     <button class="modo solo" onclick="telaLista('aulas')">
+       <h3>📘 Quiz por aula</h3>
+       <p>${DATA.aulas.length} quizzes rápidos (3 questões cada). Ideal para revisar logo após cada aula.</p>
+     </button>
+     <button class="modo lista" onclick="telaLista('modulos')">
+       <h3>⚡ Testes de módulo</h3>
+       <p>Os 12 testes rápidos da apostila (5 questões cada) para fechar cada bloco.</p>
+     </button>
+     <button class="modo turma" onclick="telaLista('provas')">
+       <h3>🏆 Desafios de prova</h3>
+       <p>Questões objetivas dos modelos A1, A2 e A3 — treino para as avaliações.</p>
+     </button>
+   </div>
+   <div class="card">
+     <b>Como jogar</b>
+     <p class="nota"><b>Modo Solo:</b> cada aluno joga no próprio celular/PC — cronômetro de 20 s,
+     pontos por velocidade e sequência de acertos; explicação após cada questão.<br>
+     <b>Modo Turma:</b> o professor projeta — cronômetro de 30 s, revela a resposta e marca
+     pontos para as equipes (botões de +1). Sem necessidade de aparelho por aluno.<br>
+     <b>Na tela de qualquer quiz há o botão “Modo Turma”.</b></p>
+   </div>`;
+}
+
+function conjuntos(tipo){
+  if (tipo === "aulas") return DATA.aulas.map(a => ({id:"a"+a.n, t:`Aula ${a.n} — ${a.t}`,
+      sub:`Módulo ${a.mod}`, qs:a.qs}));
+  if (tipo === "modulos") return DATA.modulos.map(m => ({id:"m"+m.n, t:`Módulo ${m.n} — ${m.t}`,
+      sub:"Teste rápido", qs:m.qs}));
+  return DATA.provas.map(p => ({id:"p"+p.id, t:p.t, sub:"Modelo de prova", qs:p.qs}));
+}
+
+function telaLista(tipo){
+  pararTimer();
+  const itens = conjuntos(tipo);
+  const tit = {aulas:"Quiz por aula", modulos:"Testes rápidos de módulo", provas:"Desafios de prova"}[tipo];
+  let html = `<h2 class="sec">${tit} <button class="btn secund" style="float:right" onclick="telaHome()">← Início</button></h2>`;
+  if (tipo === "aulas"){
+    let modAtual = 0;
+    for (const it of itens){
+      const mod = DATA.aulas.find(a => "a"+a.n === it.id).mod;
+      if (mod !== modAtual){ modAtual = mod; html += `<h2 class="sec" style="font-size:15px;margin:16px 4px 6px">Módulo ${mod}</h2>`; }
+      html += itemHtml(it);
+    }
+  } else {
+    for (const it of itens) html += itemHtml(it);
+  }
+  app.innerHTML = html;
+}
+function itemHtml(it){
+  const rec = store("rec_"+it.id);
+  return `<div class="item-lista" onclick="iniciar('${it.id}', false)">
+    <div><div class="tt">${esc(it.t)}</div><div class="sub">${it.qs.length} questões · ${esc(it.sub)}</div></div>
+    <div class="badge ${rec? 'rec':''}">${rec ? "★ "+rec : "jogar"}</div></div>`;
+}
+
+function acharSet(id){
+  for (const tipo of ["aulas","modulos","provas"])
+    for (const c of conjuntos(tipo)) if (c.id === id) return c;
+  return null;
+}
+
+/* ---------------- partida ---------------- */
+function iniciar(id, turma){
+  const set = acharSet(id);
+  st = { set, i:0, pts:0, acertos:0, seq:0, resp:[], turma:!!turma,
+         times: turma ? (st && st.times ? st.times : []) : [],
+         tempo: turma ? 30 : 20, restante: turma ? 30 : 20, revelado:false, escolhido:-1 };
+  if (turma && (!st.times || st.times.length === 0)) return telaTimes(id);
+  rodar();
+}
+
+function telaTimes(id){
+  pararTimer();
+  app.innerHTML = `<h2 class="sec">Modo Turma — equipes</h2>
+   <div class="card">
+     <p style="font-size:15px;margin-bottom:10px"><b>${esc(acharSet(id).t)}</b></p>
+     <p class="nota">Digite os nomes das equipes separados por vírgula (ou deixe vazio para jogar só com o cronômetro):</p>
+     <div class="linha" style="margin-top:10px"><input type="text" id="inp-times" placeholder="Equipe A, Equipe B, Equipe C"></div>
+     <div class="linha">
+       <button class="btn" onclick="comecarTurma('${id}')">Começar ▶</button>
+       <button class="btn secund" onclick="telaLista('aulas')">Voltar</button>
+     </div>
+   </div>`;
+}
+function comecarTurma(id){
+  const v = document.getElementById("inp-times").value.trim();
+  const nomes = v ? v.split(",").map(s => s.trim()).filter(Boolean).slice(0,6) : [];
+  st = { set: acharSet(id), i:0, pts:0, acertos:0, seq:0, resp:[], turma:true,
+         times: nomes.map(n => ({n, p:0})), tempo:30, restante:30, revelado:false, escolhido:-1 };
+  rodar();
+}
+
+function rodar(){
+  const q = st.set.qs[st.i];
+  st.revelado = false; st.escolhido = -1; st.restante = st.tempo;
+  let html = `<div class="barra-topo">
+      <span>${esc(st.set.t)} · questão ${st.i+1}/${st.set.qs.length}</span>
+      <span class="placar">${st.turma ? "" : `⭐ ${st.pts} pts` + (st.seq>=2?` · 🔥${st.seq}`:"")}</span>
+      <span class="timerbox" id="tb">${st.restante}s</span>
+    </div>
+    <div class="timerbar"><i id="tbi"></i></div>
+    <div class="${st.turma? 'turma':''}">
+      <div class="pergunta">${esc(q[0])}</div>
+      <div class="opcoes">
+        ${q[1].map((a,k) => `<button class="op c${k}" id="op${k}" onclick="responder(${k})">
+            <span class="forma">${FORMAS[k]}</span>${esc(a)}</button>`).join("")}
+      </div>
+    </div>
+    <div id="fb"></div>
+    <div class="linha" style="margin-top:14px">
+      ${st.turma ? `<button class="btn amarelo" id="btnRev" onclick="revelar()">👁 Revelar resposta</button>` : ""}
+      <button class="btn secund" id="btnNext" style="display:none" onclick="proxima()">Próxima ▶</button>
+      <button class="btn secund" onclick="sair()">Sair</button>
+      ${!st.turma ? `<button class="btn" onclick="iniciar('${st.set.id}', true)">📽 Modo Turma</button>` : ""}
+    </div>
+    ${st.turma && st.times.length ? `<div class="times" id="times">${st.times.map((t,k) =>
+        `<button class="time" id="tm${k}" onclick="pontoTime(${k})">${esc(t.n)}<span>${t.p}</span></button>`).join("")}</div>
+      <p class="nota">Após revelar, toque na equipe que acertou para dar +1 ponto.</p>` : ""}`;
+  app.innerHTML = html;
+  iniciarTimer();
+}
+
+function iniciarTimer(){
+  pararTimer();
+  const total = st.tempo;
+  timerId = setInterval(() => {
+    st.restante--;
+    const tb = document.getElementById("tb"), tbi = document.getElementById("tbi");
+    if (!tb) return pararTimer();
+    tb.textContent = Math.max(0, st.restante) + "s";
+    tbi.style.width = Math.max(0, 100 * st.restante / total) + "%";
+    if (st.restante <= 0){ pararTimer(); if (!st.revelado) revelar(true); }
+  }, 1000);
+}
+function pararTimer(){ if (timerId){ clearInterval(timerId); timerId = null; } }
+
+function responder(k){
+  if (st.revelado) return;
+  st.escolhido = k;
+  revelar(false, k);
+}
+
+function revelar(estourou, k){
+  if (st.revelado) return;
+  pararTimer();
+  st.revelado = true;
+  const q = st.set.qs[st.i];
+  const certo = q[2];
+  const escolha = (k === undefined) ? st.escolhido : k;
+  for (let i = 0; i < 4; i++){
+    const b = document.getElementById("op"+i);
+    if (!b) continue;
+    b.disabled = true;
+    if (i === certo) b.classList.add("certa");
+    else if (i === escolha) b.classList.add("errada");
+  }
+  let ganho = 0;
+  if (!st.turma && escolha >= 0 && escolha === certo){
+    ganho = 500 + Math.round(500 * Math.max(0, st.restante) / st.tempo) + Math.min(st.seq,5) * 100;
+    st.seq++; st.pts += ganho; st.acertos++;
+  } else if (!st.turma){ st.seq = 0; }
+  st.resp.push({q: q[0], certo, escolha, ok: escolha === certo});
+  const fb = document.getElementById("fb");
+  if (st.turma){
+    fb.innerHTML = `<div class="feedback ${estourou? 'erro':'ok'}">
+      <b>${estourou ? "⏰ Tempo esgotado!" : "✅ Resposta: " + FORMAS[certo] + " — " + esc(q[1][certo])}</b>
+      ${esc(q[3] || "")}</div>`;
+  } else {
+    fb.innerHTML = escolha === certo
+      ? `<div class="feedback ok"><b>✔ Acertou! +${ganho} pts</b>${esc(q[3] || "")}</div>`
+      : `<div class="feedback erro"><b>${estourou? "⏰ Tempo esgotado!" : "✘ Não foi dessa vez…" }
+         Resposta: ${FORMAS[certo]} — ${esc(q[1][certo])}</b>${esc(q[3] || "")}</div>`;
+  }
+  document.getElementById("btnNext").style.display = "inline-block";
+  const br = document.getElementById("btnRev"); if (br) br.style.display = "none";
+  const pl = document.querySelector(".placar");
+  if (pl && !st.turma) pl.innerHTML = `⭐ ${st.pts} pts` + (st.seq>=2?` · 🔥${st.seq}`:"");
+}
+
+function pontoTime(k){
+  if (!st.revelado || !st.times.length) return;
+  st.times[k].p++;
+  const b = document.getElementById("tm"+k);
+  if (b) b.querySelector("span").textContent = st.times[k].p;
+}
+
+function proxima(){
+  st.i++;
+  if (st.i >= st.set.qs.length) return fim();
+  rodar();
+}
+
+function fim(){
+  pararTimer();
+  const total = st.set.qs.length;
+  if (!st.turma){
+    const rec = parseInt(store("rec_"+st.set.id) || "0", 10);
+    if (st.pts > rec) store("rec_"+st.set.id, String(st.pts));
+    let rev = st.resp.map((r, i) => `<div class="rev ${r.ok? 'ok':'erro'}">
+        <b>${i+1}. ${r.ok? "✔":"✘"} ${esc(r.q)}</b><br>
+        Resposta: ${esc(st.set.qs[i][1][st.set.qs[i][2]])}</div>`).join("");
+    app.innerHTML = `<div class="card podio">
+        <div class="p1">${st.acertos === total ? "🏆" : st.acertos >= total/2 ? "🎉" : "💪"}</div>
+        <h2 style="color:var(--roxo);font-size:26px;margin:6px 0">${st.pts} pontos</h2>
+        <p style="font-size:16px">${st.acertos} de ${total} acertos · ${esc(st.set.t)}</p>
+        ${st.pts >= rec && st.pts > 0 ? '<p class="nota" style="color:var(--verde);font-weight:700">★ Novo recorde!</p>' : ""}
+        <div class="linha" style="justify-content:center;margin-top:14px">
+          <button class="btn" onclick="iniciar('${st.set.id}', false)">🔁 Jogar de novo</button>
+          <button class="btn secund" onclick="telaLista('aulas')">Lista</button>
+          <button class="btn secund" onclick="telaHome()">Início</button>
+        </div></div>
+        <h2 class="sec">Revisão das questões</h2>${rev}`;
+  } else {
+    const ordenados = [...st.times].sort((a,b) => b.p - a.p);
+    const medalhas = ["🥇","🥈","","4º","5º","6º"];
+    app.innerHTML = `<div class="card podio">
+        <div class="p1">🏁</div><h2 style="color:var(--roxo);font-size:26px;margin:6px 0">Fim de jogo!</h2>
+        <p style="font-size:15px">${esc(st.set.t)} · ${total} questões</p>
+        ${ordenados.length ? ordenados.map((t,i) =>
+            `<div class="rev ${i===0? 'ok':''}" style="font-size:17px"><b>${medalhas[i]} ${esc(t.n)} — ${t.p} pts</b></div>`).join("")
+          : `<p class="nota">Sem equipes cadastradas — o placar foi acompanhado oralmente pelo professor. 😄</p>`}
+        <div class="linha" style="justify-content:center;margin-top:14px">
+          <button class="btn" onclick="iniciar('${st.set.id}', true)">🔁 Outra rodada</button>
+          <button class="btn secund" onclick="telaHome()">Início</button>
+        </div></div>`;
+  }
+}
+
+function sair(){ pararTimer(); telaHome(); }
+
+telaHome();
+</script>
+</body>
+</html>

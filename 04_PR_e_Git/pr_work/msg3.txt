@@ -1,0 +1,18 @@
+feat(apps-nuvem): Painel do Professor v2 — histórico, CSV e entregas
+
+O quê: novo build de apps-nuvem/Painel_Professor_pi1.html e
+Painel_Professor_lp2.html (mesmos nomes/caminhos do v1).
+
+Por quê: a professora precisa ver o histórico completo de respostas
+(checkpoints + chefes) por aluno, exportar CSV com esse histórico,
+enviar materiais p/ a turma e listar/baixar as entregas dos alunos
+(rotas da API: lista/arq/arqup/entregas/dlent).
+
+Onde: apps-nuvem/Painel_Professor_{pi1,lp2}.html; API relativa
+../aulaviva/api.php; link "voltar" aponta para o app da disciplina
+(AulaViva_{pi1,lp2}_index.html).
+
+Notas: acesso com gate duplo — nome ADM (/juh/i) + token do professor
+(AULAVIVA_PROF_TOKEN); sem token válido a API responde 403; download
+de entrega passa por dlent+token (entregas NÃO têm URL pública — ficam
+fora de materiais/); sem localStorage.

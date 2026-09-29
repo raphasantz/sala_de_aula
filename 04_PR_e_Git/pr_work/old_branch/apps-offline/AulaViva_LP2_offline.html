@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AulaViva — Linguagem de Programação II</title>
+<style>
+ :root{--navy:#0d2b4e;--navy2:#143a66;--azul:#1b5faa;--sky:#e9f1fa;--amber:#f59e0b;
+   --amberd:#9a6206;--verde:#26890c;--verm:#e21b3c;--roxo:#6d28d9;--ink:#1f2937;
+   --soft:#5b6b7c;--bg:#f4f7fb;--card:#ffffff;}
+ *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+ body{font-family:"Segoe UI",system-ui,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+ header{background:var(--navy);color:#fff;padding:10px 16px;display:flex;gap:10px;
+   align-items:center;justify-content:space-between;position:sticky;top:0;z-index:9;
+   box-shadow:0 2px 0 #081b33;flex-wrap:wrap}
+ header h1{font-size:18px;cursor:pointer}
+ header .dir{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+ .pill{background:var(--amber);color:#3a2700;border:none;border-radius:20px;padding:6px 13px;
+   font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+ .pill.ghost{background:transparent;color:#cfe1f5;border:2px solid #2a527f}
+ .wrap{max-width:960px;margin:0 auto;padding:16px 14px 60px}
+ body.turma .wrap{max-width:1200px}
+ body.turma{font-size:1.22rem}
+ body.turma .cardp{padding:34px 30px}
+ body.turma .cardp p,body.turma .cardp li{font-size:1.35rem;line-height:1.55}
+ body.turma .cardp h3{font-size:1.6rem}
+ body.turma .perg{font-size:1.7rem !important}
+ body.turma .op{font-size:1.35rem !important;min-height:74px}
+ body.turma pre{font-size:1.05rem !important}
+ .bar{height:10px;background:#dfe8f2;border-radius:8px;overflow:hidden;margin:10px 0 16px}
+ .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),#ffcf4d);width:0;transition:width .3s}
+ .cardp{background:var(--card);border-radius:18px;padding:24px 22px;
+   box-shadow:0 3px 14px rgba(13,43,78,.09);animation:pop .25s ease}
+ @keyframes pop{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}}
+ .kick{font-size:12px;font-weight:800;letter-spacing:.6px;color:var(--amberd);text-transform:uppercase}
+ .cardp h2{color:var(--navy);font-size:23px;margin:4px 0 12px}
+ .cardp h3{color:var(--azul);font-size:17px;margin:14px 0 6px}
+ .cardp p{font-size:16.5px;line-height:1.6;margin:8px 0;text-align:justify}
+ .cardp ul,.cardp ol{margin:8px 0 8px 22px}
+ .cardp li{font-size:16px;line-height:1.5;margin:5px 0}
+ .bx{border-radius:14px;padding:14px 16px;margin:12px 0;border-left:6px solid}
+ .bx b.ti{display:block;font-size:12.5px;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+ .bx.con{background:#e9f1fa;border-color:var(--azul)} .bx.con b.ti{color:var(--azul)}
+ .bx.ana{background:#f1edfb;border-color:var(--roxo)} .bx.ana b.ti{color:var(--roxo)}
+ .bx.dica{background:#fef4e2;border-color:var(--amber)} .bx.dica b.ti{color:var(--amberd)}
+ .bx.aten{background:#fbeae8;border-color:var(--verm)} .bx.aten b.ti{color:var(--verm)}
+ .bx p{margin:2px 0;font-size:15.5px}
+ .codewrap{background:#0f2237;border-radius:12px;margin:12px 0;overflow:hidden}
+ .codebar{background:#1a3a5c;color:#bbd4ee;font:700 11.5px Consolas,monospace;
+   padding:6px 12px;display:flex;justify-content:space-between}
+ .codewrap pre{padding:12px 14px;overflow-x:auto;font:13.5px/1.5 Consolas,monospace;color:#dce9f7}
+ .tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+ .tbl th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left}
+ .tbl td{border:1px solid #c9d8e8;padding:7px 10px;vertical-align:top}
+ .tbl tr:nth-child(even) td{background:#f4f8fc}
+ .nav{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+ .btn{border:none;border-radius:12px;padding:12px 22px;font-size:15.5px;font-weight:800;
+   cursor:pointer;font-family:inherit;background:var(--azul);color:#fff}
+ .btn.amb{background:var(--amber);color:#3a2700}
+ .btn.gh{background:#e3ecf7;color:var(--navy)}
+ .btn:disabled{opacity:.4;cursor:default}
+ .perg{font-size:20px;font-weight:800;color:var(--ink);margin:6px 0 14px;line-height:1.4}
+ .op{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:none;
+   border-radius:14px;padding:14px 16px;margin:9px 0;font-size:16.5px;font-weight:600;
+   color:#fff;cursor:pointer;font-family:inherit;line-height:1.35}
+ .op .fm{font-size:22px}
+ .op.c0{background:#e21b3c}.op.c1{background:#1368ce}.op.c2{background:#ffa602;color:#3a2700}
+ .op.c3{background:#26890c}
+ .op:disabled{cursor:default}
+ .op.ok{outline:5px solid #0e5c00;outline-offset:-5px}
+ .op.no{outline:5px solid #7d0018;outline-offset:-5px;opacity:.85}
+ .fb{border-radius:14px;padding:14px 16px;margin-top:12px;color:#fff;font-size:15.5px}
+ .fb.ok{background:var(--verde)} .fb.no{background:var(--verm)}
+ .hud{display:flex;gap:14px;font-weight:800;color:#fff;font-size:15px;align-items:center}
+ .modgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+ .modcard{background:#fff;border-radius:16px;padding:16px;cursor:pointer;border:3px solid #e6edf6;
+   transition:border-color .15s, transform .15s;position:relative}
+ .modcard:hover{border-color:var(--azul);transform:translateY(-3px)}
+ .modcard h3{color:var(--navy);font-size:16.5px;margin:4px 0}
+ .modcard .sub{font-size:12.5px;color:var(--soft)}
+ .modcard .st{position:absolute;top:12px;right:14px;font-size:20px}
+ .prog{font-size:11.5px;font-weight:800;color:var(--azul);margin-top:8px}
+ .mini{height:7px;background:#e3ecf7;border-radius:6px;overflow:hidden;margin-top:5px}
+ .mini i{display:block;height:100%;background:var(--verde)}
+ .exitem{background:#fffdf6;border:2px solid #ead9b5;border-radius:14px;padding:13px 15px;margin:10px 0}
+ .exitem label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+ .exitem input{width:22px;height:22px;margin-top:3px;accent-color:var(--verde)}
+ .exitem b{color:var(--navy)}
+ .exitem .en{font-size:14.5px;color:var(--soft);margin-top:4px}
+ .fimbox{text-align:center;padding:30px 20px}
+ .fimbox .em{font-size:52px}
+ .nota{font-size:12.5px;color:var(--soft);margin-top:10px;line-height:1.5}
+ #modal{position:fixed;inset:0;background:rgba(8,20,38,.62);display:flex;align-items:center;
+   justify-content:center;z-index:20}
+ .mbox{background:#fff;border-radius:18px;padding:24px 22px;max-width:460px;width:94%;
+   box-shadow:0 12px 44px rgba(0,0,0,.4);animation:pop .25s ease;max-height:92vh;overflow:auto}
+ .mbox h3{color:var(--navy);margin-bottom:4px;font-size:20px}
+ .mbox input{width:100%;border:2px solid #d9d4ee;border-radius:10px;padding:11px 13px;
+   font-size:15.5px;margin:7px 0;font-family:inherit}
+ .mbox input:focus{outline:3px solid #ffd57e;border-color:var(--amber)}
+ .tabs{display:flex;gap:8px;margin:8px 0}
+ .tabs button{flex:1;border:none;border-radius:10px;padding:10px;font-weight:800;cursor:pointer;
+   font-family:inherit;background:#e3ecf7;color:var(--navy);font-size:14px}
+ .tabs button.on{background:var(--amber);color:#3a2700}
+ .item-arq{display:flex;justify-content:space-between;gap:10px;align-items:center;
+   background:#f4f8fc;border:1px solid #dfe8f2;border-radius:10px;padding:10px 12px;margin:8px 0}
+ .item-arq a{color:var(--azul);font-weight:700;text-decoration:none}
+ .err{background:#fbeae8;border-left:5px solid var(--verm);border-radius:8px;
+   padding:8px 12px;font-size:13.5px;color:#8c2418;margin:8px 0}
+ @media (max-width:760px){
+   header{padding:8px 10px}
+   header h1{font-size:15px}
+   .pill{padding:5px 9px;font-size:11px}
+   .wrap{padding:12px 10px 60px}
+   .cardp{padding:16px 14px}
+   .cardp h2{font-size:19px}
+   .cardp p,.cardp li{font-size:14.5px}
+   .perg{font-size:17px}
+   .op{font-size:14.5px;min-height:52px;padding:10px 12px 10px 46px}
+   .op .fm{font-size:17px;left:12px}
+   .codewrap pre{font-size:10.5px}
+   .modgrid{grid-template-columns:1fr}
+   .mbox{padding:18px 14px}
+   .btn{padding:10px 16px;font-size:14px}
+   table{display:block;overflow-x:auto}
+ }
+</style>
+</head>
+<body>
+<header>
+  <h1 onclick="irHome()">🎓 AulaViva · Linguagem de Programação II</h1>
+  <div class="dir">
+    <span class="hud" id="hud"></span>
+    <span class="pill ghost" id="nuvem" style="display:none">☁️ …</span>
+    <button class="pill" id="btArq" style="display:none" onclick="abrirMateriais()">📎 Materiais</button>
+    <button class="pill" id="btEnt" style="display:none" onclick="abrirEntregas()">📤 Entregar</button>
+    <button class="pill ghost" id="btMapa" style="display:none" onclick="abrirMapa()">🎯 Ir para</button>
+    <button class="pill ghost" id="btAluno" onclick="editarConta()">👤 Entrar</button>
+    <button class="pill ghost" id="btPainel" style="display:none" onclick="abrirPainel()">👩‍ Painel</button>
+    <button class="pill ghost" id="btTurma" onclick="toggleTurma()">📽 Modo Turma</button>
+    <button class="pill" onclick="irHome()">🗺 Trilha</button>
+  </div>
+</header>
+<div class="wrap" id="app"></div>
+<div id="modal" style="display:none"><div class="mbox" id="mbox"></div></div>
+<script>
+const DATA = {"mods": [{"n": 1, "ti": "Ambientação e linguagem de programação estruturada", "parte": "I", "parte_ti": "Ambiente, SGBD e Conexão", "faixa": "Aulas 1 a 4", "obj": ["Compreender o escopo da disciplina e a arquitetura do projeto final.", "Reconhecer os três pilares da programação estruturada: sequência, seleção e repetição.", "Identificar os componentes do ambiente: IDE VB6, SGBD MySQL, driver ODBC e biblioteca ADO.", "Organizar o ambiente de trabalho e executar o primeiro programa VB6."], "aulas": [{"n": 1, "ti": "Ambientação, linguagem estruturada e primeiro programa VB6", "cards": [{"t": "h", "x": "O que vamos construir neste semestre"}, {"t": "p", "h": "Em Linguagem de Programação II, você sai do “programa que só calcula” e entra no mundo dos \u003cb>dados que persistem\u003c/b>: programas que conversam com um \u003cb>banco de dados\u003c/b>, consultam com \u003cb>SQL\u003c/b>, guardam informações em \u003cb>arquivos\u003c/b>, imprimem \u003cb>relatórios e documentos\u003c/b> e viram um \u003cb>pacote de instalação\u003c/b> completo. Tudo isso se junta no projeto integrador das semanas 23–24."}, {"t": "bx", "k": "con", "ti": "Programação estruturada", "x": "Estilo de programar baseado em três estruturas de controle: \u003cb>sequência\u003c/b> (passo a passo), \u003cb>seleção\u003c/b> (If/Select Case — decidir) e \u003cb>repetição\u003c/b> (For/Do While — repetir). Sem “pulos” desorganizados (o famoso GOTO): o código fica legível, testável e fácil de manter."}, {"t": "h", "x": "A linguagem e o banco escolhidos (S)"}, {"t": "p", "h": "Trabalharemos com \u003cb>Visual Basic 6.0 (VB6)\u003c/b> como linguagem estruturada — com vetores, matrizes, registros (Type), Strings, Sub/Function, arquivos e gráficos — e o SGBD \u003cb>MySQL\u003c/b>, acessado por \u003cb>ODBC/ADO\u003c/b>. Se o laboratório não tiver servidor, usamos o plano B documentado: Access (.mdb), mesmos conceitos."}, {"t": "tb", "cab": ["Componente", "Papel no curso"], "lin": [["IDE VB6", "Editor + compilador + construtor de telas (formulários)"], ["MySQL Server", "SGBD: guarda bancos, tabelas e executa SQL"], ["Driver MySQL ODBC", "Ponte que deixa o VB6 conversar com o MySQL"], ["ADO (ActiveX Data Objects)", "Biblioteca VB6 que envia SQL e recebe resultados (Recordset)"]]}, {"t": "h", "x": "Arquitetura do projeto final"}, {"t": "ul", "it": ["\u003cb>Camada de dados\u003c/b>: banco MySQL com tabelas do tema escolhido;", "\u003cb>Camada de acesso\u003c/b>: módulo de conexão + comandos SQL (ADO);", "\u003cb>Camada de lógica\u003c/b>: Modules com Sub/Function (modularização);", "\u003cb>Camada de apresentação\u003c/b>: formulários VB6 + relatórios/Printer;", "\u003cb>Distribuição\u003c/b>: pacote de instalação (Package & Deployment Wizard)."]}, {"t": "h", "x": "Contrato da disciplina"}, {"t": "ul", "it": ["4 aulas por semana em 4 etapas: conceitos → demonstração → prática → fixação;", "Avaliações: A1 (30) semanas 1–8 · A2 (30) semana 16 · A3 (40) semana 24;", "14 h não presenciais no AVA, distribuídas conforme o cronograma;", "Diagnóstico inicial nesta semana: vale ponto de participação, não de nota."]}, {"t": "h", "x": "Anatomia de um programa VB6"}, {"t": "p", "h": "No VB6, o código vive em \u003cb>módulos\u003c/b> (Modules) e \u003cb>formulários\u003c/b> (Forms). Subs executam ações; Functions retornam valores. O ponto de partida clássico é o evento \u003cb>Form_Load\u003c/b> (quando a janela abre) ou um botão clicado."}, {"t": "cd", "ti": "Form1 — primeiro programa (sequência + saída)", "lg": "vb", "ln": ["Private Sub Form_Load()", "    ' sequência: passo a passo, de cima para baixo", "    Dim nome As String", "    nome = \"Turma 2/2026\"", "    Print \"Olá, \" & nome & \"!\"          ' saída no formulário", "    Print \"Disciplina: Linguagem de Programação II\"", "End Sub"]}, {"t": "h", "x": "As três estruturas, em um relance"}, {"t": "cd", "ti": "Seleção e repetição (prévia das semanas 7+)", "lg": "vb", "ln": ["' SELEÇÃO: decidir", "If nota >= 7 Then", "    Print \"Aprovado\"", "Else", "    Print \"Recuperação\"", "End If", "", "' REPETIÇÃO: repetir", "Dim i As Integer", "For i = 1 To 5", "    Print i", "Next i"]}, {"t": "h", "x": "Organização do ambiente de trabalho"}, {"t": "ol", "it": ["Crie a pasta do semestre: \u003cb>C:\\LP2\\\u003c/b> (ou Documents\\LP2);", "Dentro dela, uma pasta por semana: \u003cb>S01\u003c/b>, \u003cb>S02\u003c/b>… e, no fim, \u003cb>PROJETO\u003c/b>;", "Salve todo projeto VB6 (.vbp) dentro da pasta da semana correspondente;", "Nomes sem acento/espaço: \u003cb>Conexao.bas\u003c/b>, \u003cb>frmAlunos.frm\u003c/b>;", "Faça backup semanal da pasta no Drive (hábito de profissional)."]}, {"t": "bx", "k": "aten", "ti": null, "x": "VB6 é antigo e sensível a caminhos com acentos/espaços e a resoluções muito altas. Padronize: pastas simples, arquivos .vbp versionados por data e sempre FECHAR a IDE pelo menu (evita projetos corrompidos)."}], "qs": [["Os três pilares da programação estruturada são:", ["entrada, processamento e saída", "sequência, seleção e repetição", "variáveis, tipos e funções", "telas, relatórios e bancos"], 1, "Sequência executa em ordem; seleção decide (If/Select); repetição repete (For/Do)."], ["No VB6, quem RETORNA valor é:", ["a Sub", "a Function", "o Module", "o Label"], 1, "Function devolve resultado; Sub executa ações."], ["O padrão de pastas do curso é:", ["tudo na área de trabalho", "LP2\\S01..S24 + PROJETO, sem acentos", "uma pasta por arquivo", "pastas com espaços"], 1, "Caminhos simples evitam bugs no VB6 e facilitam backup."]]}], "exs": [{"ti": "Diagnóstico de lógica", "tp": "escrito", "en": "Sem computador: escreva em pseudocódigo (ou desenhe) um algoritmo que leia 3 notas, calcule a média e imprima a situação (>=7 aprovado; >=5 recuperação; senão reprovado). Identifique no seu algoritmo onde está cada estrutura: sequência, seleção e repetição (use repetição para ler as 3 notas).", "ps": []}, {"ti": "Organização do ambiente", "tp": "pratico", "en": "Crie a estrutura de pastas do semestre (LP2\\S01..S04 + PROJETO), abra o VB6, crie um projeto novo salvo em LP2\\S01\\ola.vbp e faça o Form_Load imprimir seu nome e a data de hoje (use Date).", "ps": []}, {"ti": "As três estruturas na prática", "tp": "pratico", "en": "No mesmo projeto: adicione um botão que leia um número por InputBox e use If para dizer se é par ou impar (Mod); adicione outro botão que imprima com For a tabuada desse número de 1 a 10.", "ps": []}], "boss": [["Programação estruturada se apoia em três estruturas:", ["entrada, processamento e saída", "sequência, seleção e repetição", "variáveis, constantes e funções", "telas, relatórios e bancos"], 1, "Sequência executa em ordem; seleção decide; repetição repete blocos."], ["No ambiente do curso (S), quem conversa diretamente com o MySQL a partir do VB6 é:", ["o objeto Printer", "o driver ODBC + biblioteca ADO", "o Package & Deployment Wizard", "o explorador de arquivos"], 1, "ODBC faz a ponte VB6↔MySQL; ADO envia SQL e recebe Recordset."], ["Um Sub difere de uma Function porque:", ["Sub retorna valor", "Function retorna valor", "Sub só roda em Modules", "não há diferença"], 1, "Function devolve resultado ao chamador; Sub apenas executa ações."], ["O padrão de organização de pastas adotado no curso é:", ["tudo na área de trabalho", "LP2\\S01..S24 + PROJETO, sem acentos/espaços", "uma pasta por aluno no pendrive", "pastas com nome das disciplinas por extenso"], 1, "Caminhos simples evitam bugs no VB6 e facilitam backup/entrega."], ["Para converter o texto do InputBox em número usamos:", ["Str()", "Val()", "Mid()", "Len()"], 1, "Val converte string em número; Str faz o caminho inverso."]]}, {"n": 2, "ti": "SGBD: instalação, configuração e conexão", "parte": "I", "parte_ti": "Ambiente, SGBD e Conexão", "faixa": "Aulas 5 a 12", "obj": ["Explicar o que é um SGBD e instalar/configurar o MySQL no laboratório.", "Validar o ambiente com comandos básicos do cliente MySQL.", "Compreender conexão: parâmetros, abertura, fechamento e string de conexão.", "Tratar falhas básicas de conexão no VB6 (On Error)."], "aulas": [{"n": 2, "ti": "SGBD — instalação e configuração (semana 2)", "cards": [{"t": "h", "x": "O que é um SGBD"}, {"t": "bx", "k": "con", "ti": "SGBD — Sistema Gerenciador de Banco de Dados", "x": "Software que \u003cb>armazena, organiza, protege e controla o acesso\u003c/b> aos dados: cria tabelas, executa consultas, gerencia usuários e garante integridade. Exemplos: MySQL, PostgreSQL, SQL Server, Access. No curso: \u003cb>MySQL\u003c/b> (gratuito)."}, {"t": "p", "h": "Sem SGBD, cada programa inventa seu próprio jeito de guardar dados (arquivos soltos, planilhas…). Com SGBD, todos os programas falam a mesma língua: \u003cb>SQL\u003c/b>."}, {"t": "h", "x": "Instalação passo a passo (laboratório)"}, {"t": "ol", "it": ["Baixe o instalador do MySQL (mysql-installer-community) do site oficial ou da pasta da rede;", "Execute e escolha o tipo \u003cb>Server only\u003c/b> (ou Developer padrão se houver espaço);", "Configuração: authentication padrão, \u003cb>senha do root\u003c/b> (anote! ex.: aluno123), serviço Windows MySQL habilitado (inicia com o sistema);", "Conclua e abra o \u003cb>MySQL Command Line Client\u003c/b> (ou mysql -u root -p no prompt);", "Valide: \u003cb>SHOW DATABASES;\u003c/b> deve listar information_schema, mysql, performance_schema, sys."]}, {"t": "cd", "ti": "Primeiros comandos no cliente MySQL", "lg": "sql", "ln": ["mysql -u root -p            -- entra no servidor (digite a senha)", "SHOW DATABASES;             -- lista os bancos existentes", "CREATE DATABASE escola;     -- cria nosso banco de estudo", "USE escola;                 -- seleciona o banco ativo", "SELECT VERSION();           -- confirma a versão instalada"]}, {"t": "bx", "k": "dica", "ti": null, "x": "Toda instrução SQL termina com \u003cb>ponto e vírgula\u003c/b>. E todo comando de administração (SHOW, CREATE DATABASE, USE) é um ótimo exercício de digitação: erro de uma letra = mensagem de erro educativa."}, {"t": "bx", "k": "aten", "ti": null, "x": "Senha do root perdida = laboratório parado. Padrão da turma + senha anotada no caderno e no caderno do professor. Se o serviço não subir: Serviços do Windows → MySQL80 → Iniciar."}], "qs": [["SGBD é o software que:", ["compila o VB6", "armazena, organiza e controla o acesso aos dados", "desenha telas", "imprime cupons"], 1, "Exemplos: MySQL, PostgreSQL, SQL Server, Access."], ["Para listar os bancos do servidor MySQL usamos:", ["SHOW DATABASES;", "LIST BANKS;", "SELECT * FROM bancos;", "DIR /B;"], 0, "Comando de administração do cliente MySQL."], ["O comando que cria um banco novo é:", ["NEW DATABASE escola;", "CREATE DATABASE escola;", "MAKE escola;", "INSERT DATABASE escola;"], 1, "DDL: CREATE DATABASE nome;"]]}, {"n": 3, "ti": "SGBD — conexão: parâmetros, abertura e falhas (semana 3)", "cards": [{"t": "h", "x": "O que é uma conexão"}, {"t": "p", "h": "Conectar é \u003cb>abrir um canal\u003c/b> entre o programa (cliente) e o SGBD (servidor). Para isso, o cliente informa: \u003cb>driver\u003c/b> (quem traduz), \u003cb>servidor\u003c/b> (onde), \u003cb>banco\u003c/b> (qual), \u003cb>usuário e senha\u003c/b> (credenciais). No VB6, isso vira uma \u003cb>connection string\u003c/b> passada ao objeto \u003cb>ADODB.Connection\u003c/b>."}, {"t": "cd", "ti": "Modulo Conexao.bas — abrir e fechar com tratamento", "lg": "vb", "ln": ["Public cn As ADODB.Connection", "", "Public Sub AbrirConexao()", "    On Error GoTo Falha", "    Set cn = New ADODB.Connection", "    cn.ConnectionString = \"Driver={MySQL ODBC 8.0 Driver};\" & _", "                          \"Server=localhost;Database=escola;\" & _", "                          \"Uid=root;Pwd=aluno123;\"", "    cn.Open", "    Print \"Conectado ao MySQL!\"", "    Exit Sub", "Falha:", "    MsgBox \"Falha de conexão: \" & Err.Description, vbCritical", "End Sub", "", "Public Sub FecharConexao()", "    If Not cn Is Nothing Then cn.Close", "End Sub"]}, {"t": "tb", "cab": ["Parâmetro", "Significado", "Exemplo"], "lin": [["Driver", "Driver ODBC instalado", "{MySQL ODBC 8.0 Driver}"], ["Server", "Endereço do servidor", "localhost (ou IP da rede)"], ["Database", "Banco selecionado ao conectar", "escola"], ["Uid / Pwd", "Usuário e senha", "root / aluno123"]]}, {"t": "h", "x": "Tratamento básico de falhas"}, {"t": "ul", "it": ["\u003cb>On Error GoTo Falha\u003c/b>: desvia para o rótulo se algo der errado;", "\u003cb>Err.Description\u003c/b>: mensagem técnica do erro (mostre ao usuário de forma amiga);", "Falhas típicas: serviço parado, senha errada, driver ausente, banco inexistente;", "Sempre \u003cb>fechar\u003c/b> a conexão ao terminar (FecharConexao) — conexão aberta é recurso vazando."]}, {"t": "bx", "k": "ana", "ti": "Conexão = ligação telefônica", "x": "Discar (cn.Open) exige número certo (Server), ramal (Database) e identificação (Uid/Pwd). Se a linha está muda (serviço parado), você desliga e avisa (On Error). E ao terminar a conversa, desliga (cn.Close) — ninguém deixa o telefone fora do gancho a noite toda."}], "qs": [["Na string de conexão, Server indica:", ["o banco ativo", "o endereço do servidor (ex.: localhost)", "o driver", "a senha"], 1, "Server = onde o SGBD está; Database = qual banco."], ["On Error GoTo Falha + Err.Description servem para:", ["ignorar erros de sintaxe", "tratar falhas em tempo de execução com mensagem útil", "reiniciar o MySQL", "compilar sem erros"], 1, "Desvia para o rótulo e detalha o erro ocorrido."], ["Ao terminar de usar o banco, o programa deve:", ["deixar cn aberto", "chamar cn.Close", "desinstalar o driver", "reiniciar a IDE"], 1, "Conexão aberta consome recurso do servidor."]]}], "exs": [{"ti": "Instalação validada", "tp": "pratico", "en": "Instale (ou valide) o MySQL na sua máquina: entre no cliente, rode SHOW DATABASES;, crie o banco \u003cb>escola\u003c/b> e dentro dele a tabela \u003cb>turma(id INT PRIMARY KEY AUTO_INCREMENT, nome VARCHAR(40))\u003c/b>. Cole a saída no caderno/Drive.", "ps": []}, {"ti": "Conexão VB6 → MySQL", "tp": "pratico", "en": "Crie o projeto ConexaoS03 com o módulo Conexao.bas (modelo da aula) e um formulário com botões Conectar/Desconectar que mostrem o status (conectado/falhado) em um Label.", "ps": []}, {"ti": "Mapa da conexão", "tp": "escrito", "en": "Desenhe o fluxo cliente/servidor da conexão (VB6 → ODBC → MySQL) e explique com suas palavras o papel de cada parâmetro da connection string e o que acontece em cada falha simulada no laboratório.", "ps": []}], "boss": [["Um SGBD existe para:", ["substituir o sistema operacional", "armazenar, organizar e controlar o acesso aos dados", "compilar programas VB6", "desenhar formulários"], 1, "É o gerente dos dados: criação, consulta, segurança e integridade."], ["O comando que lista os bancos do servidor é:", ["LIST ALL;", "SHOW DATABASES;", "SELECT BANKS;", "DIR /B;"], 1, "SHOW DATABASES; no cliente MySQL."], ["Na string de conexão, o parâmetro Database indica:", ["o nome do driver", "o banco selecionado ao conectar", "a porta do servidor", "o nome do formulário"], 1, "Server = onde; Database = qual banco; Uid/Pwd = quem."], ["On Error GoTo Falha serve para:", ["apagar erros do código", "desviar a execução para um rótulo quando ocorrer erro", "impedir erros de sintaxe", "reiniciar o programa"], 1, "Tratamento de erro em tempo de execução; Err.Description detalha."], ["Ao terminar de usar o banco, o programa deve:", ["deixar a conexão aberta para a próxima vez", "fechar a conexão (cn.Close)", "desinstalar o driver", "reiniciar o MySQL"], 1, "Conexão aberta consome recurso do servidor; feche sempre."]]}, {"n": 3, "ti": "SQL: fundamentos e manipulação de dados", "parte": "II", "parte_ti": "Linguagem SQL", "faixa": "Aulas 13 a 20", "obj": ["Diferenciar DDL (estrutura) de DML (dados) e escrever CREATE TABLE adequado.", "Inserir, alterar e excluir dados com INSERT, UPDATE e DELETE seguros.", "Consultar dados com SELECT simples.", "Integrar instruções SQL ao programa VB6 via cn.Execute."], "aulas": [{"n": 4, "ti": "SQL — fundamentos: criar e consultar (semana 4)", "cards": [{"t": "h", "x": "Duas famílias de comandos"}, {"t": "tb", "cab": ["Família", "Para que", "Comandos"], "lin": [["DDL (definição)", "criar/alterar a ESTRUTURA", "CREATE, ALTER, DROP"], ["DML (manipulação)", "cuidar dos DADOS", "INSERT, UPDATE, DELETE, SELECT"]]}, {"t": "cd", "ti": "Estrutura bem definida: tipos e chave primária", "lg": "sql", "ln": ["USE escola;", "", "CREATE TABLE alunos (", "    id     INT PRIMARY KEY AUTO_INCREMENT,", "    nome   VARCHAR(40)  NOT NULL,", "    curso  VARCHAR(20),", "    nota   DECIMAL(3,1),", "    nacido DATE", ");"]}, {"t": "bx", "k": "con", "ti": "Chave primária e AUTO_INCREMENT", "x": "A \u003cb>PRIMARY KEY\u003c/b> identifica cada linha de forma única (nunca repete, nunca nula). Com \u003cb>AUTO_INCREMENT\u003c/b>, o próprio MySQL numera as linhas: 1, 2, 3… — você não informa o id no INSERT."}, {"t": "cd", "ti": "Consultar: o SELECT mínimo", "lg": "sql", "ln": ["SELECT nome, nota FROM alunos;      -- colunas escolhidas", "SELECT * FROM alunos;               -- todas as colunas"]}, {"t": "h", "x": "Boas práticas de digitação SQL"}, {"t": "ul", "it": ["Comandos em MAIÚSCULAS, nomes de tabela/coluna em minúsculas (legibilidade);", "Uma cláusula por linha a partir do FROM/WHERE;", "Comentários com \u003cb>--\u003c/b> explicando a intenção;", "Guarde scripts .sql por semana: eles viram seu histórico de estudo."]}], "qs": [["CREATE TABLE pertence à família:", ["DML", "DDL", "DCL", "TCL"], 1, "DDL define estrutura; DML manipula dados."], ["PRIMARY KEY AUTO_INCREMENT garante:", ["id único gerado pelo servidor", "nome sem repetição", "ordenação automática", "backup automático"], 0, "Chave primária única, não nula, numerada automaticamente."], ["O SELECT mínimo para ver nome e nota é:", ["SELECT nome, nota FROM alunos;", "GET nome nota DE alunos;", "SHOW nome nota;", "PRINT nome, nota;"], 0, "SELECT colunas FROM tabela;"]]}, {"n": 5, "ti": "SQL — manipulação: INSERT, UPDATE, DELETE + VB6 (semana 5)", "cards": [{"t": "cd", "ti": "Inserir, alterar, excluir", "lg": "sql", "ln": ["INSERT INTO alunos (nome, curso, nota)", "VALUES ('Ana Silva', 'Informática', 8.5);", "", "UPDATE alunos SET nota = 7.0 WHERE id = 2;      -- SEMPRE com WHERE!", "", "DELETE FROM alunos WHERE id = 3;               -- SEMPRE com WHERE!"]}, {"t": "bx", "k": "aten", "ti": null, "x": "\u003cb>UPDATE/DELETE sem WHERE afetam TODAS as linhas.\u003c/b> Antes de executar, rode o SELECT com o mesmo WHERE para conferir quais linhas serão tocadas. Regra de laboratório: SELECT antes, manipulação depois."}, {"t": "h", "x": "SQL dentro do programa VB6"}, {"t": "p", "h": "Com a conexão aberta, o VB6 envia SQL com \u003cb>cn.Execute\u003c/b>. Comandos de manipulação não retornam tabela; consultas retornam um \u003cb>Recordset\u003c/b> (veremos a fundo na semana 6 e no módulo 11)."}, {"t": "cd", "ti": "Modulo SqlAlunos.bas — manipulação pelo programa", "lg": "vb", "ln": ["Public Sub InserirAluno(nome As String, nota As Single)", "    cn.Execute \"INSERT INTO alunos (nome, nota) VALUES ('\" & _", "                 nome & \"', \" & nota & \")\"", "End Sub", "", "Public Sub SubirNota(id As Integer, nova As Single)", "    cn.Execute \"UPDATE alunos SET nota = \" & nova & _", "                 \" WHERE id = \" & id", "End Sub"]}, {"t": "bx", "k": "dica", "ti": null, "x": "Montar SQL por concatenação (&) é o jeito didático agora; em sistemas reais usamos parâmetros/validação para evitar injeção de SQL — consciência que já nasce aqui."}], "qs": [["UPDATE sem WHERE:", ["altera só a primeira linha", "altera TODAS as linhas", "dá erro", "não faz nada"], 1, "Por isso: SELECT de conferência com o mesmo WHERE antes."], ["No VB6, enviamos SQL ao servidor com:", ["cn.Execute", "Printer.Print", "MsgBox", "FreeFile"], 0, "Connection.Execute; consultas retornam Recordset."], ["Textos em SQL usam:", ["aspas duplas", "aspas simples", "crases", "parênteses"], 1, "'Ana Silva' — aspas simples; aspas duplas são do VB6."]]}], "exs": [{"ti": "Script completo da semana", "tp": "pratico", "en": "Entregue um script .sql com: CREATE TABLE produtos(id, nome, preco DECIMAL(7,2), estoque INT); 5 INSERT; 2 UPDATE com WHERE; 1 DELETE com WHERE; e 3 SELECT (todos os campos; só nome e preco; só os com estoque > 0).", "ps": []}, {"ti": "Manipulação pelo VB6", "tp": "pratico", "en": "Formulário com 2 botões: ‘Cadastrar’ (InputBox nome e nota → InserirAluno) e ‘Corrigir nota’ (InputBox id e nova nota → SubirNota). Mostre MsgBox de confirmação.", "ps": []}, {"ti": "Caça ao erro SQL", "tp": "escrito", "en": "Cada comando abaixo tem 1 erro. Identifique e corrija: (a) INSERT alunos VALUES ('Ana'); (b) UPDATE alunos SET nota = 9; (c) SELECT nome FROM alunos WHERE nota = '8,5'; (d) DELETE FROM alunos WHERE nome = Ana.", "ps": []}], "boss": [["CREATE TABLE pertence a qual família do SQL?", ["DML", "DDL", "DCL", "TCL"], 1, "DDL define estrutura; DML manipula dados."], ["PRIMARY KEY AUTO_INCREMENT garante:", ["valores duplicados permitidos", "identificador único gerado automaticamente", "ordenação alfabética", "criptografia da coluna"], 1, "Chave única, não nula, numerada pelo servidor."], ["UPDATE sem WHERE:", ["altera a primeira linha", "altera todas as linhas da tabela", "dá erro de sintaxe", "não faz nada"], 1, "Sem filtro, o comando vale para todas as linhas — por isso o SELECT de conferência antes."], ["No VB6, enviamos um comando SQL ao servidor com:", ["cn.Execute", "Printer.Print", "Form_Load", "MsgBox"], 0, "Connection.Execute; consultas devolvem Recordset."], ["Strings em SQL são escritas com:", ["aspas duplas", "aspas simples", "crases", "sem aspas"], 1, "'Ana Silva' — aspas simples; aspas duplas são do VB6."]]}, {"n": 4, "ti": "SQL — consultas e filtros", "parte": "II", "parte_ti": "Linguagem SQL", "faixa": "Aulas 21 a 24", "obj": ["Filtrar linhas com WHERE (comparação, BETWEEN, LIKE, IN).", "Ordenar resultados com ORDER BY (ASC/DESC).", "Resumir dados com funções de agregação (COUNT, SUM, AVG, MAX, MIN) e GROUP BY.", "Aplicar consultas em cenários reais de dados (estudo de caso)."], "aulas": [{"n": 6, "ti": "Consultas que respondem perguntas", "cards": [{"t": "h", "x": "WHERE: a pergunta certa"}, {"t": "cd", "ti": "Filtros essenciais", "lg": "sql", "ln": ["SELECT nome, nota FROM alunos WHERE nota >= 7;", "SELECT nome FROM alunos WHERE curso = 'Informática' AND nota >= 7;", "SELECT nome FROM alunos WHERE nome LIKE 'A%';      -- começa com A", "SELECT nome FROM alunos WHERE nota BETWEEN 5 AND 7;", "SELECT nome FROM alunos WHERE curso IN ('Redes', 'Informática');"]}, {"t": "h", "x": "ORDER BY: a apresentação do resultado"}, {"t": "cd", "ti": "Ordenação", "lg": "sql", "ln": ["SELECT nome, nota FROM alunos ORDER BY nota DESC;      -- maiores primeiro", "SELECT nome, nota FROM alunos ORDER BY nome ASC;       -- A → Z"]}, {"t": "h", "x": "Agregações: o resumo da ópera"}, {"t": "cd", "ti": "COUNT, SUM, AVG, MAX, MIN + GROUP BY", "lg": "sql", "ln": ["SELECT COUNT(*)            AS total   FROM alunos;", "SELECT AVG(nota)           AS media   FROM alunos;", "SELECT MAX(nota), MIN(nota)           FROM alunos;", "", "SELECT curso, COUNT(*) AS qtd, AVG(nota) AS media", "FROM alunos", "GROUP BY curso", "ORDER BY media DESC;"]}, {"t": "bx", "k": "con", "ti": "GROUP BY responde “por grupo”", "x": "Sem GROUP BY, as agregações resumem a tabela inteira. Com GROUP BY curso, o MySQL separa os grupos e calcula COUNT/AVG \u003cb>dentro de cada grupo\u003c/b> — é assim que nascem relatórios gerenciais."}, {"t": "h", "x": "Estudo de caso: a loja"}, {"t": "p", "h": "Com a tabela vendas(id, produto, qtd, valor, datavenda): quantas vendas por produto? Faturamento total? Melhor mês? Cada pergunta vira uma consulta — e depois vira relatório no módulo 13."}, {"t": "cd", "ti": "Perguntas de negócio em SQL", "lg": "sql", "ln": ["SELECT produto, SUM(qtd) AS unidades, SUM(qtd * valor) AS faturamento", "FROM vendas", "GROUP BY produto", "ORDER BY faturamento DESC;"]}], "qs": [["Para nomes que começam com 'A':", ["WHERE nome = 'A'", "WHERE nome LIKE 'A%'", "WHERE nome STARTS 'A'", "WHERE LEFT nome A"], 1, "LIKE com curinga %."], ["COUNT(*) com GROUP BY curso retorna:", ["total geral", "quantidade por curso", "só o número de cursos", "média por curso"], 1, "Agregação calculada dentro de cada grupo."], ["ORDER BY nota DESC lista:", ["crescente", "decrescente (maiores primeiro)", "por inserção", "aleatório"], 1, "DESC = decrescente."]]}], "exs": [{"ti": "Dez perguntas, dez consultas", "tp": "pratico", "en": "No banco escola (alunos, produtos, vendas): escreva e execute 10 consultas: 3 com WHERE simples, 2 com LIKE/BETWEEN, 2 com ORDER BY, 3 com agregação (uma delas com GROUP BY). Salve no script consultas_s06.sql.", "ps": []}, {"ti": "Consultas no VB6", "tp": "pratico", "en": "Formulário com ListBox e botão ‘Listar aprovados’: use cn.Execute com SELECT ... WHERE nota >= 7 ORDER BY nome e preencha o ListBox percorrendo o Recordset (Do While Not rs.EOF).", "ps": []}, {"ti": "Relatório em papel de uma consulta", "tp": "escrito", "en": "Escolha uma consulta com GROUP BY do exercício 1 e desenhe no caderno a tabela de resultado (colunas e linhas) exatamente como o MySQL devolveria.", "ps": []}], "boss": [["Para filtrar nomes que começam com ‘A’:", ["WHERE nome = 'A'", "WHERE nome LIKE 'A%'", "WHERE nome IN 'A'", "WHERE LEFT(nome) = A"], 1, "LIKE com curinga % casa padrões de texto."], ["ORDER BY nota DESC exibe:", ["das menores para as maiores", "das maiores para as menores", "em ordem de inserção", "aleatoriamente"], 1, "DESC = decrescente; ASC (padrão) = crescente."], ["COUNT(*) com GROUP BY curso retorna:", ["o total geral de alunos", "a quantidade de alunos por curso", "o número de cursos existentes apenas", "a média por curso"], 1, "Agregação calculada dentro de cada grupo definido pelo GROUP BY."], ["BETWEEN 5 AND 7 equivale a:", ["nota > 5 AND nota \u003c 7", "nota >= 5 AND nota \u003c= 7", "nota IN (5,7)", "nota = 5 OR nota = 7"], 1, "BETWEEN inclui as pontas (fechado nos extremos)."], ["No VB6, o resultado de um SELECT chega como:", ["MsgBox", "Recordset (ADO)", "arquivo .txt", "Printer"], 1, "ADODB.Recordset percorrido com Do While Not rs.EOF."]]}, {"n": 5, "ti": "Programação estruturada no VB6", "parte": "III", "parte_ti": "Programação Estruturada e Estruturas de Dados", "faixa": "Aulas 25 a 28", "obj": ["Aplicar sequência, seleção (If/Select Case) e repetição (For/Do/While) no VB6.", "Escolher a estrutura de controle adequada a cada problema.", "Organizar o código com indentação, comentários e nomes claros.", "Resolver problemas clássicos de lógica com laços e decisões."], "aulas": [{"n": 7, "ti": "Seleção e repetição: o cânone estruturado", "cards": [{"t": "h", "x": "Seleção: If completo e Select Case"}, {"t": "cd", "ti": "If / ElseIf / Else — situação do aluno", "lg": "vb", "ln": ["Dim nota As Single", "nota = Val(InputBox(\"Digite a nota:\"))", "", "If nota >= 7 Then", "    Print nota; \"- APROVADO\"", "ElseIf nota >= 5 Then", "    Print nota; \"- RECUPERAÇÃO\"", "Else", "    Print nota; \"- REPROVADO\"", "End If"]}, {"t": "cd", "ti": "Select Case — menu de opções", "lg": "vb", "ln": ["Select Case opcao", "    Case 1", "        Call CadastrarAluno", "    Case 2", "        Call ListarAlunos", "    Case 3", "        Call GerarRelatorio", "    Case Else", "        MsgBox \"Opção inválida\", vbExclamation", "End Select"]}, {"t": "h", "x": "Repetição: For, Do While e Do Until"}, {"t": "cd", "ti": "Os três laços, lado a lado", "lg": "vb", "ln": ["' FOR: quando se sabe quantas voltas", "For i = 1 To 10", "    Print i;", "Next i", "", "' DO WHILE: testa antes, repete enquanto verdadeiro", "Do While nota \u003c> -1", "    soma = soma + nota", "    nota = Val(InputBox(\"Nota (-1 termina):\"))", "Loop", "", "' DO UNTIL: repete até a condição virar verdadeira", "Do Until senha = \"1234\"", "    senha = InputBox(\"Senha:\")", "Loop"]}, {"t": "bx", "k": "con", "ti": "Qual laço escolher?", "x": "\u003cb>For\u003c/b>: número de voltas conhecido (contar, percorrer vetor). \u003cb>Do While\u003c/b>: repetir enquanto uma condição valer (ler até sentinela). \u003cb>Do Until\u003c/b>: repetir até alcançar um estado (validar entrada). \u003cb>While...Wend\u003c/b>: existe no VB6, mas evitamos — o Do é mais claro e flexível."}, {"t": "h", "x": "Organização lógica do código"}, {"t": "ul", "it": ["Indentação de 4 espaços dentro de cada bloco (If/For/Select);", "Comentários ' explicando o PORQUÊ, não o óbvio;", "Uma responsabilidade por Sub (nome em verbo: CalcularMedia, ListarAprovados);", "Variáveis declaradas no topo com Dim e tipo explícito;", "Sentinela documentada: -1 termina a leitura (combinado com o usuário)."]}, {"t": "bx", "k": "aten", "ti": null, "x": "Laço infinito no VB6 trava a IDE: se acontecer, Ctrl+Break (ou o botão End) e procure a variável que não avança. Todo Do/While precisa de um caminho que torne a condição falsa."}], "qs": [["Menu com opções fixas 1/2/3 fica mais legível com:", ["If aninhados", "Select Case", "Do Until", "While...Wend"], 1, "Select Case compara um valor com casos fixos."], ["Do While testa a condição:", ["depois do bloco", "antes de cada volta", "só no final", "nunca"], 1, "Pode executar zero vezes se começar falsa."], ["Sentinela é:", ["um erro de disco", "valor combinado que encerra a leitura (ex.: -1)", "uma Function", "um tipo de Print"], 1, "Padrão de leitura até sentinela."]]}], "exs": [{"ti": "Calculadora estruturada", "tp": "pratico", "en": "Formulário com dois Text (n1, n2) e um Combo de operação (+, -, *, /): ao clicar em =, use Select Case para calcular e Label para o resultado; trate divisão por zero com MsgBox (If).", "ps": []}, {"ti": "Leitura até sentinela", "tp": "pratico", "en": "Com Do While, leia notas até o usuário digitar -1; ao final mostre quantidade, soma, média, maior e menor nota (variáveis de acompanhamento).", "ps": []}, {"ti": "Refatoração dirigida", "tp": "escrito", "en": "O código abaixo funciona, mas está desorganizado. Reescreva-o com indentação, comentários de porquê, nomes claros e um Select Case no lugar dos Ifs encadeados de menu: (código com 6 Ifs aninhados sem indentação fornecido no quadro/apostila).", "ps": []}], "boss": [["Para um menu com opções fixas 1, 2 e 3, a estrutura mais legível é:", ["If aninhados", "Select Case", "Do Until", "For"], 1, "Select Case compara um valor com casos fixos — menus ficam limpos."], ["Do While repete:", ["sempre ao menos uma vez", "enquanto a condição for verdadeira (teste antes)", "até a condição virar verdadeira", "um número fixo de voltas"], 1, "Testa antes de cada volta; pode executar zero vezes."], ["Um laço infinito geralmente acontece por:", ["excesso de comentários", "variável de controle que nunca torna a condição falsa", "usar Print dentro do laço", "declarar Dim dentro do laço"], 1, "Sem avanço/saída, a condição nunca muda — Ctrl+Break e corrija."], ["Sentinela é:", ["um erro de execução", "um valor combinado que encerra a leitura (ex.: -1)", "uma variável global", "um tipo de laço"], 1, "Padrão de leitura até sentinela com Do While."], ["Val(InputBox(...)) serve para:", ["exibir texto", "converter o texto digitado em número", "validar senha", "fechar a janela"], 1, "InputBox retorna String; Val converte para número."]]}, {"n": 6, "ti": "Vetores e matrizes", "parte": "III", "parte_ti": "Programação Estruturada e Estruturas de Dados", "faixa": "Aulas 29 a 36", "obj": ["Declarar, preencher, ler e processar vetores (arrays unidimensionais).", "Trabalhar com matrizes (duas dimensões) e laços aninhados.", "Resolver problemas clássicos: média, maior/menor, busca, somas por linha/coluna.", "Combinar vetores/matrizes com laços e decisões de forma organizada."], "aulas": [{"n": 8, "ti": "Vetores: muitas caixinhas, um nome só", "cards": [{"t": "h", "x": "Declaração e índices"}, {"t": "cd", "ti": "Vetor de 10 notas", "lg": "vb", "ln": ["Dim notas(1 To 10) As Single", "Dim i As Integer", "", "' preenchimento", "For i = 1 To 10", "    notas(i) = Val(InputBox(\"Nota \" & i & \":\"))", "Next i", "", "' leitura/processamento", "Dim soma As Single", "For i = 1 To 10", "    soma = soma + notas(i)", "Next i", "Print \"Média: \"; soma / 10"]}, {"t": "bx", "k": "con", "ti": "Índice é o endereço da caixinha", "x": "notas(1) é a PRIMEIRA posição quando declaramos (1 To 10). O índice pode vir de uma variável ou expressão: notas(i), notas(posicao) — é isso que permite percorrer tudo com um laço."}, {"t": "h", "x": "Processamentos clássicos"}, {"t": "cd", "ti": "Maior, menor e busca", "lg": "vb", "ln": ["Dim maior As Single, menor As Single, pos As Integer", "maior = notas(1): menor = notas(1)", "For i = 2 To 10", "    If notas(i) > maior Then maior = notas(i)", "    If notas(i) \u003c menor Then menor = notas(i)", "Next i", "", "' busca: em que posição está a nota 10?", "pos = 0", "For i = 1 To 10", "    If notas(i) = 10 Then pos = i", "Next i", "If pos > 0 Then Print \"Achou na posição \"; pos"]}, {"t": "bx", "k": "dica", "ti": null, "x": "Padrão de ouro: inicialize maior/menor com o PRIMEIRO elemento (não com 0!) e comece o laço de comparação no segundo. Funciona até com notas negativas."}], "qs": [["Dim notas(1 To 10) As Single cria:", ["10 variáveis soltas", "vetor com posições 1 a 10", "matriz 10×10", "registro com 10 campos"], 1, "Array unidimensional com índices explícitos."], ["Para percorrer o vetor, o acesso usa:", ["índice fixo notas(1)", "a variável do laço notas(i)", "sempre notas(0)", "InputBox"], 1, "Índice variável permite o percurso."], ["Maior/menor devem ser inicializados com:", ["0", "10", "o primeiro elemento", "-1"], 2, "Garante corretude para qualquer faixa de valores."]]}, {"n": 9, "ti": "Matrizes: linhas e colunas", "cards": [{"t": "h", "x": "Declaração e acesso"}, {"t": "cd", "ti": "Matriz 3×4 e laços aninhados", "lg": "vb", "ln": ["Dim m(1 To 3, 1 To 4) As Integer", "Dim i As Integer, j As Integer", "", "' preenchimento", "For i = 1 To 3", "    For j = 1 To 4", "        m(i, j) = i * j", "    Next j", "Next i", "", "' soma por linha", "For i = 1 To 3", "    Dim sl As Integer: sl = 0", "    For j = 1 To 4", "        sl = sl + m(i, j)", "    Next j", "    Print \"Linha \"; i; \" soma \"; sl", "Next i"]}, {"t": "bx", "k": "con", "ti": "Laço de fora = linha; laço de dentro = coluna", "x": "Para varrer uma matriz, o laço externo percorre as \u003cb>linhas\u003c/b> (i) e o interno, as \u003cb>colunas\u003c/b> (j). Somar por linha: zere o acumulador DENTRO do laço de linhas, antes do laço de colunas."}, {"t": "h", "x": "Aplicações"}, {"t": "ul", "it": ["Tabela de notas por aluno × bimestre;", "Tabuada 1–9 em grade;", "Mapa de estoque por loja × produto;", "Transposição e comparação de matrizes (desafio)."]}, {"t": "bx", "k": "aten", "ti": null, "x": "Índice fora da faixa (m(4,1) em matriz 3×4) gera erro de execução “subscript out of range”. Confira os limites do For com a declaração."}], "qs": [["Na varredura de matriz, o laço externo percorre:", ["colunas", "linhas", "diagonais", "índices aleatórios"], 1, "Externo = linhas (i); interno = colunas (j)."], ["'Subscript out of range' indica:", ["índice fora dos limites declarados", "variável não declarada", "divisão por zero", "arquivo fechado"], 0, "Ex.: m(4,1) em matriz 3×4."], ["Para somar POR LINHA, o acumulador deve zerar:", ["antes dos dois laços", "dentro do laço de linhas, antes do de colunas", "depois de tudo", "no módulo"], 1, "Um acumulador por grupo de soma."]]}], "exs": [{"ti": "Vetor completo", "tp": "pratico", "en": "Leia 8 temperaturas em um vetor; mostre: média, maior, menor, quantas acima da média e a posição da maior.", "ps": []}, {"ti": "Matriz de notas", "tp": "pratico", "en": "Matriz 4 alunos × 3 bimestres: preencha por InputBox; mostre a média de cada aluno (por linha), a média de cada bimestre (por coluna) e a maior nota com sua posição.", "ps": []}, {"ti": "Busca no vetor", "tp": "escrito", "en": "Escreva de memória o padrão de busca: ler um valor e informar a posição dele no vetor de 10 notas (ou ‘não encontrado’). Depois explique por que pos = 0 antes do laço é essencial.", "ps": []}], "boss": [["Dim v(1 To 5) As Integer cria:", ["5 variáveis chamadas v1..v5", "um vetor com posições 1 a 5", "uma matriz 5×5", "um vetor de textos"], 1, "Array unidimensional com índices explícitos de 1 a 5."], ["Para percorrer todo o vetor, o índice usado no acesso deve ser:", ["fixo (v(1))", "a variável do laço (v(i))", "sempre 0", "um InputBox"], 1, "Índice variável é o que permite o percurso com For."], ["Na varredura de matriz, o laço EXTERNO normalmente percorre:", ["as colunas", "as linhas", "as diagonais", "os índices aleatórios"], 1, "Externo = linhas (i); interno = colunas (j)."], ["‘Subscript out of range’ significa:", ["variável não declarada", "índice fora dos limites declarados", "divisão por zero", "arquivo não encontrado"], 1, "Acessar m(4,1) em matriz 3×4, por exemplo."], ["Para achar o maior valor de um vetor de notas (que podem ser negativas), inicialize maior com:", ["0", "10", "o primeiro elemento do vetor", "um número aleatório"], 2, "Iniciar no 1º elemento garante corretude para qualquer faixa."]]}, {"n": 7, "ti": "Registros: agrupando informações relacionadas", "parte": "III", "parte_ti": "Programação Estruturada e Estruturas de Dados", "faixa": "Aulas 37 a 40", "obj": ["Definir tipos estruturados com Type/End Type.", "Declarar variáveis e vetores de registros.", "Acessar campos com o operador ponto e processar coleções de registros.", "Modelar entidades reais (aluno, produto) com registros."], "aulas": [{"n": 10, "ti": "Registros (Type): a ficha dentro do programa", "cards": [{"t": "h", "x": "Definindo um tipo"}, {"t": "cd", "ti": "Module Tipos.bas", "lg": "vb", "ln": ["Public Type Aluno", "    nome   As String * 40", "    matricula As Integer", "    nota   As Single", "End Type", "", "Public Type Produto", "    codigo As Integer", "    descricao As String * 30", "    preco  As Currency", "    estoque As Integer", "End Type"]}, {"t": "h", "x": "Usando registros e vetores de registros"}, {"t": "cd", "ti": "Ficha e coleção", "lg": "vb", "ln": ["Dim a As Aluno", "a.nome = \"Ana Silva\"", "a.matricula = 101", "a.nota = 8.5", "Print a.nome; \" - \"; a.nota", "", "' coleção: vetor de fichas", "Dim turma(1 To 30) As Aluno", "Dim i As Integer", "For i = 1 To 30", "    turma(i).nome = InputBox(\"Nome do aluno \" & i)", "    turma(i).nota = Val(InputBox(\"Nota:\"))", "Next i"]}, {"t": "bx", "k": "con", "ti": "Registro = linha de tabela dentro do programa", "x": "Um registro agrupa campos de tipos diferentes sob um nome só — exatamente como uma LINHA de tabela no banco. Vetor de registros = tabela em memória. É a ponte mental entre as estruturas do VB6 e as tabelas do MySQL."}, {"t": "h", "x": "Processamentos típicos"}, {"t": "cd", "ti": "Aprovados da turma (vetor de registros)", "lg": "vb", "ln": ["For i = 1 To 30", "    If turma(i).nota >= 7 Then", "        Print turma(i).nome; \" aprovado com \"; turma(i).nota", "    End If", "Next i"]}, {"t": "bx", "k": "dica", "ti": null, "x": "String * 40 fixa o tamanho do campo (herança dos arquivos de registro fixo). Para textos de tamanho livre em memória, use String simples — discutimos o trade-off na semana de arquivos."}], "qs": [["Public Type Aluno ... End Type define:", ["um formulário", "um registro (tipo estruturado)", "um banco", "uma consulta"], 1, "Campos de tipos diferentes sob um nome."], ["O acesso à nota do i-ésimo aluno é:", ["turma.nota(i)", "turma(i).nota", "nota(turma,i)", "turma[i].nota()"], 1, "Índice do vetor, ponto, campo."], ["Um vetor de registros equivale a:", ["uma coluna", "uma tabela em memória", "um índice", "um backup"], 1, "Cada registro = linha; o vetor = conjunto de linhas."]]}], "exs": [{"ti": "Ficha do produto", "tp": "pratico", "en": "Defina o Type Produto (codigo, descricao, preco, estoque); cadastre 5 produtos em um vetor; liste os produtos com estoque \u003c 5 (reposição) e o valor total do estoque (preco × estoque somado).", "ps": []}, {"ti": "Turma completa", "tp": "pratico", "en": "Vetor de 10 registros Aluno: leia nome/matrícula/nota; mostre aprovados, reprovados, média da turma e o nome do aluno de maior nota.", "ps": []}, {"ti": "Modelagem no papel", "tp": "escrito", "en": "Para um controle de biblioteca, defina no caderno os Types Livro e Emprestimo (campos e tipos) e explique como um vetor de cada um representaria as ‘tabelas’ do sistema.", "ps": []}], "boss": [["Public Type Aluno ... End Type define:", ["um formulário", "um tipo estruturado (registro)", "um banco de dados", "uma Function"], 1, "Registro: campos de tipos diferentes sob um nome."], ["O acesso ao campo nota do i-ésimo aluno de um vetor de registros é:", ["turma.nota(i)", "turma(i).nota", "nota.turma(i)", "turma[i,nota]"], 1, "Primeiro o índice do vetor, depois o ponto e o campo."], ["Um vetor de registros equivale, no mundo do banco, a:", ["uma coluna", "uma tabela em memória (conjunto de linhas)", "um índice", "uma view"], 1, "Cada registro = linha; o vetor = conjunto de linhas."], ["String * 40 em um Type significa:", ["texto de até 40 caracteres com tamanho fixo", "40 strings diferentes", "texto ilimitado", "número de 40 dígitos"], 0, "Campo de tamanho fixo — útil em arquivos de registro fixo."], ["Para somar o valor total do estoque (preco × estoque) percorrendo um vetor de Produtos, usamos:", ["um laço com acumulador: total = total + p(i).preco * p(i).estoque", "SUM(preco) como no SQL", "Print p.preco * p.estoque sem laço", "Count(p)"], 0, "Em memória, agregações são laços com acumulador — no banco, SQL."]]}, {"n": 8, "ti": "Variáveis do tipo String", "parte": "IV", "parte_ti": "Strings, Modularização e Arquivos", "faixa": "Aulas 41 a 44", "obj": ["Armazenar, ler e exibir textos com variáveis String.", "Aplicar as funções de manipulação: Len, Mid$, Left$, Right$, UCase$, LCase$, Trim$, InStr, Replace.", "Validar e normalizar entradas de texto (caixa, espaços, padrões).", "Combinar Strings com números (Val, Str, Format) em saídas legíveis."], "aulas": [{"n": 11, "ti": "String: o texto como dado", "cards": [{"t": "h", "x": "O essencial das Strings"}, {"t": "cd", "ti": "Funções de manipulação", "lg": "vb", "ln": ["Dim s As String", "s = \"  Linguagem de Programação II  \"", "", "Print Len(s)                 ' 33 (conta espaços)", "Print Trim$(s)               ' sem espaços nas pontas", "Print UCase$(Trim$(s))       ' CAIXA ALTA", "Print Left$(s, 5)            ' \"  Lin\"", "Print Right$(s, 2)           ' \"  \"... cuidado com espaços!", "Print Mid$(s, 3, 9)          ' \"Linguagem\"", "Print InStr(s, \"Program\")    ' posição onde começa (16)", "Print Replace$(s, \"II\", \"III\")"]}, {"t": "bx", "k": "con", "ti": "Posições começam em 1", "x": "No VB6, Mid$/Left$/Right$ contam a partir de \u003cb>1\u003c/b> (não de 0). InStr retorna 0 quando não encontra — use como flag: If InStr(...) > 0 Then."}, {"t": "h", "x": "Validação e normalização de entrada"}, {"t": "cd", "ti": "Padronizar nome digitado", "lg": "vb", "ln": ["Dim nome As String", "nome = Trim$(InputBox(\"Nome completo:\"))", "", "If Len(nome) \u003c 5 Then", "    MsgBox \"Nome muito curto!\"", "ElseIf InStr(nome, \" \") = 0 Then", "    MsgBox \"Digite nome e sobrenome!\"", "Else", "    nome = UCase$(nome)          ' padroniza caixa", "    Print nome", "End If"]}, {"t": "h", "x": "Strings × números em saídas legíveis"}, {"t": "cd", "ti": "Format e conversões", "lg": "vb", "ln": ["Dim media As Single, txt As String", "media = 7.25", "txt = \"Média: \" & Format(media, \"0.00\")     ' Média: 7,25", "Print txt", "Print \"Hoje: \" & Format(Date, \"dd/mm/yyyy\")", "Print Str$(42) & \" | \" & Val(\"42 anos\")      ' 42 | 42"]}, {"t": "bx", "k": "dica", "ti": null, "x": "Montar mensagens com & e Format é o que separa saída de iniciante (“7,250000E+00”) de saída profissional (“7,25”). Relatórios (semana 19) dependem disso."}], "qs": [["Mid$(\"LINGUAGEM\", 3, 4) retorna:", ["LING", "NGUA", "GUAG", "AGEM"], 1, "Posição 3, quatro caracteres: N G U A."], ["InStr retorna 0 quando:", ["acha no início", "não encontra o trecho", "texto vazio", "texto numérico"], 1, "0 = não achou; >0 = posição inicial."], ["Para tirar espaços das pontas:", ["Trim$", "Mid$", "Left$", "UCase$"], 0, "Trim$ corta esquerda e direita."]]}], "exs": [{"ti": "Caixa de ferramentas de String", "tp": "pratico", "en": "Leia uma frase e mostre: comprimento sem espaços nas pontas; frase em caixa alta e baixa; primeira e última palavra; posição da palavra ‘VB’; frase sem a palavra ‘não’ (Replace).", "ps": []}, {"ti": "Validador de matrículas", "tp": "pratico", "en": "Matrícula padrão: 2 letras + 4 números (ex.: AB1234). Leia uma string e valide formato e comprimento com Len/Mid$/IsNumeric; mostre OK ou o motivo da recusa.", "ps": []}, {"ti": "Recibo formatado", "tp": "pratico", "en": "Monte um ‘recibo’ em um Label multilinha: nome em caixa alta, data dd/mm/yyyy, valor Format(v, \"R$ #,##0.00\") e linha separadora String(40, \"-\").", "ps": []}], "boss": [["Mid$(\"LINGUAGEM\", 3, 4) retorna:", ["\"LING\"", "\"NGUA\"", "\"GUAG\"", "\"AGEM\""], 1, "Começa na posição 3 e pega 4 caracteres: N G U A."], ["InStr retorna 0 quando:", ["encontra no início", "não encontra o trecho", "o texto está vazio de espaços", "o texto é numérico"], 1, "0 = não achou; >0 = posição inicial do trecho."], ["Para remover espaços das pontas de um texto digitado:", ["Trim$", "Mid$", "Left$", "Replace$ com \" \""], 0, "Trim$ corta espaços à esquerda e à direita."], ["No VB6, as posições de String contam a partir de:", ["0", "1", "-1", "depende do Option Base"], 1, "Funções de texto iniciam em 1."], ["Format(7.25, \"0.00\") produz:", ["7,25 como texto formatado", "725", "7.250000", "erro"], 0, "Saída legível com duas casas — padrão de relatórios."]]}, {"n": 9, "ti": "Modularização: Sub, Function e Modules", "parte": "IV", "parte_ti": "Strings, Modularização e Arquivos", "faixa": "Aulas 45 a 48", "obj": ["Dividir programas em Sub e Function com responsabilidades únicas.", "Usar parâmetros (ByVal/ByRef) e retorno de valores.", "Organizar código em Modules (.bas) com escopos Public/Private.", "Refatorar código monolítico em módulos reutilizáveis."], "aulas": [{"n": 12, "ti": "Modularização: dividir para conquistar", "cards": [{"t": "h", "x": "Sub × Function (revisitando com profundidade)"}, {"t": "cd", "ti": "Modulo Calculos.bas", "lg": "vb", "ln": ["Public Function Media(n1 As Single, n2 As Single) As Single", "    Media = (n1 + n2) / 2        ' retorno = nome da Function", "End Function", "", "Public Function Situacao(m As Single) As String", "    If m >= 7 Then", "        Situacao = \"APROVADO\"", "    ElseIf m >= 5 Then", "        Situacao = \"RECUPERAÇÃO\"", "    Else", "        Situacao = \"REPROVADO\"", "    End If", "End Function", "", "Public Sub MostrarBoletim(n1 As Single, n2 As Single)", "    Dim m As Single", "    m = Media(n1, n2)", "    MsgBox \"Média \" & Format(m, \"0.0\") & \" - \" & Situacao(m)", "End Sub"]}, {"t": "h", "x": "Parâmetros: ByVal e ByRef"}, {"t": "cd", "ti": "Efeito colateral controlado", "lg": "vb", "ln": ["Public Sub Dobrar(ByVal x As Integer, ByRef y As Integer)", "    x = x * 2      ' mexe só na CÓPIA local", "    y = y * 2        ' mexe na variável ORIGINAL do chamador", "End Sub", "", "Dim a As Integer, b As Integer", "a = 5: b = 5", "Dobrar a, b", "Print a; b           ' 5  10"]}, {"t": "bx", "k": "con", "ti": "ByVal protege; ByRef compartilha", "x": "\u003cb>ByVal\u003c/b>: o parâmetro recebe uma cópia — o original não muda (padrão seguro). \u003cb>ByRef\u003c/b>: o parâmetro é a própria variável do chamador — use só quando a Sub PRECISA devolver algo por parâmetro. No VB6, parâmetros são ByRef por padrão: escreva ByVal explicitamente por segurança."}, {"t": "h", "x": "Escopo e organização em Modules"}, {"t": "ul", "it": ["\u003cb>Public\u003c/b> em Module (.bas): visível no projeto inteiro (conexão, cálculos, SQL);", "\u003cb>Private\u003c/b>: só dentro do módulo/formulário (detalhes internos);", "Variável declarada dentro de Sub = \u003cb>local\u003c/b>; no topo do Module com Public = \u003cb>global\u003c/b> (use com parcimônia!);", "Nomes em verbo + objeto: CalcularMedia, ListarAprovados, GravarArquivo;", "Um módulo por assunto: Conexao.bas, Calculos.bas, Arquivos.bas, Relatorios.bas."]}, {"t": "h", "x": "Refatoração: do monólito aos módulos"}, {"t": "p", "h": "Pegue o exercício ‘monolítico’ da semana 7 (menu com tudo dentro de um clique) e divida: um Module de regras (Functions puras), um Module de saída (Subs de Print/MsgBox) e o formulário só orquestrando chamadas. Mesma funcionalidade, manutenção dez vezes mais fácil."}], "qs": [["O retorno de uma Function é atribuído:", ["à palavra Return", "ao próprio nome da Function", "a uma global", "ao ByRef"], 1, "Media = (n1+n2)/2."], ["ByVal significa:", ["cópia local (original protegido)", "a própria variável do chamador", "parâmetro opcional", "retorno duplo"], 0, "Declare ByVal por segurança (padrão VB6 é ByRef)."], ["Function pura, no padrão do curso:", ["usa MsgBox", "só recebe parâmetros e retorna", "imprime com Print", "grava arquivo"], 1, "I/O fica com quem chama."]]}], "exs": [{"ti": "Biblioteca de funções", "tp": "pratico", "en": "Crie Calculos.bas com: Media(n1,n2), MaiorDe3(a,b,c), EhPar(n) e PorExtensoDezena(n) (10..19). Teste todas em um formulário com botões.", "ps": []}, {"ti": "ByVal × ByRef na prática", "tp": "pratico", "en": "Implemente Sub Trocar(ByRef a, ByRef b) que inverte dois valores e Sub TrocarCopia(ByVal a, ByVal b) que não muda nada fora; demonstre a diferença com Print.", "ps": []}, {"ti": "Refatoração do monólito", "tp": "pratico", "en": "Refatore o menu monolítico da semana 7 em: Regras.bas (Functions), Saida.bas (Subs) e formulário orquestrador com Select Case chamando as Subs.", "ps": []}], "boss": [["O valor de retorno de uma Function no VB6 é atribuído:", ["à palavra Return", "ao próprio nome da Function", "a uma variável global obrigatória", "ao parâmetro ByRef sempre"], 1, "Media = (n1+n2)/2 — o nome da Function recebe o retorno."], ["ByVal significa que o parâmetro:", ["é a própria variável do chamador", "recebe uma cópia (original protegido)", "deve ser numérico", "é opcional"], 1, "Cópia local; por segurança, declare ByVal explicitamente."], ["Modules .bas com rotinas Public servem para:", ["guardar telas", "compartilhar regras entre formulários do projeto", "substituir o banco de dados", "compilar mais rápido"], 1, "Camada de regras reutilizável em todo o projeto."], ["Uma Function ‘pura’, no padrão do curso:", ["usa MsgBox para pedir dados", "não conversa com o usuário: só recebe e retorna", "imprime com Print", "grava arquivo"], 1, "Entrada por parâmetros, saída por retorno; I/O fica com quem chama."], ["Variável declarada dentro de uma Sub é:", ["global", "local à execução da Sub", "pública do módulo", "estática permanente"], 1, "Escopo local: nasce e morre a cada chamada."]]}, {"n": 10, "ti": "Arquivos e textos como transferência de dados", "parte": "IV", "parte_ti": "Strings, Modularização e Arquivos", "faixa": "Aulas 49 a 56", "obj": ["Gravar e ler arquivos texto com Open/Close, Print #, Input # e Line Input #.", "Usar modos For Output, For Input e For Append corretamente.", "Detectar fim de arquivo com EOF e numerar arquivos com FreeFile.", "Integrar arquivos aos dados do programa: importação/exportação em fluxo controlado."], "aulas": [{"n": 13, "ti": "Arquivos texto: gravar e ler", "cards": [{"t": "h", "x": "O ciclo de vida de um arquivo"}, {"t": "cd", "ti": "Gravar (Output) e acrescentar (Append)", "lg": "vb", "ln": ["Dim n As Integer", "n = FreeFile                      ' número de arquivo livre", "Open \"c:\\lp2\\dados\\alunos.txt\" For Output As #n", "Print #n, \"Ana Silva;101;8.5\"     ' linha com campos separados", "Print #n, \"Beto Souza;102;6.0\"", "Close #n", "", "Open \"c:\\lp2\\dados\\alunos.txt\" For Append As #n", "Print #n, \"Carla Dias;103;7.5\"    ' acrescenta sem apagar", "Close #n"]}, {"t": "cd", "ti": "Ler até o fim (EOF)", "lg": "vb", "ln": ["Dim n As Integer, linha As String", "n = FreeFile", "Open \"c:\\lp2\\dados\\alunos.txt\" For Input As #n", "Do While Not EOF(n)", "    Line Input #n, linha", "    List1.AddItem linha", "Loop", "Close #n"]}, {"t": "tb", "cab": ["Modo", "Efeito", "Quando usar"], "lin": [["For Output", "cria/substitui o arquivo vazio", "gerar um arquivo novo"], ["For Append", "abre e posiciona no final", "acrescentar sem perder"], ["For Input", "somente leitura", "importar/consultar"]]}, {"t": "bx", "k": "con", "ti": "EOF e FreeFile", "x": "\u003cb>EOF(n)\u003c/b> = True quando a leitura chegou ao fim (fim do arquivo). \u003cb>FreeFile\u003c/b> devolve um número de arquivo livre — evita conflito quando vários arquivos ficam abertos ao mesmo tempo. Par obrigatório: Open … Close."}, {"t": "bx", "k": "aten", "ti": null, "x": "Esquecer o \u003cb>Close\u003c/b> = arquivo travado e dados perdidos no pior momento. Esquecer que \u003cb>Output apaga tudo\u003c/b> = tragédia de laboratório: para acrescentar, use Append."}], "qs": [["Para acrescentar sem apagar, abre-se com:", ["For Output", "For Append", "For Input", "For Random"], 1, "Append posiciona no fim do arquivo."], ["EOF(n) é True quando:", ["abriu o arquivo", "chegou ao fim da leitura", "deu erro de disco", "arquivo vazio"], 1, "Condição de parada do Do While."], ["FreeFile devolve:", ["número de arquivo livre", "memória livre", "tamanho do arquivo", "data de criação"], 0, "Evita conflito de #n entre arquivos abertos."]]}, {"n": 14, "ti": "Arquivos + dados: importação/exportação controlada", "cards": [{"t": "h", "x": "Do arquivo para o vetor de registros"}, {"t": "cd", "ti": "Importar alunos.txt para a turma em memória", "lg": "vb", "ln": ["Public Sub ImportarTurma(caminho As String)", "    Dim n As Integer, linha As String", "    Dim partes() As String", "    qt = 0", "    n = FreeFile", "    Open caminho For Input As #n", "    Do While Not EOF(n)", "        Line Input #n, linha", "        partes = Split(linha, \";\")          ' nome;matricula;nota", "        qt = qt + 1", "        turma(qt).nome = partes(0)", "        turma(qt).matricula = Val(partes(1))", "        turma(qt).nota = Val(partes(2))", "    Loop", "    Close #n", "End Sub"]}, {"t": "cd", "ti": "Exportar (gravar) a turma de volta", "lg": "vb", "ln": ["Public Sub ExportarTurma(caminho As String)", "    Dim n As Integer, i As Integer", "    n = FreeFile", "    Open caminho For Output As #n", "    For i = 1 To qt", "        Print #n, turma(i).nome & \";\" & turma(i).matricula & _", "                  \";\" & Format(turma(i).nota, \"0.0\")", "    Next i", "    Close #n", "End Sub"]}, {"t": "h", "x": "Fluxo controlado de importação/exportação"}, {"t": "ol", "it": ["Validar existência do arquivo antes de abrir (Dir(caminho) \u003c> \"\");", "Abrir em Input e ler linha a linha com Split no separador combinado (;);", "Validar cada linha (qt de partes, tipos com Val/IsNumeric) antes de popular o vetor;", "Linhas inválidas: contar e reportar ao final (não travar nelas);", "Exportar com Format para manter padronização de números/datas."]}, {"t": "bx", "k": "ana", "ti": "Arquivo = fila de caixas etiquetadas", "x": "Cada linha é uma caixa; o separador ; é a etiqueta interna que diz o que há dentro. Importar é abrir caixas uma a uma e conferir o conteúdo; exportar é montar caixas padronizadas e fechar o caminhão (Close)."}], "qs": [["Split(linha, \";\") devolve:", ["texto único", "vetor de campos", "só o 1º campo", "um Type"], 1, "partes(0), partes(1)..."], ["Antes de abrir para leitura, verificar existência com:", ["Dir(caminho) \u003c> \"\"", "EOF(caminho)", "Len(caminho)", "FreeFile"], 0, "Evita erro de arquivo inexistente."], ["Exportar com Format(nota, \"0.0\") garante:", ["número padronizado no arquivo", "criptografia", "compressão", "ordenação"], 0, "Round-trip íntegro entre exportar e importar."]]}], "exs": [{"ti": "Diário de classe em arquivo", "tp": "pratico", "en": "Grave com Append as chamadas diárias (data;matricula;presença) em diario.txt; crie botão que liste todo o arquivo em um ListBox usando EOF.", "ps": []}, {"ti": "Importação com validação", "tp": "pratico", "en": "Importe alunos.txt (nome;matricula;nota) para o vetor turma com validação por linha (3 partes, nota numérica); ao final mostre: importadas, recusadas e média dos importados.", "ps": []}, {"ti": "Export → Import round-trip", "tp": "escrito", "en": "Explique por que exportar com Format(nota, \"0.0\") e importar com Val mantém o round-trip íntegro; o que aconteceria sem o Format em notas como 8.25?", "ps": []}], "boss": [["Para ACRESCENTAR linhas sem apagar o conteúdo existente, abre-se com:", ["For Output", "For Input", "For Append", "For Random"], 2, "Append posiciona no fim; Output recria vazio."], ["EOF(n) retorna True quando:", ["o arquivo foi aberto", "a leitura chegou ao fim do arquivo", "houve erro de disco", "o arquivo está vazio de linhas válidas"], 1, "Fim de arquivo — condição de parada do Do While."], ["FreeFile serve para:", ["liberar memória", "obter um número de arquivo livre", "apagar o arquivo", "fechar todos os arquivos"], 1, "Evita conflito de #n com outros arquivos abertos."], ["Split(linha, \";\") devolve:", ["um texto único", "um vetor com os campos separados por ;", "o primeiro campo apenas", "um registro Type"], 1, "Array de partes: partes(0), partes(1)..."], ["Esquecer o Close após gravação pode causar:", ["nada, o VB6 fecha sozinho sempre", "perda de dados e arquivo travado", "conversão errada de tipos", "erro de sintaxe"], 1, "Buffer não descarregado/arquivo bloqueado — feche sempre."]]}, {"n": 11, "ti": "Manipulação de dados Cliente/Servidor (ADO)", "parte": "V", "parte_ti": "Dados Cliente/Servidor e Administração do Banco", "faixa": "Aulas 57 a 64", "obj": ["Explicar o fluxo Cliente/Servidor: aplicação → SQL → SGBD → resultados.", "Percorrer resultados com Recordset (EOF, MoveNext, campos por nome).", "Executar CRUD completo (CREATE/INSERT/SELECT/UPDATE/DELETE) pelo VB6.", "Validar entradas e tratar problemas de conexão/SQL em tempo de execução."], "aulas": [{"n": 15, "ti": "Cliente/Servidor: o fluxo completo com ADO", "cards": [{"t": "h", "x": "O fluxo que rege tudo"}, {"t": "p", "h": "A aplicação VB6 (cliente) monta o SQL, envia pela conexão; o MySQL (servidor) executa, e devolve: ou um \u003cb>Recordset\u003c/b> (consulta) ou um \u003cb>número de linhas afetadas\u003c/b> (manipulação). Entender esse vai-e-vem é entender sistemas reais."}, {"t": "cd", "ti": "Recordset: percorrendo o resultado", "lg": "vb", "ln": ["Dim rs As ADODB.Recordset", "Set rs = cn.Execute(\"SELECT nome, nota FROM alunos \" & _", "                      \"WHERE nota >= 7 ORDER BY nome\")", "", "Do While Not rs.EOF", "    List1.AddItem rs!nome & \" - \" & rs!nota", "    rs.MoveNext", "Loop", "rs.Close", "Set rs = Nothing"]}, {"t": "bx", "k": "con", "ti": "O trio sagrado do Recordset", "x": "\u003cb>rs.EOF\u003c/b>: chegou ao fim? · \u003cb>rs.MoveNext\u003c/b>: avance uma linha · \u003cb>rs!campo\u003c/b>: leia o valor da coluna. Sem MoveNext, laço infinito; sem Close, recurso preso no servidor."}, {"t": "h", "x": "CRUD completo pelo programa"}, {"t": "cd", "ti": "Modulo CrudAlunos.bas", "lg": "vb", "ln": ["Public Sub Inserir(nome As String, nota As Single)", "    cn.Execute \"INSERT INTO alunos (nome, nota) VALUES ('\" & _", "                 nome & \"', \" & Format(nota, \"0.0\") & \")\"", "End Sub", "", "Public Sub Atualizar(id As Integer, nota As Single)", "    cn.Execute \"UPDATE alunos SET nota = \" & Format(nota, \"0.0\") & _", "                 \" WHERE id = \" & id", "End Sub", "", "Public Sub Excluir(id As Integer)", "    cn.Execute \"DELETE FROM alunos WHERE id = \" & id", "End Sub", "", "Public Function Existe(id As Integer) As Boolean", "    Dim rs As ADODB.Recordset", "    Set rs = cn.Execute(\"SELECT id FROM alunos WHERE id = \" & id)", "    Existe = Not rs.EOF", "    rs.Close", "End Function"]}, {"t": "h", "x": "Validação e tratamento de problemas"}, {"t": "ul", "it": ["Validar ANTES de mandar SQL: Len/Trim/Val/IsNumeric no cliente;", "Aspas simples em textos: escapar ' duplicando ('') para não quebrar o comando;", "On Error GoTo em toda operação de banco; Err.Number 2000+ = erro de banco/conexão;", "Confirmar exclusões com MsgBox vbYesNo antes do DELETE;", "Mostrar ao usuário mensagem amiga + detalhe técnico no log (Debug.Print)."]}, {"t": "bx", "k": "aten", "ti": null, "x": "Injeção de SQL: se o texto digitado entra direto no comando, um usuário mal-intencionado ‘fecha as aspas’ e injeta comandos. Por isso validamos, escapamos e, em sistemas reais, usamos parâmetros preparados. Consciência desde já."}], "qs": [["Sem rs.MoveNext no Do While Not rs.EOF:", ["pula linhas", "laço infinito", "fecha o rs", "erro de sintaxe"], 1, "O ponteiro não avança."], ["rs!nota lê:", ["o nome da coluna", "o valor do campo na linha atual", "todas as linhas", "o total"], 1, "Campo da linha corrente do Recordset."], ["Aspas simples dentro de texto que vira SQL são escapadas:", ["duplicando ('')", "removendo", "trocando por \"", "com \\ "], 0, "'' representa aspa literal no SQL."]]}, {"n": 16, "ti": "Cliente/Servidor — prática e validação em grupo", "cards": [{"t": "h", "x": "Oficina de CRUD com tela"}, {"t": "ol", "it": ["Formulário frmAlunos: Text nome, Text nota, botões Incluir/Alterar/Excluir/Listar;", "Listar preenche ListBox via Recordset (nome + nota + id entre colchetes);", "Incluir valida (nome >= 5 caracteres, nota 0–10) antes do INSERT;", "Alterar/Excluir pedem o id e confirmam com MsgBox vbYesNo;", "Toda operação termina atualizando a ListBox (refresh)."]}, {"t": "h", "x": "Testes de robustez (atividade em grupo)"}, {"t": "tb", "cab": ["Teste", "Entrada", "Esperado"], "lin": [["Nome vazio", "(vazio)", "MsgBox de validação, nada vai ao banco"], ["Nota fora de faixa", "nota = 15", "MsgBox, nada vai ao banco"], ["Aspas no nome", "O'Connor", "INSERT funciona (aspas escapadas)"], ["Excluir inexistente", "id = 999", "Aviso ‘não encontrado’ (Existe=False)"], ["Serviço parado", "MySQL off", "MsgBox amiga de falha de conexão"]]}, {"t": "bx", "k": "dica", "ti": null, "x": "Teste em dupla trocada: uma dupla ataca o programa da outra com o plano de testes. Quem acha bug, assina o relatório — caçar bug também é conteúdo."}], "qs": [["Validar no cliente antes do SQL serve para:", ["acelerar o servidor", "evitar comandos inválidos/perigosos", "substituir On Error", "economizar RAM"], 1, "Defesa em camadas."], ["Exclusões devem ser confirmadas com:", ["MsgBox vbYesNo", "Print", "InputBox vazio", "Label"], 0, "Confirmação explícita antes do DELETE."], ["Após incluir/alterar/excluir, a ListBox deve:", ["ser limpa e esquecida", "ser atualizada (refresh)", "virar arquivo", "fechar o form"], 1, "Refresh mantém a tela coerente com o banco."]]}], "exs": [{"ti": "CRUD de produtos", "tp": "pratico", "en": "Replique a oficina para a tabela produtos(id, nome, preco, estoque): formulário completo com as 4 operações e validações (preco > 0, estoque >= 0).", "ps": []}, {"ti": "Consulta com filtro dinâmico", "tp": "pratico", "en": "Text de busca + botão: SELECT ... WHERE nome LIKE '%texto%' ORDER BY nome; preencha a ListBox; mostre contagem de resultados com rs.RecordCount ou contador próprio.", "ps": []}, {"ti": "Relatório de falhas", "tp": "escrito", "en": "Do teste em dupla trocada: liste os 3 bugs mais sérios encontrados no programa avaliado, com: sintoma, causa provável e correção proposta.", "ps": []}], "boss": [["Sem rs.MoveNext dentro do Do While Not rs.EOF, o programa:", ["pula a primeira linha", "entra em laço infinito", "fecha o Recordset", "dá erro de sintaxe"], 1, "O ponteiro não avança: EOF nunca chega."], ["rs!nota lê:", ["o nome da coluna", "o valor do campo nota da linha atual", "a primeira linha inteira", "o total de linhas"], 1, "Acesso ao campo da linha corrente do Recordset."], ["Para escapar uma aspa simples dentro de um texto que vai virar SQL:", ["duplica a aspa ('')", "remove a aspa", "troca por aspas duplas", "usa \\ ' "], 0, "Em SQL, '' representa uma aspa literal dentro do texto."], ["cn.Execute de um UPDATE devolve:", ["um Recordset com as linhas alteradas", "nada de tabela; afeta linhas no banco", "um arquivo temporário", "um MsgBox automático"], 1, "Manipulação não retorna Recordset; consulta retorna."], ["Validar no cliente antes de enviar SQL serve para:", ["deixar o banco mais rápido", "evitar comandos inválidos/perigosos e mensagens ruins", "substituir o On Error", "economizar memória"], 1, "Defesa em camadas: cliente valida, servidor protege, erro tratado."]]}, {"n": 12, "ti": "Backup e recuperação de banco de dados", "parte": "V", "parte_ti": "Dados Cliente/Servidor e Administração do Banco", "faixa": "Aulas 65 a 72", "obj": ["Explicar a finalidade de backup e os cuidados de organização das cópias.", "Executar backup do MySQL com mysqldump e restaurar com mysql \u003c.", "Validar a recuperação restaurando em banco de teste e conferindo dados.", "Planejar rotina de cópias (frequência, nomeação, guarda) para um cenário real."], "aulas": [{"n": 17, "ti": "Backup: a cópia que salva o semestre", "cards": [{"t": "h", "x": "Por que backup (e por que agora)"}, {"t": "p", "h": "Dados são o ativo mais valioso de um sistema: discos falham, alguém executa DELETE sem WHERE, um UPDATE errado reescreve notas. \u003cb>Backup\u003c/b> é a cópia que permite voltar no tempo; \u003cb>recuperação\u003c/b> é o treino que garante que a cópia funciona."}, {"t": "cd", "ti": "Backup com mysqldump (prompt de comando)", "lg": "shell", "ln": ["REM copia estrutura + dados do banco escola:", "mysqldump -u root -paluno123 escola > c:\\lp2\\backups\\escola_2026-09-18.sql", "", "REM só a estrutura (sem dados):", "mysqldump -u root -paluno123 --no-data escola > estrutura.sql"]}, {"t": "h", "x": "Organização das cópias"}, {"t": "ul", "it": ["Nome com data: banco_YYYY-MM-DD.sql (ordena sozinho na pasta);", "Pasta própria fora do servidor (c:\\lp2\\backups\\ ou Drive/nuvem da escola);", "Rotina mínima de laboratório: backup ao fim de cada semana de uso do banco;", "Testar a recuperação PELO MENOS uma vez por mês (cópia não testada = esperança)."]}, {"t": "bx", "k": "con", "ti": "Backup bom é backup restaurado", "x": "Um .sql nunca visto pode estar truncado, com senha errada ou banco errado dentro. A validação é prática: restaurar em um banco de teste e conferir contagens (SELECT COUNT(*) antes × depois)."}], "qs": [["O comando de backup do MySQL é:", ["mysql --copy", "mysqldump banco > arq.sql", "BACKUP TABLE", "cn.Backup"], 1, "Gera script .sql com estrutura + dados."], ["Nomes de backup devem ter:", ["data (banco_YYYY-MM-DD)", "só o nome do banco", "senha embutida", "extensão .exe"], 0, "Ordena sozinho e identifica a geração."], ["Manter gerações (avô-pai-filho) protege contra:", ["falta de espaço", "cópias corrompidas/desastres tardios", "senhas fracas", "vírus"], 1, "Se a última cópia falha, a anterior salva."]]}, {"n": 18, "ti": "Recuperação e validação pós-restauro", "cards": [{"t": "cd", "ti": "Restaurar (prompt de comando)", "lg": "shell", "ln": ["REM restaura sobre o banco escola (recria tabelas e dados do .sql):", "mysql -u root -paluno123 escola \u003c c:\\lp2\\backups\\escola_2026-09-18.sql", "", "REM restauração segura em banco de TESTE:", "mysql -u root -paluno123 -e \"CREATE DATABASE escola_teste;\"", "mysql -u root -paluno123 escola_teste \u003c escola_2026-09-18.sql"]}, {"t": "h", "x": "Validação após recuperação"}, {"t": "ol", "it": ["Conferir tabelas: SHOW TABLES; no banco restaurado;", "Conferir contagens: SELECT COUNT(*) de cada tabela (antes × depois);", "Conferir amostras: 3 linhas conhecidas batem campo a campo;", "Registrar: data/hora do restauro, arquivo usado, responsável, resultado;", "Só então apontar a aplicação para o banco recuperado."]}, {"t": "h", "x": "Cenários de desastre (estudo de caso)"}, {"t": "tb", "cab": ["Cenário", "Ação"], "lin": [["DELETE sem WHERE apagou tudo às 10h", "Restaurar backup de ontem + reaplicar inserções de hoje (se houver log)"], ["Disco do servidor morreu", "Restaurar último backup em servidor novo e reconfigurar conexão"], ["UPDATE errado mudou 200 notas", "Restaurar em banco de teste, extrair só a coluna correta e corrigir"], ["Backup de sexta corrompido", "Usar o de quinta (por isso guardamos várias gerações!)"]]}, {"t": "bx", "k": "dica", "ti": null, "x": "Gerações de backup (avô-pai-filho): manter pelo menos as 4 últimas cópias semanais resolve 90% dos cenários acima sem drama."}], "qs": [["Para restaurar usa-se:", ["mysqldump \u003c arq", "mysql banco \u003c arq.sql", "RESTORE arq", "cn.Restore"], 1, "O cliente mysql executa o script no banco."], ["Restaurar primeiro em banco de teste:", ["treina SQL", "não arrisca a produção na validação", "acelera o dump", "economiza disco"], 1, "Valida arquivo e procedimento com segurança."], ["Validação pós-restauro inclui:", ["SHOW TABLES + COUNT(*) + amostras", "só tamanho do arquivo", "reiniciar o serviço", "abrir no Notepad"], 0, "Conferência estrutural e de conteúdo."]]}], "exs": [{"ti": "Rotina completa de backup", "tp": "pratico", "en": "Gere backup do banco escola com nome datado; apague uma tabela de testes (DROP); restaure do .sql; valide com SHOW TABLES e COUNT(*).", "ps": []}, {"ti": "Recuperação cirúrgica", "tp": "pratico", "en": "Simule UPDATE errado em 5 notas; restaure o backup em escola_teste; escreva o SQL que copia de volta apenas as notas corretas do banco de teste para o produção (UPDATE com JOIN ou subselect, demonstrado no quadro).", "ps": []}, {"ti": "Plano de backup da escola", "tp": "escrito", "en": "Proponha por escrito a rotina de backup do laboratório: frequência, nomeação, local de guarda, gerações mantidas, responsável e procedimento de recuperação testada.", "ps": []}], "boss": [["mysqldump banco > arquivo.sql produz:", ["um banco novo", "um arquivo com estrutura + dados em SQL", "um backup binário criptografado", "um relatório em PDF"], 1, "Texto SQL reproduzível em qualquer servidor MySQL."], ["Para restaurar o conteúdo do arquivo no banco:", ["mysqldump \u003c arquivo", "mysql banco \u003c arquivo.sql", "RESTORE FILE arquivo", "cn.Execute(arquivo)"], 1, "O cliente mysql executa o script .sql dentro do banco indicado."], ["Validar uma recuperação inclui:", ["só olhar o tamanho do arquivo", "SHOW TABLES + contagens + amostras conferidas", "reiniciar o servidor", "abrir o .sql no Bloco de Notas"], 1, "Conferência estrutural e de conteúdo após o restauro."], ["Manter várias gerações de backup (avô-pai-filho) protege contra:", ["falta de espaço", "cópias corrompidas ou desastres descobertos tardiamente", "senhas fracas", "vírus de tela"], 1, "Se a cópia de ontem está ruim, a de quinta-feira salva."], ["Restaurar primeiro em banco de TESTE serve para:", ["treinar SQL", "não arriscar o banco de produção durante a validação", "acelerar o mysqldump", "economizar disco"], 1, "Valida o arquivo e o procedimento sem tocar em dados reais."]]}, {"n": 13, "ti": "Relatórios, impressão e documentos fiscais", "parte": "VI", "parte_ti": "Saídas, Distribuição, Gráficos e Projeto Integrador", "faixa": "Aulas 73 a 80", "obj": ["Gerar relatórios com seleção e organização de dados (tela e papel).", "Usar o objeto Printer (Print, Tab, String, EndDoc) para saídas impressas.", "Montar documentos fiscais simples (cupom/nota) com layout controlado.", "Aplicar Format e alinhamentos para saída profissional."], "aulas": [{"n": 19, "ti": "Relatórios: dados que viram informação", "cards": [{"t": "h", "x": "Anatomia de um relatório"}, {"t": "ul", "it": ["\u003cb>Cabeçalho\u003c/b>: título, empresa, data/hora de emissão, página;", "\u003cb>Colunas\u003c/b>: nomes alinhados sobre os dados;", "\u003cb>Corpo\u003c/b>: linhas selecionadas e ordenadas (SQL faz o pesado);", "\u003cb>Rodapé de grupo/geral\u003c/b>: contagens, somas, médias;", "\u003cb>Separadores\u003c/b>: linhas String(80, \"-\") entre blocos."]}, {"t": "cd", "ti": "Relatório de aprovados na tela (montado por Sub)", "lg": "vb", "ln": ["Public Sub RelatorioAprovados()", "    Dim rs As ADODB.Recordset", "    Print Tab(20); \"RELATÓRIO DE APROVADOS - \" & Format(Date, \"dd/mm/yyyy\")", "    Print String(60, \"-\")", "    Print \"NOME\"; Tab(35); \"NOTA\"", "    Print String(60, \"-\")", "    Set rs = cn.Execute(\"SELECT nome, nota FROM alunos \" & _", "                          \"WHERE nota >= 7 ORDER BY nome\")", "    Do While Not rs.EOF", "        Print rs!nome; Tab(35); Format(rs!nota, \"0.0\")", "        rs.MoveNext", "    Loop", "    rs.Close", "    Print String(60, \"-\")", "End Sub"]}, {"t": "h", "x": "Do tela para o papel: objeto Printer"}, {"t": "cd", "ti": "Impressão com Printer", "lg": "vb", "ln": ["Public Sub ImprimirRelatorio()", "    Printer.Print Tab(20); \"RELATÓRIO DE APROVADOS\"", "    Printer.Print String(60, \"-\")", "    ' ...mesmas linhas do corpo, trocando Print por Printer.Print...", "    Printer.Print String(60, \"-\")", "    Printer.Print \"Emitido em \" & Now", "    Printer.EndDoc          ' envia o trabalho à impressora'", "End Sub"]}, {"t": "bx", "k": "con", "ti": "Printer = a impressora como objeto", "x": "Tudo que você Printa no Printer entra na fila de impressão; \u003cb>EndDoc\u003c/b> fecha o documento e despacha. Sem EndDoc, o trabalho fica preso. Tab() e String() cuidam do alinhamento em colunas de caracteres."}], "qs": [["Alinhamento de colunas em relatório de texto:", ["Space apenas", "Tab(n) e String(n,\"-\")", "MsgBox", "Printer.Page"], 1, "Tab posiciona; String separa blocos."], ["Sem Printer.EndDoc:", ["imprime na hora", "o job fica retido", "cancela", "imprime em dobro"], 1, "EndDoc fecha e despacha o documento."], ["Fonte para colunas fecharem na impressora:", ["proporcional", "monoespaçada (Courier New)", "itálica", "decorativa"], 1, "Largura fixa por caractere."]]}, {"n": 20, "ti": "Documentos fiscais: cupom e nota simplificados", "cards": [{"t": "h", "x": "Layout de cupom (monoespaçado)"}, {"t": "cd", "ti": "Cupom de venda não fiscal (modelo didático)", "lg": "vb", "ln": ["Public Sub Cupom(venda As Integer)", "    Printer.Print Tab(12); \"MERCADO ESCOLA LTDA\"", "    Printer.Print Tab(8); \"CNPJ 00.000.000/0001-00\"", "    Printer.Print String(48, \"-\")", "    Printer.Print \"CUPOM NÃO FISCAL - Venda \"; venda", "    Printer.Print String(48, \"-\")", "    ' itens: codigo, descricao, qtd, unit, total", "    Printer.Print \"001 ARROZ 5KG      2 x  22,90   45,80\"", "    Printer.Print String(48, \"-\")", "    Printer.Print Tab(30); \"TOTAL R$   45,80\"", "    Printer.Print \"Obrigado pela preferência!\"", "    Printer.EndDoc", "End Sub"]}, {"t": "h", "x": "O que um documento fiscal de verdade exige (contexto)"}, {"t": "ul", "it": ["Identificação do emitente (razão social, CNPJ, endereço);", "Numeração sequencial e data/hora de emissão;", "Itens com quantidade, unitário e total conferindo (soma validada);", "Totais e forma de pagamento;", "Em sistemas reais: autorização da SEFAZ (NF-e/NFC-e) — aqui, o MODELO didático."]}, {"t": "bx", "k": "dica", "ti": null, "x": "Monte os itens do cupom vindo do banco (tabela itens_venda) com Recordset: o cupom deixa de ser texto fixo e vira saída de dados — exatamente como no projeto final."}, {"t": "bx", "k": "aten", "ti": null, "x": "Alinhamento em impressora real muda com fonte proporcional: fixe fonte monoespaçada (Printer.FontName = \"Courier New\") para as colunas fecharem."}], "qs": [["Os itens do cupom do nosso sistema vêm:", ["texto fixo no código", "do banco via Recordset", "de um .bmp", "do Clipboard"], 1, "Saída de dados: SQL alimenta o layout."], ["Um documento fiscal identifica:", ["só o total", "emitente, numeração, data, itens e totais", "só o cliente", "o programador"], 1, "Blocos obrigatórios mesmo no modelo didático."], ["Totais e valores no cupom usam:", ["Str sem formato", "Format(v, \"0.00\")", "Val", "Len"], 1, "Aparência profissional e conferência fácil."]]}], "exs": [{"ti": "Relatório de estoque", "tp": "pratico", "en": "Relatório (tela + Printer) dos produtos com estoque \u003c mínimo: cabeçalho com data, colunas codigo/descricao/estoque, rodapé com contagem e valor total imobilizado.", "ps": []}, {"ti": "Cupom dinâmico", "tp": "pratico", "en": "Cupom que lê a venda pelo id: cabeçalho do emitente (tabela loja), itens da tabela itens_venda via Recordset, totais calculados (qtd × unit) e EndDoc.", "ps": []}, {"ti": "Leitura de documento fiscal", "tp": "escrito", "en": "Traga (ou receba) um cupom/NF-e real e identifique por escrito: emitente, numeração, data, itens com unit/qtd/total, totais e pagamento; marque o que nosso modelo didático já reproduz e o que ficaria por conta da SEFAZ.", "ps": []}], "boss": [["Para alinhar colunas em relatórios de texto usamos:", ["Space( ) apenas", "Tab(n) e String(n, \"-\")", "MsgBox", "Printer.Page"], 1, "Tab posiciona colunas; String desenha separadores."], ["Sem Printer.EndDoc, o trabalho de impressão:", ["sai imediatamente", "fica retido/no buffer sem despachar", "é cancelado", "imprime em dobro"], 1, "EndDoc fecha o documento e envia à fila."], ["Para colunas fecharem em impressora real, a fonte deve ser:", ["proporcional (Arial)", "monoespaçada (Courier New)", "itálica", "decorativa"], 1, "Largura fixa por caractere = colunas alinhadas."], ["Os itens de um cupom ‘de verdade’ no nosso sistema vêm:", ["digitados fixos no código", "do banco, via Recordset", "de um arquivo .bmp", "do Clipboard"], 1, "Saída de dados: SQL + Recordset alimentam o layout."], ["Um relatório gerencial típico termina com:", ["somente os detalhes", "totais/contagens/médias de fechamento", "o código SQL", "a string de conexão"], 1, "Rodapé de fechamento dá a leitura gerencial do conjunto."]]}, {"n": 14, "ti": "Disco de instalação e recursos gráficos", "parte": "VI", "parte_ti": "Saídas, Distribuição, Gráficos e Projeto Integrador", "faixa": "Aulas 81 a 88", "obj": ["Preparar e organizar os arquivos necessários à distribuição do programa.", "Gerar o pacote/disco de instalação com o Package & Deployment Wizard.", "Aplicar recursos gráficos no VB6 (PictureBox: Line, Circle, PSet) com herança do modo DOS.", "Testar a instalação em máquina/conta limpa."], "aulas": [{"n": 21, "ti": "Disco de instalação: do projeto ao pacote", "cards": [{"t": "h", "x": "O que vai dentro de um instalador"}, {"t": "ul", "it": ["Executável compilado (.exe) do projeto;", "Bibliotecas de tempo de execução (runtime VB6, MSADO/ODBC);", "Arquivos de dados/modelos (textos, logs, templates de relatório);", "Configurações (string de conexão parametrizável!);", "Atalhos e desinstalador."]}, {"t": "h", "x": "Package & Deployment Wizard passo a passo"}, {"t": "ol", "it": ["No VB6: Add-Ins → Package & Deployment Wizard;", "Compile o projeto primeiro (File → Make projeto.exe);", "Escolha o projeto e a opção \u003cb>Package\u003c/b>;", "Selecione os arquivos dependentes sugeridos (marque os .bas de dados e templates);", "Defina o grupo de menu/atalhos e o destino padrão (C:\\MeuSistema);", "Gere a pasta/pacote (setup.exe + cab) e copie para a pasta de distribuição;", "Teste em conta/máquina limpa: instalar, executar, conectar ao banco, desinstalar."]}, {"t": "bx", "k": "con", "ti": "Configuração fora do executável", "x": "Senha/servidor nunca vão compilados no .exe: o instalador copia um \u003cb>config.txt/ini\u003c/b> que o programa lê ao abrir (conexão parametrizável). Assim o mesmo pacote serve para laboratórios diferentes."}, {"t": "bx", "k": "aten", "ti": null, "x": "Teste de instalação que não passa em máquina limpa = pacote incompleto (falta dependência). O erro clássico é esquecer o driver ODBC na lista de pré-requisitos documentados."}], "qs": [["O Package & Deployment Wizard gera:", ["o banco", "o pacote de instalação (setup + dependentes)", "o relatório", "o backup"], 1, "Empacota exe, runtimes, dados e atalhos."], ["Senha/servidor de conexão ficam em:", ["compilados no exe", "config.ini lido em execução", "título do form", "Registry"], 1, "Mesmo pacote serve a ambientes diferentes."], ["O teste de instalação acontece em:", ["máquina do desenvolvedor", "máquina/conta limpa", "qualquer uma", "só no papel"], 1, "Revela dependência esquecida no pacote."]]}, {"n": 22, "ti": "Recursos gráficos: a herança do modo DOS", "cards": [{"t": "h", "x": "Do DOS ao formulário"}, {"t": "p", "h": "A ementa cita ‘programação gráfica em ambiente DOS’: nos PCs antigos, gráficos nasciam de comandos de desenho em modo texto/gráfico (SCREEN, LINE, CIRCLE). No VB6, o mesmo espírito vive no \u003cb>PictureBox\u003c/b>: coordenadas, cores e métodos de desenho."}, {"t": "cd", "ti": "Desenhando no PictureBox", "lg": "vb", "ln": ["Picture1.ScaleMode = 3                 ' pixels", "Picture1.BackColor = vbWhite", "", "Picture1.Line (10, 10)-(200, 120), vbBlue, B     ' retângulo (B = box)", "Picture1.Circle (110, 65), 40, vbRed              ' círculo", "Picture1.Line (10, 130)-(200, 130), vbBlack       ' linha simples", "", "Dim x As Integer", "For x = 10 To 200 Step 5", "    Picture1.PSet (x, 140 + 10 * Sin(x / 10)), vbGreen  ' pontos (onda)", "Next x"]}, {"t": "h", "x": "Gráficos com dados do sistema"}, {"t": "cd", "ti": "Gráfico de barras das notas (dados do banco)", "lg": "vb", "ln": ["Dim rs As ADODB.Recordset, x As Integer", "Set rs = cn.Execute(\"SELECT nome, nota FROM alunos ORDER BY nome\")", "x = 20", "Do While Not rs.EOF", "    Picture1.Line (x, 160)-(x + 18, 160 - rs!nota * 14), vbBlue, BF", "    Picture1.CurrentX = x: Picture1.CurrentY = 165", "    Picture1.Print Left$(rs!nome, 3)", "    x = x + 26", "    rs.MoveNext", "Loop", "rs.Close"]}, {"t": "bx", "k": "dica", "ti": null, "x": "Gráfico de barras com BF (box filled) + escala simples (nota × 14) transforma qualquer consulta em painel visual — use no dashboard do projeto final."}], "qs": [["No VB6, os recursos gráficos da ementa (herança DOS) vivem no:", ["Printer", "PictureBox", "ListBox", "Timer"], 1, "Line/Circle/PSet com coordenadas e cores."], ["Retângulo PREENCHIDO no PictureBox:", ["Line com B", "Line com BF", "Circle BF", "PSet B"], 1, "B = borda; BF = box filled."], ["PSet desenha:", ["um ponto", "um círculo", "uma linha", "um texto"], 0, "Ondas e texturas nascem de laços com PSet."]]}], "exs": [{"ti": "Pacote de instalação", "tp": "pratico", "en": "Compile um projeto seu (ex.: CRUD de produtos) e gere o pacote com o Wizard; teste em conta limpa: instalar, rodar, conectar, desinstalar. Registre o passo a passo com prints.", "ps": []}, {"ti": "Bandeira e onda", "tp": "pratico", "en": "No PictureBox: desenhe a bandeira da escola (retângulos/círculos com B/BF) e uma onda com PSet em laço; adicione botão Limpar (Picture1.Cls).", "ps": []}, {"ti": "Dashboard de notas", "tp": "pratico", "en": "Gráfico de barras das notas por aluno (consulta SQL) com eixo, rótulos (Left$ do nome) e legenda; inclua o dashboard como tela do seu projeto.", "ps": []}], "boss": [["O Package & Deployment Wizard gera:", ["o banco de dados", "o pacote/disco de instalação (setup + dependentes)", "o relatório fiscal", "o backup do MySQL"], 1, "Empacota exe, runtimes, dados e atalhos para distribuição."], ["Senha/servidor de conexão devem ficar:", ["compilados no .exe", "em arquivo de configuração lido em tempo de execução", "no título do formulário", "no Registry sem documentação"], 1, "Config.ini parametrizável: mesmo pacote em ambientes diferentes."], ["No PictureBox, o método que desenha um retângulo preenchido usa:", ["Box F", "BF no final do Line", "Fill automaticamente", "Rect()"], 1, "Line (x1,y1)-(x2,y2), cor, BF (B = borda, BF = preenchido)."], ["PSet serve para:", ["desenhar um ponto na coordenada", "imprimir texto", "limpar a tela", "mover o formulário"], 0, "Ponto único — ondas e texturas nascem de laços com PSet."], ["Testar a instalação em máquina/conta limpa serve para:", ["ganhar tempo", "garantir que o pacote leva todas as dependências", "economizar licença", "validar o banco"], 1, "Ambiente limpo revela dependência esquecida no pacote."]]}, {"n": 15, "ti": "Projeto integrador e consolidação final", "parte": "VI", "parte_ti": "Saídas, Distribuição, Gráficos e Projeto Integrador", "faixa": "Aulas 89 a 96", "obj": ["Integrar banco + SQL + estruturas + modularização + arquivos + relatórios + gráficos no projeto.", "Aplicar revisão geral da ementa como preparação da prova final.", "Testar, revisar e apresentar o projeto com demonstração completa.", "Consolidar o portfólio do semestre: código, pacote de instalação e documentação."], "aulas": [{"n": 23, "ti": "Integração do projeto (semana 23)", "cards": [{"t": "h", "x": "O que o projeto precisa ter"}, {"t": "ul", "it": ["\u003cb>Banco\u003c/b>: tabelas criadas por script .sql versionado;", "\u003cb>Conexão\u003c/b>: módulo Conexao.bas com tratamento de falhas;", "\u003cb>CRUD\u003c/b>: cadastro e consulta via ADO com validação no cliente;", "\u003cb>Estruturas\u003c/b>: vetor/matriz/registro onde fizer sentido (ex.: cache, cálculos);", "\u003cb>Modularização\u003c/b>: regras em Modules (Functions puras);", "\u003cb>Arquivos\u003c/b>: importação/exportação de dados (txt) com validação;", "\u003cb>Relatório\u003c/b>: saída Printer/PDF com totais; \u003cb>gráfico\u003c/b> PictureBox opcional;", "\u003cb>Instalação\u003c/b>: pacote gerado + config.ini parametrizável."]}, {"t": "h", "x": "Roteiro de acompanhamento por aula"}, {"t": "tb", "cab": ["Aula", "Foco", "Entrega"], "lin": [["89", "Integração: banco + SQL + telas (CRUD completo)", "Entrega 2"], ["90", "Arquivos + relatório acoplados ao fluxo", "—"], ["91", "Modularização final + gráficos/dashboard", "—"], ["92", "Testes internos com plano de testes da dupla", "Entrega 3"]]}, {"t": "bx", "k": "dica", "ti": null, "x": "Congele escopo na semana 23: o que não entrou até a aula 92 vira ‘versão 2’ no relatório, não dívida na apresentação."}], "qs": [["O checklist de integração do projeto cobra:", ["só telas", "banco+CRUD+módulos+arquivos+relatório+pacote", "só relatório", "só backup"], 1, "Todas as camadas do semestre juntas."], ["Congelar escopo na semana 23 é:", ["não testar", "não adicionar funções novas; pendências viram 'versão 2'", "parar de programar", "adiar a prova"], 1, "Entrega e apresentação confiáveis."], ["Funções de regra no projeto ficam em:", ["dentro dos botões", "Modules (.bas) reutilizáveis", "no banco", "no instalador"], 1, "Formulário orquestra; módulos sabem fazer."]]}, {"n": 24, "ti": "Consolidação, prova final e apresentações (semana 24)", "cards": [{"t": "h", "x": "Revisão geral (aulas 93–94)"}, {"t": "ul", "it": ["SGBD/conexão: string, On Error, abrir/fechar;", "SQL: CREATE/INSERT/UPDATE/DELETE/SELECT com WHERE/ORDER/GROUP;", "Estruturas: vetor, matriz, registro; Strings e funções;", "Modularização: Sub/Function, ByVal/ByRef, escopos;", "Arquivos: Output/Append/Input, EOF, FreeFile, Split;", "Cliente/Servidor: Recordset (EOF/MoveNext/rs!campo);", "Backup/recuperação: mysqldump/mysql \u003c, validação;", "Relatórios/Printer e gráficos PictureBox; pacote de instalação."]}, {"t": "h", "x": "Prova final escrita (30 pts) e apresentações (10 pts)"}, {"t": "ol", "it": ["Aulas 93–94: revisão ativa com o modelo de prova da apostila (em duplas, correção comentada);", "Prova escrita individual e cumulativa conforme o Plano de Ensino;", "Aula 95: ensaio geral cronometrado (5–8 min) com demonstração: cadastro válido, tentativa inválida, consulta/relatório ao vivo;", "Aula 96: apresentações + entrega do pacote de instalação + encerramento."]}, {"t": "bx", "k": "con", "ti": "Demonstração que convence", "x": "Mostre o fluxo completo com dados reais: cadastre → erre de propósito (validação) → corrija → consulte → imprima relatório. Erro tratado ao vivo vale mais que demo perfeita ensaiada demais."}], "qs": [["Na demonstração, barrar uma entrada inválida ao vivo prova:", ["bug", "que a validação funciona", "lentidão", "falta de teste"], 1, "Erro tratado é qualidade demonstrada."], ["A prova final escrita (30 pts) é:", ["em duplas com consulta", "individual e cumulativa", "oral", "só projeto"], 1, "Conforme o Plano de Ensino; +10 pts do projeto."], ["O pacote entregue inclui:", ["só o exe", "exe+dependentes+config.ini+atalhos", "banco com senhas", "fontes crus"], 1, "Distribuição profissional e configurável."]]}], "exs": [{"ti": "Checklist de integração", "tp": "grupo", "en": "Preencham o checklist de integração do projeto (8 itens da aula 89) com status Feito/Parcial/Pendente e plano para os pendentes até a aula 92.", "ps": []}, {"ti": "Plano de testes do projeto", "tp": "grupo", "en": "Montem a tabela de testes com mínimo 8 casos: cadastro válido/inválido, consulta com e sem resultado, exclusão confirmada/cancelada, importação com linha corrompida, relatório com zero registros, conexão com serviço parado.", "ps": []}, {"ti": "Ensaio cronometrado", "tp": "grupo", "en": "Ensaio de 5–8 min com cronômetro: abertura (tema/tabela), demonstração completa (válido, inválido, consulta, relatório), fechamento (o que ficou para a versão 2). Gravem no celular como plano B.", "ps": []}], "boss": [["O checklist de integração do projeto exige, entre outros:", ["somente telas bonitas", "banco + CRUD + módulos + arquivos + relatório + pacote", "apenas o relatório", "somente backup"], 1, "Integração é o nome do jogo: todas as camadas do semestre."], ["Congelar escopo na semana 23 significa:", ["não testar mais", "não acrescentar funcionalidades novas; pendências viram ‘versão 2’", "parar de programar", "adiar a apresentação"], 1, "Escopo fechado = entrega e apresentação confiáveis."], ["Na demonstração, mostrar uma entrada inválida sendo barrada prova:", ["que o programa tem bugs", "que a validação funciona", "que o banco está lento", "que faltou teste"], 1, "Erro tratado ao vivo é demonstração de qualidade, não defeito."], ["A prova final (30 pts) é:", ["em duplas com consulta", "escrita, individual e cumulativa", "oral", "só do projeto"], 1, "Conforme o Plano de Ensino; os 10 pts restantes são do projeto."], ["O pacote de instalação entregue deve incluir:", ["somente o .exe", "exe + dependentes + config.ini parametrizável + atalhos", "o banco com senhas compiladas", "os fontes sem compilar"], 1, "Distribuição profissional: instalável e configurável por ambiente."]]}]};
+const API  = "";            // vazio = modo offline
+const DISC = "lp2";
+const LBL  = "Semana";
+const CLOUD = API !== "";
+const FM = ["▲","◆","●","■"];
+const app = document.getElementById("app");
+const hud = document.getElementById("hud");
+let S = { mi:0, step:0, flow:null, pts:0, seq:0, exok:{}, done:{}, boss:{},
+          pos:null, aulas:{}, scored:{}, hist:[], nome:"", turma:"" };
+const LS = "aulaviva_" + DISC;
+if (!CLOUD){ try{ const sv = localStorage.getItem(LS); if (sv) Object.assign(S, JSON.parse(sv)); }catch(e){} }
+S.flow = null;
+
+/* ---------- utilidades ---------- */
+function rich(s){                      // texto com marcação segura (tags HTML viram texto)
+  s = String(s)
+    .replace(/&(?!amp;|lt;|gt;|quot;|apos;|nbsp;|#\d+;|#x[0-9a-fA-F]+;)/g, "&amp;")
+    .replace(/<(?!\/?(?:b|i|u|br|sub|super|strike)(?:\s[^>]*)?\s*\/?>)/g, "&lt;");
+  return s;
+}
+function save(){
+  if (CLOUD){ marcarNuvem(); return; }
+  try{ localStorage.setItem(LS, JSON.stringify(payloadS())); }catch(e){}
+}
+function payloadS(){ return { mi:S.mi, pts:S.pts, seq:S.seq, exok:S.exok, done:S.done,
+  boss:S.boss, pos:S.pos, aulas:S.aulas, scored:S.scored, hist:S.hist,
+  nome:S.nome, turma:S.turma }; }
+function primeiroNome(){ return (S.nome || "").split(" ")[0] || ""; }
+function ehADM(){ return /juh/i.test((S.nome || "").trim()); }
+function setHud(){ hud.innerHTML = S.flow || S.nome ? `⭐ ${S.pts}` + (S.seq>=2?` 🔥${S.seq}`:"") : "";
+  document.getElementById("btMapa").style.display = S.flow ? "" : "none"; }
+function updateChrome(){
+  const ba = document.getElementById("btAluno");
+  ba.textContent = S.nome ? "👤 " + S.nome : "👤 Entrar";   // nome COMPLETO
+  document.getElementById("btArq").style.display = (CLOUD && S.nome) ? "" : "none";
+  document.getElementById("btEnt").style.display = (CLOUD && S.nome) ? "" : "none";
+  document.getElementById("btPainel").style.display = (CLOUD && ehADM()) ? "" : "none";
+  document.getElementById("nuvem").style.display = CLOUD ? "" : "none";
+}
+function abrirPainel(){ location.href = "prof.html"; }
+function toggleTurma(){ document.body.classList.toggle("turma");
+  document.getElementById("btTurma").textContent =
+    document.body.classList.contains("turma") ? "👤 Modo Aluno" : "📽 Modo Turma"; }
+
+/* ---------- nuvem ---------- */
+let pend = false, timerN = null;
+function statusNuvem(t){ const el = document.getElementById("nuvem"); if (el) el.textContent = t; }
+function marcarNuvem(){ pend = true; if (!timerN) timerN = setTimeout(enviarNuvem, 1200); }
+function enviarNuvem(){ timerN = null; if (!pend) return; pend = false;
+  api("put", payloadS()).then(() => statusNuvem("☁️ salvo")).catch(() => statusNuvem("☁️ offline")); }
+function api(rota, corpo, extra){
+  const q = API + "?disc=" + DISC + "&a=" + rota + (extra || "");
+  if (corpo !== undefined)
+    return fetch(q, { method:"POST", headers:{ "Content-Type":"application/json" },
+                      body: JSON.stringify(corpo) }).then(r => {
+        if (!r.ok) return r.json().then(j => { throw j; });
+        return r.json(); });
+  return fetch(q).then(r => { if (!r.ok) return r.json().then(j => { throw j; }); return r.json(); });
+}
+
+/* ---------- autenticação ---------- */
+let abaAuth = "entrar";
+function modalAuth(msg){
+  const mb = document.getElementById("mbox");
+  mb.innerHTML = `<h3>👤 ${CLOUD ? "Entrar ou criar conta" : "Identifique-se"}</h3>
+   <p class="nota">${CLOUD ? "Seu progresso fica guardado no servidor da escola, protegido por senha."
+     : "Modo offline: o progresso fica só neste navegador."}</p>
+   ${CLOUD ? `<div class="tabs">
+     <button id="tbE" class="${abaAuth==="entrar"?"on":""}" onclick="abaAuth='entrar';modalAuth()">Já tenho conta</button>
+     <button id="tbC" class="${abaAuth==="criar"?"on":""}" onclick="abaAuth='criar';modalAuth()">Criar conta</button>
+   </div>` : ""}
+   <label style="font-size:13px;font-weight:700;color:var(--navy)">Nome completo *</label>
+   <input id="inNome" maxlength="40" placeholder="Seu nome completo"
+     oninput="if(this.dataset.t) checkNome(this.value)">
+   <label style="font-size:13px;font-weight:700;color:var(--navy)">Turma (opcional)</label>
+   <input id="inTurma" maxlength="20" placeholder="ex.: 2/2026">
+   ${CLOUD ? `<label style="font-size:13px;font-weight:700;color:var(--navy)">Senha *
+     <span style="font-weight:400">(crie uma só sua)</span></label>
+   <input id="inSenha" type="password" maxlength="30" placeholder="senha">
+   <input id="inSenha2" type="password" maxlength="30" placeholder="repita a senha"
+     style="display:${abaAuth==="criar"?"block":"none"}">
+   <div id="chkNome" class="nota"></div>` : ""}
+   <div id="authErr" class="err" style="display:none"></div>
+   <div class="nav">
+     <button class="btn amb" onclick="submitAuth()">${CLOUD ? (abaAuth==="criar" ? "Criar e jogar ✔" : "Entrar ▶") : "Salvar e jogar ✔"}</button>
+   </div>
+   ${msg ? `<div class="err">${msg}</div>` : ""}`;
+  if (CLOUD && abaAuth === "criar") document.getElementById("inNome").dataset.t = "1";
+  document.getElementById("modal").style.display = "flex";
+  setTimeout(() => document.getElementById("inNome").focus(), 60);
+}
+function checkNome(v){
+  const el = document.getElementById("chkNome");
+  v = v.trim(); if (v.length < 3){ el.textContent = ""; return; }
+  api("check", undefined, "&nome=" + encodeURIComponent(v))
+    .then(j => { el.innerHTML = j.existe
+        ? "<span style='color:#c0392b;font-weight:700'>✗ Este nome já existe — use “Já tenho conta”.</span>"
+        : "<span style='color:#1e7b34;font-weight:700'>✔ Nome disponível.</span>"; })
+    .catch(() => { el.textContent = ""; });
+}
+function submitAuth(){
+  const nome = document.getElementById("inNome").value.trim();
+  const turma = document.getElementById("inTurma").value.trim();
+  const err = document.getElementById("authErr");
+  err.style.display = "none";
+  if (nome.length < 3){ err.textContent = "Digite seu nome completo."; err.style.display = "block"; return; }
+  if (!CLOUD){ S.nome = nome; S.turma = turma; save(); finishBoot(); return; }
+  const senha = document.getElementById("inSenha").value;
+  if (senha.length < 4){ err.textContent = "A senha precisa de pelo menos 4 caracteres."; err.style.display = "block"; return; }
+  if (abaAuth === "criar"){
+    const s2 = document.getElementById("inSenha2").value;
+    if (s2 !== senha){ err.textContent = "As senhas não conferem."; err.style.display = "block"; return; }
+    api("reg", { nome, turma, senha })
+      .then(j => { S.nome = nome; S.turma = turma;
+                   if (j && j.payload) Object.assign(S, j.payload);
+                   finishBoot(); })
+      .catch(j => { err.textContent = (j && j.erro === "nome")
+          ? "Este nome já está cadastrado. Use a aba “Já tenho conta”." : "Falha ao criar conta.";
+        err.style.display = "block"; });
+  } else {
+    api("login", { nome, senha })
+      .then(j => { S.nome = j.nome || nome; S.turma = j.turma || turma;
+                   if (j.payload) Object.assign(S, j.payload);
+                   finishBoot(); })
+      .catch(() => { err.textContent = "Nome ou senha incorretos."; err.style.display = "block"; });
+  }
+}
+function editarConta(){
+  if (!S.nome) return modalAuth();
+  const mb = document.getElementById("mbox");
+  mb.innerHTML = `<h3>👤 ${S.nome}</h3>
+    <p class="nota">Turma: ${S.turma || "—"} · ⭐ ${S.pts} pts · ${ehADM() ? "perfil ADM" : "perfil aluno"}</p>
+    <div class="nav" style="flex-direction:column;align-items:stretch">
+      <button class="btn gh" onclick="fecharModal(); abrirMinhas()">📤 Minhas entregas</button>
+      <button class="btn gh" onclick="fecharModal(); abrirMateriais()">📎 Materiais da turma</button>
+      ${CLOUD ? `<button class="btn gh" onclick="trocarConta()">🔄 Trocar de conta / sair</button>` : ""}
+    </div>`;
+  document.getElementById("modal").style.display = "flex";
+}
+function trocarConta(){
+  fecharModal();
+  api("logout", {}).catch(()=>{});
+  S = { mi:0, step:0, flow:null, pts:0, seq:0, exok:{}, done:{}, boss:{},
+        pos:null, aulas:{}, scored:{}, hist:[], nome:"", turma:"" };
+  updateChrome(); setHud(); modalAuth();
+}
+function fecharModal(){ document.getElementById("modal").style.display = "none"; }
+
+/* ---------- boot ---------- */
+function finishBoot(){
+  document.getElementById("modal").style.display = "none";
+  updateChrome(); setHud();
+  if (CLOUD){
+    statusNuvem("☁️ …");
+    api("get").then(j => {
+      if (j && j.payload && typeof j.payload.pts === "number" && !S.pts){
+        Object.assign(S, j.payload);
+      }
+      statusNuvem("☁️ sincronizado");
+      retomar();
+    }).catch(() => { statusNuvem("☁️ offline"); retomar(); });
+  } else retomar();
+}
+function retomar(){
+  updateChrome(); setHud();
+  if (S.pos){ abrirMod(S.pos.mi, S.pos.step); }   // volta DIRETO de onde parou
+  else irHome();
+}
+function boot(){
+  updateChrome();
+  if (CLOUD){
+    api("get").then(j => {
+      if (j && j.nome){ S.nome = j.nome; S.turma = j.turma || "";
+        if (j.payload) Object.assign(S, j.payload);
+        finishBoot(); }
+      else modalAuth();
+    }).catch(() => { statusNuvem("☁️ offline"); modalAuth(); });
+  } else {
+    if (S.nome) finishBoot(); else modalAuth();
+  }
+}
+
+/* ---------- entregas de arquivos do aluno ---------- */
+function abrirEntregas(){
+  if (!S.nome) return modalAuth();
+  const mb = document.getElementById("mbox");
+  mb.innerHTML = `<h3>📤 Entregar atividade</h3>
+    <p class="nota">Anexe seu arquivo (txt, doc, docx, pdf) — ele fica ligado ao seu nome para
+    a professora corrigir depois.</p>
+    <input type="file" id="inFile" accept=".txt,.doc,.docx,.pdf,.odt">
+    <div id="entErr" class="err" style="display:none"></div>
+    <div class="nav"><button class="btn amb" onclick="enviarEntrega()">Enviar ✔</button>
+    <button class="btn gh" onclick="abrirMinhas()">Minhas entregas</button></div>
+    <div id="entSt" class="nota"></div>`;
+  document.getElementById("modal").style.display = "flex";
+}
+function enviarEntrega(){
+  const f = document.getElementById("inFile").files[0];
+  const err = document.getElementById("entErr");
+  err.style.display = "none";
+  if (!f){ err.textContent = "Escolha um arquivo antes."; err.style.display = "block"; return; }
+  if (f.size > 12 * 1024 * 1024){ err.textContent = "Arquivo maior que 12 MB."; err.style.display = "block"; return; }
+  document.getElementById("entSt").textContent = "Enviando " + f.name + " …";
+  const r = new FileReader();
+  r.onload = () => {
+    api("entrega", { nome: f.name, base64: String(r.result).split(",")[1], tipo: f.type })
+      .then(() => { document.getElementById("entSt").textContent = "✔ Entregue com sucesso!"; abrirMinhas(); })
+      .catch(() => { err.textContent = "Falha no envio — tente de novo."; err.style.display = "block"; });
+  };
+  r.readAsDataURL(f);
+}
+function abrirMinhas(){
+  const mb = document.getElementById("mbox");
+  mb.innerHTML = `<h3>📤 Minhas entregas</h3><div id="minhasLista" class="nota">carregando…</div>
+    <div class="nav"><button class="btn gh" onclick="fecharModal()">Fechar</button></div>`;
+  document.getElementById("modal").style.display = "flex";
+  api("minhas").then(xs => {
+    document.getElementById("minhasLista").innerHTML = (xs && xs.length)
+      ? xs.map(x => `<div class="item-arq"><span>📄 ${x.nome}</span>
+          <span class="nota">${(x.atualizado||"").slice(0,10)}</span></div>`).join("")
+      : "<p class='nota'>Nenhuma entrega ainda.</p>";
+  }).catch(() => { document.getElementById("minhasLista").innerHTML =
+      "<p class='nota'>Offline no momento.</p>"; });
+}
+
+/* ---------- materiais ---------- */
+function abrirMateriais(){
+  S.flow = null; setHud(); updateChrome();
+  app.innerHTML = `<div class="cardp"><h2>📎 Materiais da turma</h2>
+    <p style="margin:6px 0 12px">Documentos enviados pela professora: apostilas, listas, slides.</p>
+    <div id="listaArq"><p class="nota">carregando…</p></div>
+    <div class="nav"><button class="btn gh" onclick="irHome()">← Voltar à trilha</button></div></div>`;
+  api("arq").then(xs => {
+    const el = document.getElementById("listaArq");
+    if (!xs || !xs.length){ el.innerHTML = "<p class='nota'>Nenhum material enviado ainda.</p>"; return; }
+    el.innerHTML = xs.map(x => `<div class="item-arq"><a href="${x.url}" target="_blank" download>⬇ ${x.nome}</a>
+      <span class="nota">${x.tamanho ? Math.max(1, Math.round(x.tamanho/1024)) + " KB" : ""} ·
+      ${(x.atualizado||"").slice(0,10)}</span></div>`).join("");
+  }).catch(() => { document.getElementById("listaArq").innerHTML =
+      "<p class='nota'>Offline no momento.</p>"; });
+}
+
+/* ---------- trilha / fluxo ---------- */
+function irHome(){ S.flow = null; setHud(); updateChrome(); renderHome(); }
+function renderHome(){
+  let h = S.nome
+    ? `<h2 style="color:var(--navy);margin:6px 0 4px">Olá, ${S.nome}! 👋</h2>
+       <div class="kick">Trilha do semestre${S.turma ? " · Turma " + S.turma : ""} · seus pontos: ⭐ ${S.pts}</div>`
+    : `<h2 style="color:var(--navy);margin:6px 0 4px">Trilha do semestre</h2>`;
+  h += `<p class="nota">Cada módulo é uma fase: cartas de aula com checkpoints ✅, exercícios 🛠 e o
+   <b>chefe do módulo</b> ⚡. ${CLOUD ? "Seu progresso vive na nuvem da escola." :
+   "Seu progresso fica neste navegador."}</p>
+   <div class="modgrid" style="margin-top:14px">`;
+  for (const m of DATA.mods){
+    const d = (S.aulas["m"+m.n] || []).length;
+    const tot = m.aulas.length;
+    const st = S.done["m"+m.n] ? "🏆" : d > 0 ? "⭐" : "📘";
+    h += `<div class="modcard" onclick="abrirMod(${m.n})">
+      <span class="st">${st}</span>
+      <div class="kick">Módulo ${m.n} · Parte ${m.parte}</div>
+      <h3>${m.ti}</h3>
+      <div class="sub">${m.faixa} · ${tot} aulas interativas</div>
+      <div class="prog">${d}/${tot} aulas concluídas</div>
+      <div class="mini"><i style="width:${tot? Math.round(100*d/tot):0}%"></i></div>
+    </div>`;
+  }
+  app.innerHTML = h + "</div>";
+}
+function buildFlow(m){
+  const f = [{ k:"intro" }];
+  m.aulas.forEach((a, ai) => {
+    a.cards.forEach((c, ci) => f.push({ k:"card", ai, ci }));
+    a.qs.forEach((q, qi) => f.push({ k:"chk", ai, qi }));
+  });
+  f.push({ k:"exs" });
+  m.boss.forEach((q, qi) => f.push({ k:"boss", qi }));
+  f.push({ k:"fim" });
+  return f;
+}
+function abrirMod(n, step){
+  const m = DATA.mods.find(x => x.n === n);
+  S.mi = n; S.seq = 0;
+  S.flow = buildFlow(m);
+  const alvo = (step !== undefined) ? step : ((S.pos && S.pos.mi === n) ? S.pos.step : 0);
+  S.step = Math.max(0, Math.min(S.flow.length - 1, alvo));
+  S.pos = { mi:n, step:S.step };
+  save(); setHud(); updateChrome(); renderStep();
+}
+function mod(){ return DATA.mods.find(x => x.n === S.mi); }
+function continuar(){ if (S.pos) abrirMod(S.pos.mi, S.pos.step); }
+function chkId(st){ return "m"+S.mi + (st.k === "boss" ? ":b"+st.qi : ":a"+st.ai+":q"+st.qi); }
+function pct(){ return Math.round(100 * S.step / (S.flow.length - 1)); }
+function rotuloStep(i){
+  const f = S.flow; if (!f || i < 0 || i >= f.length) return "";
+  const st = f[i]; const m = mod();
+  if (st.k === "intro") return "abertura da fase";
+  if (st.k === "card")  return "carta " + (st.ci+1) + " · " + LBL + " " + m.aulas[st.ai].n;
+  if (st.k === "chk")   return "checkpoint · " + LBL + " " + m.aulas[st.ai].n +
+                               " (" + (st.qi+1) + "/" + m.aulas[st.ai].qs.length + ")";
+  if (st.k === "exs")   return "exercícios do módulo";
+  if (st.k === "boss")  return "chefe · pergunta " + (st.qi+1);
+  return "finalização";
+}
+function stepLabel(){ return rotuloStep(S.step); }
+function topo(tit, kick){
+  return `<div class="bar"><i style="width:${pct()}%"></i></div>
+    <div class="kick">${kick}</div><div class="cardp"><h2>${tit}</h2>`;
+}
+function navBtns(volt, rotulo){
+  const volta = (volt && S.step > 0)
+    ? `<button class="btn gh" onclick="passo(-1)">← Voltar: ${rotuloStep(S.step-1)}</button>` : "";
+  return `</div><div class="nav">${volta}
+    <button class="btn" onclick="passo(1)">${rotulo||"Continuar →"}</button></div>`;
+}
+function passo(d){ S.step = Math.max(0, Math.min(S.flow.length-1, S.step+d));
+  S.pos = { mi:S.mi, step:S.step }; save(); renderStep(); }
+function chip(i, txt){ return `<button class="btn gh" style="margin:3px 5px 3px 0;padding:8px 13px;
+  font-size:13px" onclick="irPara(${i})">${txt}</button>`; }
+function irPara(i){ S.step = Math.max(0, Math.min(S.flow.length-1, i));
+  S.pos = { mi:S.mi, step:S.step }; save(); fecharMapa(); renderStep(); }
+function abrirMapa(){
+  if (!S.flow) return;
+  const m = mod(); let h = "";
+  S.flow.forEach((st, i) => {
+    if (st.k === "card" && st.ci === 0){
+      h += `<div class="kick" style="margin:11px 0 3px">${LBL} ${m.aulas[st.ai].n} — ${m.aulas[st.ai].ti}</div>`;
+      h += chip(i, "🃏 Cartas da aula");
+    } else if (st.k === "chk"){
+      h += chip(i, "✅ Checkpoint " + (st.qi+1) + "/" + m.aulas[st.ai].qs.length +
+                 (S.scored[chkId(st)] ? " ✔" : ""));
+    } else if (st.k === "exs"){
+      h += `<div class="kick" style="margin:11px 0 3px">Fechamento do módulo</div>` + chip(i, "🛠 Exercícios");
+    } else if (st.k === "boss"){
+      h += chip(i, "⚡ Chefe · pergunta " + (st.qi+1));
+    }
+  });
+  const mb = document.getElementById("mbox");
+  mb.innerHTML = `<h3>🎯 Ir diretamente para…</h3>
+    <div style="max-height:55vh;overflow:auto;padding:4px 0">${h}</div>
+    <div class="nav"><button class="btn gh" onclick="fecharMapa()">Fechar</button></div>`;
+  document.getElementById("modal").style.display = "flex";
+}
+function fecharMapa(){ document.getElementById("modal").style.display = "none"; }
+
+function renderStep(){
+  const st = S.flow[S.step];
+  const m = mod();
+  window.scrollTo(0,0);
+  if (st.k === "intro"){
+    app.innerHTML = topo(`Módulo ${m.n} — ${m.ti}`, `Parte ${m.parte} · ${m.faixa}`) +
+      `<p><b>${m.parte_ti}.</b> Nesta fase você vai viver ${m.aulas.length} aulas interativas.</p>
+       <h3>🎯 Objetivos da fase</h3><ul>` +
+      m.obj.map(o => `<li>${rich(o)}</li>`).join("") + `</ul>
+       <p class="nota">Cada <b>carta</b> traz um pedaço da aula; no fim, <b>checkpoints</b> que valem
+       pontos (⭐) e sequência (🔥). Setas do teclado também avançam.</p>` +
+      navBtns(false, "Começar a fase ▶");
+    return;
+  }
+  if (st.k === "card"){
+    const a = m.aulas[st.ai], c = a.cards[st.ci];
+    let h = topo(`${LBL} ${a.n} — ${a.ti}`, `Módulo ${m.n} · carta ${st.ci+1}/${a.cards.length}`);
+    h += cardHtml(c);
+    h += navBtns(true, st.ci === a.cards.length-1 ? "Ir aos checkpoints ✅" : "Continuar →");
+    app.innerHTML = h;
+    return;
+  }
+  if (st.k === "chk" || st.k === "boss"){
+    const isBoss = st.k === "boss";
+    const q = isBoss ? m.boss[st.qi] : m.aulas[st.ai].qs[st.qi];
+    const tit = isBoss ? `CHEFE DO MÓDULO ${m.n} ⚡` : `Checkpoint · ${LBL} ${m.aulas[st.ai].n}`;
+    const id = chkId(st); const prev = S.scored[id];
+    app.innerHTML = `<div class="bar"><i style="width:${pct()}%"></i></div>
+      <div class="kick">${tit} · pergunta ${st.qi+1}/${isBoss? m.boss.length : m.aulas[st.ai].qs.length}${prev? " · já respondida ✔":""}</div>
+      <div class="cardp"><div class="perg">${rich(q[0])}</div>
+      <div id="ops">` + q[1].map((a,i) =>
+        `<button class="op c${i}${prev ? (i===q[2]?" ok":(i===prev.i?" no":"")) : ""}" ${prev?"disabled":""}
+          onclick="resp(${i},${q[2]},this)"><span class="fm">${FM[i]}</span>${rich(a)}</button>`).join("") +
+      `</div><div id="fb">${prev ? (prev.ok
+          ? `<div class="fb ok"><b>✔ Você já respondeu esta pergunta.</b>${rich(q[3]||"")}</div>`
+          : `<div class="fb no"><b>✘ Já respondida — correta: ${FM[q[2]]} — ${rich(q[1][q[2]])}</b>${rich(q[3]||"")}</div>`) : ""}</div></div>
+      <div class="nav">${S.step > 0 ? `<button class="btn gh" onclick="passo(-1)">← Voltar: ${rotuloStep(S.step-1)}</button>` : ""}
+        <button class="btn" id="nx" style="display:${prev?"inline-block":"none"}" onclick="passo(1)">
+        ${proximoRotulo(st)} ▶</button></div>`;
+    return;
+  }
+  if (st.k === "exs"){
+    const key = "m"+m.n;
+    if (!S.exok[key]) S.exok[key] = [];
+    app.innerHTML = topo(`Exercícios do Módulo ${m.n} 🛠`, "Marque ao concluir no laboratório") +
+      `<p class="nota">Resolva no ambiente da disciplina e marque cada item ao terminar —
+       seu “visto” fica salvo${CLOUD ? " no servidor" : ""}.</p>` +
+      m.exs.map((e,i) => `<div class="exitem"><label>
+        <input type="checkbox" ${S.exok[key].includes(i)?"checked":""} onchange="markEx(${i},this.checked)">
+        <span><b>${rich(e.ti)}</b> <span class="kick">[${e.tp}]</span><div class="en">${rich(e.en)}</div></span>
+      </label></div>`).join("") +
+      navBtns(true, "Encarar o chefe ⚡");
+    return;
+  }
+  if (st.k === "fim"){
+    S.done["m"+m.n] = m.aulas.length;
+    S.aulas["m"+m.n] = m.aulas.map(a => a.n);
+    S.pos = null; save();
+    const nx = DATA.mods.find(x => x.n === m.n+1);
+    app.innerHTML = `<div class="cardp fimbox"><div class="em">🏆</div>
+      <h2 style="color:var(--navy)">Módulo ${m.n} concluído${S.nome ? ", " + primeiroNome() : ""}! 🎉</h2>
+      <p><b>${m.ti}</b> · Parte ${m.parte}</p>
+      <p class="nota">Pontos: ⭐ ${S.pts} · Exercícios marcados: ${(S.exok["m"+m.n]||[]).length}/${m.exs.length}.</p>
+      <div class="nav" style="justify-content:center">
+        ${nx ? `<button class="btn amb" onclick="abrirMod(${nx.n})">Próxima fase: Módulo ${nx.n} ▶</button>` :
+               `<button class="btn amb" onclick="abrirMod(1)">Recomeçar trilha 🔁</button>`}
+        <button class="btn gh" onclick="irHome()">🗺 Trilha</button></div></div>`;
+    return;
+  }
+}
+function proximoRotulo(st){
+  if (st.k === "boss") return st.qi === mod().boss.length-1 ? "Finalizar fase" : "Próxima";
+  const a = mod().aulas[st.ai];
+  if (st.qi === a.qs.length-1){
+    return st.ai === mod().aulas.length-1 ? "Ir aos exercícios" : "Próxima aula";
+  }
+  return "Próxima";
+}
+function markEx(i, v){
+  const key = "m"+S.mi; const arr = S.exok[key] || (S.exok[key] = []);
+  if (v && !arr.includes(i)) arr.push(i);
+  if (!v) S.exok[key] = arr.filter(x => x !== i);
+  save();
+}
+function resp(i, certo, btn){
+  const st = S.flow[S.step];
+  const id = chkId(st);
+  if (S.scored[id]) return;
+  const ops = document.querySelectorAll("#ops .op");
+  ops.forEach((b,k) => { b.disabled = true; if (k === certo) b.classList.add("ok");
+    else if (k === i) b.classList.add("no"); });
+  const q = st.k === "boss" ? mod().boss[st.qi] : mod().aulas[st.ai].qs[st.qi];
+  const fb = document.getElementById("fb");
+  const ok = (i === certo);
+  S.scored[id] = { i:i, ok:ok };
+  S.hist = S.hist || [];
+  S.hist.push({ t: st.k, mod: S.mi, aula: st.k === "boss" ? "chefe" : mod().aulas[st.ai].n,
+                q: st.qi+1, perg: q[0].replace(/<[^>]+>/g,"").slice(0,90),
+                esc: i, ok: ok, ts: new Date().toISOString().slice(0,16).replace("T"," ") });
+  if (S.hist.length > 600) S.hist = S.hist.slice(-600);
+  if (ok){
+    S.pts += 100 + Math.min(S.seq,5)*20; S.seq++;
+    fb.className = "fb ok"; fb.innerHTML = `<b>✔ Acertou! +${100 + Math.min(S.seq-1,5)*20} pts</b>${rich(q[3]||"")}`;
+  } else {
+    S.seq = 0;
+    fb.className = "fb no";
+    fb.innerHTML = `<b>✘ Resposta: ${FM[certo]} — ${rich(q[1][certo])}</b>${rich(q[3]||"")}`;
+  }
+  if (st.k === "chk"){
+    const a = mod().aulas[st.ai];
+    if (st.qi === a.qs.length-1){
+      const key = "m"+S.mi; const arr = S.aulas[key] || (S.aulas[key] = []);
+      if (!arr.includes(a.n)) arr.push(a.n);
+    }
+  } else if (st.qi === mod().boss.length-1){
+    S.boss["m"+S.mi] = true;
+  }
+  setHud(); save();
+  document.getElementById("nx").style.display = "inline-block";
+}
+function cardHtml(c){
+  if (c.t === "p") return `<p>${c.h}</p>`;
+  if (c.t === "h") return `<h3>${c.x}</h3>`;
+  if (c.t === "ul") return `<ul>${c.it.map(i=>`<li>${i}</li>`).join("")}</ul>`;
+  if (c.t === "ol") return `<ol>${c.it.map(i=>`<li>${i}</li>`).join("")}</ol>`;
+  if (c.t === "bx"){
+    const ti = c.ti || {con:"Conceito-chave", ana:"Analogia", dica:"Dica", aten:"Atenção"}[c.k];
+    return `<div class="bx ${c.k}"><b class="ti">${ti}</b><p>${c.x}</p></div>`;
+  }
+  if (c.t === "cd") return codeHtml(c);
+  if (c.t === "tb") return `<table class="tbl"><tr>${c.cab.map(x=>`<th>${x}</th>`).join("")}</tr>` +
+    c.lin.map(r => `<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("") + `</table>`;
+  return "";
+}
+/* ---------- realce de código ---------- */
+const KW = /(echo|print|if|else|elseif|endif|for|endforeach|foreach|while|do|switch|case|break|default|function|return|true|false|null|exit|die|include|require|include_once|require_once|define|as|new|isset|empty)\b/;
+function hiLine(line, lg){
+  if (lg === "html") return hiHtml(line);
+  if (lg === "vb") return hiVb(line);
+  if (lg === "sql") return hiSql(line);
+  if (lg === "shell" || lg === "texto"){
+    const i = line.indexOf("#");
+    if (lg === "shell" && i >= 0) return [["", line.slice(0,i)], ["c", line.slice(i)]];
+    return [["", line]];
+  }
+  const ci = line.indexOf("//");
+  let code = line, com = null;
+  if (ci >= 0){ code = line.slice(0, ci); com = line.slice(ci); }
+  const out = [];
+  const re = /("[^"]*"|'[^']*')|(<\?php\b|<\?=|\?>)|(<\/?[A-Za-z][^>]*>)|(\$[A-Za-z_]\w*)|\b([A-Za-z_]\w*)(?=\s*\()/g;
+  let last = 0, m;
+  while ((m = re.exec(code))){
+    if (m.index > last) out.push(...tokSolta(code.slice(last, m.index)));
+    if (m[1]) out.push(["s", m[1]]);
+    else if (m[2]) out.push(["k", m[2]]);
+    else if (m[3]) out.push(["t", m[3]]);
+    else if (m[4]) out.push(["v", m[4]]);
+    else if (m[5]) out.push(["f", m[5]]);
+    last = re.lastIndex;
+  }
+  if (last < code.length) out.push(...tokSolta(code.slice(last)));
+  if (com) out.push(["c", com]);
+  return out;
+}
+function tokSolta(txt){
+  const res = []; const r2 = new RegExp(KW.source, "g"); let last = 0, m;
+  while ((m = r2.exec(txt))){
+    if (m.index > last) res.push(["", txt.slice(last, m.index)]);
+    res.push(["k", m[0]]); last = r2.lastIndex;
+  }
+  if (last < txt.length) res.push(["", txt.slice(last)]);
+  return res;
+}
+function hiVb(line){
+  const out=[]; let instr=false, ci=-1;
+  for (let i=0;i<line.length;i++){ const ch=line[i];
+    if (ch==='"') instr=!instr; else if (ch==="'" && !instr){ ci=i; break; } }
+  const code = ci>=0 ? line.slice(0,ci) : line;
+  const com  = ci>=0 ? line.slice(ci) : null;
+  const re=/("[^"]*")|\b(Dim|As|Sub|End|Function|If|Then|Else|ElseIf|For|Next|Do|While|Loop|Until|Select|Case|Public|Private|Print|Set|New|Not|And|Or|Mod|To|Step|ByVal|ByRef|Type|Exit|On|Error|GoTo|Is|Nothing|True|False|Call|Each|In|Option)\b|\b(\d+(?:\.\d+)?)\b/g;
+  let last=0,m;
+  while((m=re.exec(code))){
+    if (m.index>last) out.push(["", code.slice(last,m.index)]);
+    if (m[1]) out.push(["s",m[1]]); else if (m[2]) out.push(["k",m[2]]); else out.push(["n",m[3]]);
+    last=re.lastIndex;
+  }
+  if (last<code.length) out.push(["", code.slice(last)]);
+  if (com) out.push(["c", com]);
+  return out;
+}
+function hiSql(line){
+  const out=[]; const ci=line.indexOf("--");
+  const code = ci>=0 ? line.slice(0,ci) : line;
+  const com  = ci>=0 ? line.slice(ci) : null;
+  const re=/('[^']*')|\b(SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DATABASE|USE|SHOW|ORDER|BY|GROUP|AND|OR|NOT|LIKE|BETWEEN|IN|PRIMARY|KEY|AUTO_INCREMENT|INT|VARCHAR|DECIMAL|DATE|AS|COUNT|SUM|AVG|MAX|MIN|DESC|ASC)\b|\b(\d+(?:\.\d+)?)\b/gi;
+  let last=0,m;
+  while((m=re.exec(code))){
+    if (m.index>last) out.push(["", code.slice(last,m.index)]);
+    if (m[1]) out.push(["s",m[1]]); else if (m[2]) out.push(["k",m[2].toUpperCase()]); else out.push(["n",m[3]]);
+    last=re.lastIndex;
+  }
+  if (last<code.length) out.push(["", code.slice(last)]);
+  if (com) out.push(["c", com]);
+  return out;
+}
+function hiHtml(line){
+  const res=[]; let re=/(<\/?[A-Za-z][^>]*>)|("[^"]*")/g, last=0, m;
+  while ((m=re.exec(line))){
+    if (m.index>last) res.push(["", line.slice(last,m.index)]);
+    res.push(m[1] ? ["t", m[1]] : ["s", m[2]]); last=re.lastIndex;
+  }
+  if (last<line.length) res.push(["", line.slice(last)]);
+  return res;
+}
+const COLS = { s:"#9ece6a", k:"#d38ae0", t:"#6cb6ff", v:"#f2777a", f:"#6cb6ff", c:"#7f96ad", n:"#e5c07b" };
+function codeHtml(cd){
+  const lines = cd.ln.map(l => {
+    const segs = hiLine(l, cd.lg || "php");
+    const inner = segs.map(([k, t]) =>
+      k ? `<span style="color:${COLS[k]}">${t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</span>`
+        : t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")).join("");
+    return inner || "&nbsp;";
+  }).join("\n");
+  return `<div class="codewrap"><div class="codebar"><span>${cd.ti||"código"}</span><span>${(cd.lg||"php").toUpperCase()}</span></div><pre>${lines}</pre></div>`;
+}
+document.addEventListener("keydown", e => {
+  if (!S.flow || document.getElementById("modal").style.display === "flex") return;
+  const st = S.flow[S.step];
+  if ((st.k === "chk" || st.k === "boss")){
+    if (["1","2","3","4"].includes(e.key)){
+      const b = document.querySelectorAll("#ops .op")[+e.key-1];
+      if (b && !b.disabled) b.click();
+    }
+    if ((e.key === "ArrowRight" || e.key === " ") && document.getElementById("nx").style.display !== "none"){
+      passo(1); e.preventDefault();
+    }
+    return;
+  }
+  if (st.k === "exs") return;
+  if (e.key === "ArrowRight" || e.key === " ") { passo(1); e.preventDefault(); }
+  if (e.key === "ArrowLeft") passo(-1);
+});
+boot();
+</script>
+</body>
+</html>

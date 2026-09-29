@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel da Professora · AulaViva</title>
+<style>
+ :root{--navy:#0d2b4e;--azul:#1b5faa;--amber:#f59e0b}
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:#f4f7fb;color:#1f2937}
+ header{background:var(--navy);color:#fff;padding:12px 18px;display:flex;gap:10px;align-items:center;
+   justify-content:space-between;flex-wrap:wrap;position:sticky;top:0}
+ header h1{font-size:18px}
+ .wrap{max-width:1080px;margin:0 auto;padding:18px 14px 70px}
+ .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 14px rgba(13,43,78,.08);margin-bottom:16px}
+ .btn{border:none;border-radius:10px;padding:10px 18px;font-weight:800;cursor:pointer;
+   font-family:inherit;background:var(--azul);color:#fff;font-size:14px}
+ .btn.amb{background:var(--amber);color:#3a2700}
+ .btn.gh{background:#e3ecf7;color:var(--navy)}
+ input[type=text],input[type=password]{border:2px solid #d9d4ee;border-radius:10px;padding:10px 12px;
+   font-size:15px;font-family:inherit;width:100%;margin:6px 0}
+ table{width:100%;border-collapse:collapse;font-size:14px}
+ th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left}
+ td{border:1px solid #dbe6f2;padding:7px 10px}
+ tr:nth-child(even) td{background:#f6fafd}
+ tr.click{cursor:pointer} tr.click:hover td{background:#fff7e6}
+ .tag{display:inline-block;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:800}
+ .tag.ok{background:#e8f7e6;color:#1e7b34}.tag.no{background:#fdecef;color:#c0392b}
+ .nota{font-size:13px;color:#5b6b7c;margin-top:8px}
+ .err{background:#fbeae8;border-left:5px solid #e21b3c;border-radius:8px;padding:8px 12px;
+   font-size:13.5px;color:#8c2418;margin:8px 0;display:none}
+ #modal{position:fixed;inset:0;background:rgba(8,20,38,.62);display:none;align-items:center;
+   justify-content:center;z-index:20}
+ .mbox{background:#fff;border-radius:18px;padding:24px;max-width:640px;width:94%;
+   max-height:88vh;overflow:auto;box-shadow:0 12px 44px rgba(0,0,0,.4)}
+ .hist td{font-size:12.5px}
+ @media(max-width:760px){header h1{font-size:15px}.wrap{padding:12px 10px 60px}
+   .card{padding:14px}table{display:block;overflow-x:auto}.btn{padding:9px 13px;font-size:13px}
+   .mbox{padding:16px;width:97%}}
+</style></head><body>
+<header><h1>👩‍ Painel da Professora · AulaViva</h1>
+ <a class="btn amb" href="AulaViva_Linguagem_de_Programacao_II.html" style="text-decoration:none">← Voltar ao app</a></header>
+<div class="wrap">
+ <div class="card" id="gate">
+  <h2 style="color:var(--navy)">🔒 Acesso restrito</h2>
+  <p class="nota">Painel exclusivo da professora (ADM). Informe seu nome e o token.</p>
+  <input type="text" id="gnome" placeholder="Nome (ADM)">
+  <input type="password" id="gtok" placeholder="Token do painel">
+  <div class="err" id="gerr"></div>
+  <button class="btn amb" onclick="entrar()">Entrar 🔓</button>
+ </div>
+ <div id="painel" style="display:none">
+  <div class="card">
+   <h2 style="color:var(--navy)">👥 Progresso dos alunos</h2>
+   <div style="margin:10px 0;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn gh" onclick="baixarCSV()">⬇ CSV completo (com respostas)</button>
+    <button class="btn gh" onclick="abrirEnvio()">📎 Enviar material à turma</button>
+    <button class="btn gh" onclick="verEntregas()">📤 Entregas recebidas</button>
+    <button class="btn gh" onclick="carregar()">🔄 Atualizar</button>
+   </div>
+   <div id="lista"><p class="nota">carregando…</p></div>
+   <p class="nota">Clique na linha do aluno para ver TODAS as respostas registradas e as entregas.</p>
+  </div>
+ </div>
+</div>
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+<script>
+const API = "https://raquel.redserver.top/Kit_Sala_de_Aula/api.php"; const DISC = "lp2";
+let TOK = ""; let ALUNOS = [];
+function api(rota, corpo, extra){
+  const q = API + "?disc=" + DISC + "&a=" + rota + (extra || "");
+  if (corpo !== undefined)
+    return fetch(q,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(corpo)});
+  return fetch(q);
+}
+function entrar(){
+  const nome = document.getElementById("gnome").value.trim();
+  const tok  = document.getElementById("gtok").value.trim();
+  const err  = document.getElementById("gerr");
+  err.style.display = "none";
+  if (!/juh/i.test(nome)){ err.textContent = "Acesso restrito ao perfil ADM (professora).";
+    err.style.display = "block"; return; }
+  TOK = tok;
+  carregar(true);
+}
+function carregar(primeira){
+  api("lista", undefined, "&token=" + encodeURIComponent(TOK))
+   .then(r => { if (!r.ok) throw 0; return r.json(); })
+   .then(xs => { ALUNOS = xs; document.getElementById("gate").style.display = "none";
+     document.getElementById("painel").style.display = "block"; renderLista(); })
+   .catch(() => { const e = document.getElementById("gerr");
+     e.textContent = "Token inválido ou servidor offline."; e.style.display = "block"; });
+}
+function renderLista(){
+  if (!ALUNOS.length){ document.getElementById("lista").innerHTML =
+    "<p class='nota'>Nenhum aluno ainda.</p>"; return; }
+  let h = `<table><tr><th>Aluno</th><th>Turma</th><th>⭐ Pts</th><th>Aulas</th><th>Ex.</th>
+    <th>Chefes</th><th>Onde parou</th><th>Respostas</th><th>Atualizado</th></tr>`;
+  for (const x of ALUNOS){
+    h += `<tr class="click" onclick="detalhe(${ALUNOS.indexOf(x)})"><td><b>${x.nome}</b></td>
+     <td>${x.turma || "—"}</td><td>${x.pts}</td><td>${x.aulas}</td><td>${x.exercicios}</td>
+     <td>${x.chefes}</td><td>${x.pos ? "Módulo " + x.pos.mi : "início"}</td>
+     <td>${(x.hist || []).length}</td><td>${(x.atualizado || "").slice(0,10)}</td></tr>`;
+  }
+  document.getElementById("lista").innerHTML = h + "</table>";
+}
+function detalhe(i){
+  const x = ALUNOS[i];
+  const hist = (x.hist || []);
+  let h = `<h3 style="color:var(--navy)">📝 ${x.nome} <span class="nota">(${x.turma || "sem turma"})</span></h3>
+   <p class="nota">⭐ ${x.pts} pts · ${x.aulas} aulas · ${x.chefes} chefes ·
+   ${hist.length} respostas registradas</p>`;
+  if (hist.length){
+    h += `<table class="hist"><tr><th>Quando</th><th>Tipo</th><th>Mod</th><th>Aula</th>
+      <th>Pergunta</th><th>Escolha</th><th>Resultado</th></tr>`;
+    for (const r of hist.slice().reverse().slice(0, 200))
+      h += `<tr><td>${r.ts || ""}</td><td>${r.t === "boss" ? "chefe" : "checkpoint"}</td>
+        <td>${r.mod}</td><td>${r.aula}</td><td>${(r.perg || "").slice(0,60)}</td>
+        <td>${["▲","◆","●","■"][r.esc] || r.esc}</td>
+        <td><span class="tag ${r.ok ? "ok" : "no"}">${r.ok ? "acertou" : "errou"}</span></td></tr>`;
+    h += "</table>";
+  } else h += "<p class='nota'>Sem respostas registradas ainda.</p>";
+  h += `<div style="margin-top:12px"><button class="btn gh" onclick="fechar()">Fechar</button></div>`;
+  document.getElementById("mbox").innerHTML = h;
+  document.getElementById("modal").style.display = "flex";
+}
+function fechar(){ document.getElementById("modal").style.display = "none"; }
+function baixarCSV(){
+  const sep = ";";
+  let csv = "Aluno" + sep + "Turma" + sep + "Pontos" + sep + "Aulas" + sep + "Exercicios" + sep +
+    "Chefes" + sep + "Modulo_atual" + sep + "Respostas_certas" + sep + "Respostas_erradas" + sep +
+    "Atualizado" + sep + "Historico" + "\n";
+  for (const x of ALUNOS){
+    const hist = x.hist || [];
+    const det = hist.map(r => `${r.ts}|${r.t === "boss" ? "chefe" : "chk"}|m${r.mod}|${r.aula}|p${r.q}|${r.ok ? "C" : "E"}`).join(" ");
+    csv += [x.nome, x.turma || "", x.pts, x.aulas, x.exercicios, x.chefes,
+      x.pos ? x.pos.mi : "", hist.filter(r => r.ok).length, hist.filter(r => !r.ok).length,
+      x.atualizado || "", '"' + det.replace(/"/g, "''") + '"'].join(sep) + "\n";
+  }
+  const b = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(b);
+  a.download = "aulaviva_" + DISC + "_respostas.csv"; a.click();
+}
+function abrirEnvio(){
+  document.getElementById("mbox").innerHTML = `<h3 style="color:var(--navy)">📎 Enviar material</h3>
+   <input type="file" id="fin" accept=".pdf,.docx,.doc,.pptx,.txt,.png,.jpg">
+   <div class="err" id="ferr" style="display:none"></div>
+   <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn amb" onclick="enviar()">Enviar ✔</button>
+    <button class="btn gh" onclick="fechar()">Fechar</button></div><p id="fst" class="nota"></p>`;
+  document.getElementById("modal").style.display = "flex";
+}
+function enviar(){
+  const f = document.getElementById("fin").files[0];
+  const err = document.getElementById("ferr"); err.style.display = "none";
+  if (!f){ err.textContent = "Escolha um arquivo."; err.style.display = "block"; return; }
+  if (f.size > 15 * 1024 * 1024){ err.textContent = "Arquivo > 15 MB."; err.style.display = "block"; return; }
+  document.getElementById("fst").textContent = "Enviando " + f.name + " …";
+  const r = new FileReader();
+  r.onload = () => api("arqup", { token: TOK, nome: f.name,
+      base64: String(r.result).split(",")[1], tipo: f.type })
+    .then(x => x.json())
+    .then(() => { document.getElementById("fst").textContent = "✔ enviado!"; fechar(); })
+    .catch(() => { err.textContent = "Falha no envio."; err.style.display = "block"; });
+  r.readAsDataURL(f);
+}
+function verEntregas(){
+  api("entregas", undefined, "&token=" + encodeURIComponent(TOK))
+   .then(r => r.json()).then(xs => {
+    let h = `<h3 style="color:var(--navy)">📤 Entregas recebidas (${xs.length})</h3>`;
+    if (!xs.length) h += "<p class='nota'>Nenhuma entrega ainda.</p>";
+    else h += `<table><tr><th>Quando</th><th>Aluno</th><th>Arquivo</th><th>Tamanho</th></tr>` +
+      xs.map(x => `<tr><td>${(x.created_at || "").slice(0,16).replace("T"," ")}</td>
+        <td>${x.aluno}</td><td><a href="${x.url}" target="_blank">${x.nome}</a></td>
+        <td>${Math.round((x.tamanho || 0) / 1024)} KB</td></tr>`).join("") + "</table>";
+    h += `<div style="margin-top:12px"><button class="btn gh" onclick="fechar()">Fechar</button></div>`;
+    document.getElementById("mbox").innerHTML = h;
+    document.getElementById("modal").style.display = "flex";
+  }).catch(() => alert("Falha ao listar entregas."));
+}
+</script></body></html>

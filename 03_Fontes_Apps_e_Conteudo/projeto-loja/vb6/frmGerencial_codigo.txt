@@ -1,0 +1,102 @@
+' ============================================================
+' FRMGERENCIAL — código do formulário principal (LP2)
+' Projeto Loja Tech da Turma
+'
+' COMO MONTAR NO VB6 (passo a passo para a aula):
+'  1) File > New Project > Standard EXE
+'  2) Renomeie o Form1 para frmGerencial (propriedade Name e Caption
+'     "Gerencial — Loja Tech da Turma")
+'  3) Crie os controles com EXATAMENTE estes nomes:
+'       ListBox    lstProdutos     (grande, à esquerda)
+'       TextBox    txtNome
+'       TextBox    txtPreco
+'       TextBox    txtEstoque
+'       ComboBox   cboCategoria    (Style: Dropdown List)
+'       CommandButton cmdAdicionar   "Adicionar produto"
+'       CommandButton cmdAtualizar   "Atualizar lista"
+'       CommandButton cmdRelatorio   "Relatório (impressora)"
+'       CommandButton cmdExportar    "Exportar .txt"
+'       CommandButton cmdSair        "Sair"
+'       Label      lblStatus       (rodapé do form)
+'  4) Projeto > Add Module > importe mdlConexao.bas e mdlRelatorios.bas
+'  5) Cole TODO o código abaixo na janela de código do formulário
+' ============================================================
+
+Option Explicit
+
+' ---------- Ao abrir: conecta e lista ----------
+Private Sub Form_Load()
+    cboCategoria.AddItem "perifericos"
+    cboCategoria.AddItem "audio"
+    cboCategoria.AddItem "acessorios"
+    cboCategoria.AddItem "componentes"
+    cboCategoria.ListIndex = 0
+
+    If Conectar() Then
+        lblStatus.Caption = "Conectado ao MySQL (loja_turma)."
+        AtualizarLista
+    Else
+        lblStatus.Caption = "SEM conexão — verifique XAMPP/ODBC."
+    End If
+End Sub
+
+' ---------- Ao fechar: desconecta ----------
+Private Sub Form_Unload(Cancel As Integer)
+    Desconectar
+End Sub
+
+' ---------- Preenche a ListBox com o Recordset ----------
+Private Sub AtualizarLista()
+    Dim rs As ADODB.Recordset
+    lstProdutos.Clear
+    Set rs = ListarProdutos()
+    Do While Not rs.EOF
+        lstProdutos.AddItem rs!id & " | " & rs!nome & " | R$ " & _
+                            Format(rs!preco, "0.00") & " | est: " & rs!estoque
+        rs.MoveNext
+    Loop
+    rs.Close
+    lblStatus.Caption = lstProdutos.ListCount & " produto(s) carregado(s)."
+End Sub
+
+Private Sub cmdAtualizar_Click()
+    AtualizarLista
+End Sub
+
+' ---------- Adicionar produto com validação (Strings + Val, semanas 8-11) ----------
+Private Sub cmdAdicionar_Click()
+    Dim nome As String, preco As Single, estoque As Integer
+
+    nome = Trim$(txtNome.Text)
+    If Len(nome) < 3 Then
+        MsgBox "Digite um nome com pelo menos 3 letras.", vbExclamation
+        txtNome.SetFocus
+        Exit Sub
+    End If
+    If Not IsNumeric(txtPreco.Text) Or Val(txtPreco.Text) <= 0 Then
+        MsgBox "Preço inválido.", vbExclamation
+        txtPreco.SetFocus
+        Exit Sub
+    End If
+    estoque = Val(txtEstoque.Text)
+    If estoque < 0 Then estoque = 0
+
+    InserirProduto nome, cboCategoria.Text, Val(txtPreco.Text), estoque
+    MsgBox "Produto cadastrado!", vbInformation
+    txtNome.Text = "": txtPreco.Text = "": txtEstoque.Text = ""
+    AtualizarLista
+End Sub
+
+' ---------- Relatório via Printer ----------
+Private Sub cmdRelatorio_Click()
+    RelatorioEstoque
+End Sub
+
+' ---------- Exportar para arquivo texto ----------
+Private Sub cmdExportar_Click()
+    ExportarProdutosTxt "C:\lp2\export\produtos.txt"
+End Sub
+
+Private Sub cmdSair_Click()
+    Unload Me
+End Sub

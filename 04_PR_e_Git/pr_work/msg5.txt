@@ -1,0 +1,28 @@
+feat(apps): navegação página a página — contador, Início/Voltar/Próximo/Fim e salto por número
+
+O quê:
+- Barra de páginas no topo de TODAS as páginas de um módulo: "Página X de Y",
+  botões ⏮ Início, ◀ Voltar, Próximo ▶ e ⏭ Fim, e um campo para DIGITAR a
+  página desejada (+ botão Ir; Enter também funciona).
+- A barra mostra ainda o que é a página atual (ex.: "carta 3 · Aula 12",
+  "checkpoint · Aula 5 (2/3)", "chefe · pergunta 1").
+- Total de páginas do módulo visível nos cards da trilha ("… · N páginas")
+  e no mapa 🎯 (cabeçalho "página X de Y" + atalhos ⏮ Início e ⏭ Fim).
+- Setas do teclado deixam de virar página quando o cursor está num campo
+  (senão o campo de página brigava com a navegação por setas).
+
+Por quê:
+- Pedido da professora (item extra da lista do AulaViva v2): módulos longos
+  (alguns com mais de 100 páginas entre cartas, checkpoints, exercícios e
+  chefe) precisam de navegação direta — voltar ao início, pular ao fim ou
+  digitar "página 57" sem depender só do mapa ou de rolar a tela.
+- "Pode ser excessiva a consulta, mas prefiro assim": todos os controles
+  ficam sempre visíveis, em qualquer página do módulo.
+
+Onde:
+- apps-nuvem/AulaViva_pi1_index.html e apps-nuvem/AulaViva_lp2_index.html
+- apps-offline/AulaViva_PI-I_offline.html e apps-offline/AulaViva_LP2_offline.html
+  (novos builds do mesmo gerador; sem mudança em API, banco, painéis ou nomes
+  de arquivo. No gerador: funções paginador()/irPagina()/qtdPaginas(),
+  paginador injetado em topo(), checkpoint/chefe e finalização, CSS .pager,
+  guarda de teclado para INPUT/TEXTAREA.)

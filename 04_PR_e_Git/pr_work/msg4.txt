@@ -1,0 +1,18 @@
+feat(apps-offline): AulaViva offline v2 (PI-I e LP2)
+
+O quê: novo build de apps-offline/AulaViva_PI-I_offline.html e
+apps-offline/AulaViva_LP2_offline.html (mesmos nomes/caminhos).
+
+Por quê: levar as mesmas correções da nuvem para o pendrive da escola
+(alternativas com tags HTML renderizadas como texto, nome completo,
+🏠 home, 🎯 mapa, retomada automática) + FIX CRÍTICO do DISC da LP2:
+no build anterior os DOIS apps offline gravavam na mesma chave
+localStorage ("aulaviva_pi1") — quem abrisse PI-I e LP2 no mesmo
+navegador perdia o progresso de um ao salvar o outro. Agora cada app
+usa a sua chave (aulaviva_pi1 / aulaviva_lp2).
+
+Onde: apps-offline/ (versões sem API; botão Painel fica oculto).
+
+Notas: offline usa localStorage POR DEFINIÇÃO (a regra "nada de
+localStorage" vale para as versões de nuvem, que seguem com cookie
+httpOnly); Modo Turma e responsivo preservados.

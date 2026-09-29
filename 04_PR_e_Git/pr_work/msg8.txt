@@ -1,0 +1,19 @@
+túnel: cloudflared sem tela de aviso + notas de deploy atualizadas
+
+O QUÊ: adiciona redserver/tunel/ com sobe-tunel.sh (quick tunnel p/ :8080, imprime
+o link e salva em /root/url-tunel.txt, opção --parar), a unidade systemd
+tunel-cloudflared.service (túnel permanente) e LEIA-ME_TUNEL.md com passo a passo
+e teste de aceite; DEPLOY_NOTES.md ganha a seção do túnel novo.
+POR QUÊ: o ngrok grátis interpõe a tela "Visit Site" antes do Kit (e a
+pré-visualização do link no WhatsApp mostrava a propaganda do ngrok); o cloudflared
+quick tunnel não tem intermediário — clicou, cai direto no login nome+senha.
+ONDE: redserver/tunel/* (novos), redserver/DEPLOY_NOTES.md (seção nova).
+Obs.: o link do quick tunnel muda a cada subida (como o ngrok mutável atual);
+o LEIA-ME documenta o opcional túnel nomeado p/ link fixo.
+Também entra aqui videoaulas/LEIA-ME_MEDIA.md: o contrato da pasta de mídia
+(mp4 das videoaulas, passo a passo em PDF e áudios opcionais de módulo),
+irmã dos apps e referenciada por caminho relativo ../videoaulas/.
+O DEPLOY_NOTES.md atualizado (seções do túnel, da mídia e do hotfix do
+título v1 da LP2) viaja como ANEXO em extras/DEPLOY_NOTES.md e no kit
+Manutencao_Redserver_v2.zip — fora dos patches porque o master real
+contém usuário/IP do servidor, que vazaria pelo contexto do diff.

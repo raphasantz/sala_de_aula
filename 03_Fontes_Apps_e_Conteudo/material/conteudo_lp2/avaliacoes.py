@@ -1,0 +1,456 @@
+# -*- coding: utf-8 -*-
+"""Avaliações de Linguagem de Programação II (A1, A2, A3) + Projeto Integrador.
+Modelos de prova propostos (S). Gabaritos nos campos resposta/comentario/criterio."""
+
+PROJETO_FINAL = {
+    "titulo": "Projeto Integrador — semanas 23 e 24",
+    "o_que_e": (
+        "Programa completo em Visual Basic 6.0 que reúne, conforme a viabilidade do ambiente: "
+        "conexão com banco de dados (MySQL via ODBC/ADO), instruções SQL de manipulação e "
+        "consulta, estruturas de dados (vetor, matriz e/ou registro), modularização (Sub e "
+        "Function em Modules), variáveis String, arquivos/textos para importação/exportação, "
+        "geração de relatório e/ou saída para impressão, recursos gráficos quando pertinente e "
+        "preparação do disco/pacote de instalação."
+    ),
+    "temas": [
+        "Controle de estoque com relatórios", "Cadastro de alunos com histórico",
+        "Contas a pagar/receber com documentos", "Biblioteca com empréstimos",
+        "PDV simples com cupom (documento fiscal)", "Controle de tarefas com arquivos",
+    ],
+    "entregas": [
+        ("Entrega 1", "Requisitos e desenho: tabelas do banco, telas e módulos previstos", "Aulas 89–90", "Semana 23"),
+        ("Entrega 2", "Versão parcial: conexão + SQL (cadastro e consulta) + estruturas", "Aulas 91–92", "Semana 23"),
+        ("Entrega 3", "Versão completa: arquivos, relatório/impressão e modularização", "Aulas 93–94", "Semana 24"),
+        ("Entrega 4", "Pacote de instalação + apresentação e defesa do projeto", "Aulas 95–96", "Semana 24"),
+    ],
+    "criterios_10pts": [
+        ("Funcionalidade", "3,0", "Cadastro, consulta e relatório funcionando de ponta a ponta com o banco."),
+        ("Estruturas e modularização", "2,0", "Uso coerente de vetor/matriz/registro e Sub/Function em Modules."),
+        ("SQL e banco de dados", "2,0", "CREATE/INSERT/SELECT/UPDATE corretos; conexão tratada com falhas."),
+        ("Relatório e saída", "1,0", "Relatório organizado (cabeçalho, linhas, totais) e/ou documento impresso."),
+        ("Instalação e apresentação", "2,0", "Pacote de instalação gerado + apresentação clara com demonstração."),
+    ],
+}
+
+A1 = {
+    "id": "A1",
+    "titulo": "Avaliação 1 — SGBD, SQL e estruturas (30 pts)",
+    "periodo": "Semanas 1 a 8 (S)",
+    "composicao": [
+        ("Lista prática de SQL + estruturas de dados", "10 pts", "Entrega na semana 6"),
+        ("Atividades extraclasse/AVA e exercícios", "5 pts", "Semanas 1 a 8"),
+        ("Teste escrito-prático (SGBD, conexão, SQL, estruturas)", "15 pts", "Semana 8"),
+    ],
+    "trabalho": {
+        "titulo": "Lista prática (10 pts): SQL + estruturas no laboratório",
+        "descricao": (
+            "Resolver no laboratório: (a) criação de banco e tabela no MySQL; (b) 5 INSERT, "
+            "3 UPDATE e 2 DELETE; (c) 4 SELECT com WHERE e ORDER BY; (d) programa VB6 com um "
+            "vetor de 10 números (média, maior, menor) e uma matriz 3×3 somada por linha. "
+            "Individual ou em duplas (critério do professor)."
+        ),
+        "requisitos": [
+            "Script .sql completo (CREATE DATABASE, CREATE TABLE, INSERT/UPDATE/DELETE/SELECT) comentado;",
+            "Capturas de tela das execuções no MySQL (ou saída colada no documento);",
+            "Projeto VB6 com vetor e matriz processados (código + tela de saída);",
+            "Organização: pasta unica nomeada sobrenome_lista1 com .sql, .vbp e documento de respostas.",
+        ],
+        "rubrica": [
+            ("Criação e população do banco", "2,5", "CREATE/INSERT corretos, tipos adequados, chave primária."),
+            ("Manipulação (UPDATE/DELETE)", "2,5", "Comandos corretos com WHERE seguro (sem apagar tudo sem querer)."),
+            ("Consultas (SELECT)", "2,5", "Filtros e ordenação corretos; resultados conferem."),
+            ("Vetor e matriz em VB6", "2,5", "Declaração, laços e cálculos corretos; saída legível."),
+        ],
+    },
+    "teste": {
+        "titulo": "Teste escrito-prático (15 pts) — modelo (S)",
+        "instrucoes": [
+            "Prova individual, sem consulta. Duração: 2 aulas (100 min).",
+            "Parte A: 6 questões objetivas (1 pt cada). Parte B: 3 questões práticas (3 pts cada).",
+            "Ambiente de referência: Visual Basic 6.0 + MySQL via ODBC/ADO.",
+        ],
+        "parte_a": {
+            "titulo": "Parte A — questões objetivas (1 pt cada)",
+            "questoes": [
+                {"enunciado": "Um SGBD (Sistema Gerenciador de Banco de Dados) é:",
+                 "alt": ["Um editor de textos para dados.",
+                         "Um software que armazena, organiza e controla o acesso aos dados (ex.: MySQL).",
+                         "Uma linguagem de programação estruturada.",
+                         "Um periférico de armazenamento."],
+                 "resposta": 1, "comentario": "SGBD gerencia criação, consulta, alteração e segurança dos dados."},
+                {"enunciado": "A string de conexão em ADO serve para:",
+                 "alt": ["Definir a cor do formulário.",
+                         "Informar driver, servidor, banco e credenciais para abrir a conexão.",
+                         "Criar as tabelas do banco automaticamente.",
+                         "Compilar o programa VB6."],
+                 "resposta": 1, "comentario": "Driver/Servidor/Database/Uid/Pwd: tudo que a conexão precisa."},
+                {"enunciado": "Para INSERIR uma linha nova em uma tabela usamos:",
+                 "alt": ["SELECT", "UPDATE", "INSERT", "ALTER"],
+                 "resposta": 2, "comentario": "INSERT INTO tabela (cols) VALUES (...). UPDATE altera; SELECT consulta."},
+                {"enunciado": "A cláusula que FILTRA linhas de um SELECT é:",
+                 "alt": ["ORDER BY", "WHERE", "GROUP BY", "VALUES"],
+                 "resposta": 1, "comentario": "WHERE define a condição; ORDER BY ordena o resultado."},
+                {"enunciado": "Em VB6, Dim v(1 To 5) As Integer declara:",
+                 "alt": ["Uma matriz 5×5", "Um vetor com 5 posições (1 a 5)", "Um registro com 5 campos", "5 variáveis soltas"],
+                 "resposta": 1, "comentario": "Vetor (array unidimensional) com índices de 1 a 5."},
+                {"enunciado": "Após usar um arquivo aberto com Open ... For Output, é obrigatório:",
+                 "alt": ["Delete #1", "Close #1", "Print #1", "Reset #1"],
+                 "resposta": 1, "comentario": "Close libera o arquivo e garante a gravação completa."},
+            ],
+        },
+        "parte_b": {
+            "titulo": "Parte B — questões práticas (3 pts cada)",
+            "questoes": [
+                {
+                    "tipo": "escrever_codigo",
+                    "enunciado": "Escreva o script SQL que: cria a tabela alunos (id inteiro, chave primária "
+                                 "auto-incremento; nome VARCHAR(40) não nulo; nota DECIMAL(3,1)); insere 2 alunos; "
+                                 "e consulta nome e nota dos aprovados (nota >= 7) em ordem alfabética.",
+                    "resposta_codigo": [
+                        "CREATE TABLE alunos (",
+                        "    id    INT PRIMARY KEY AUTO_INCREMENT,",
+                        "    nome  VARCHAR(40) NOT NULL,",
+                        "    nota  DECIMAL(3,1)",
+                        ");",
+                        "",
+                        "INSERT INTO alunos (nome, nota) VALUES ('Ana Silva', 8.5);",
+                        "INSERT INTO alunos (nome, nota) VALUES ('Bruno Souza', 6.0);",
+                        "",
+                        "SELECT nome, nota FROM alunos",
+                        "WHERE nota >= 7",
+                        "ORDER BY nome;",
+                    ],
+                    "criterio": "CREATE com PK/auto-incremento e tipos (1,0) · 2 INSERT corretos (1,0) · "
+                                "SELECT com WHERE e ORDER BY (1,0).",
+                },
+                {
+                    "tipo": "corrigir_codigo",
+                    "enunciado": "O código VB6 abaixo deveria abrir a conexão com o MySQL, mas tem 3 erros. "
+                                 "Reescreva-o corrigido.",
+                    "codigo": [
+                        "Public cn As ADODB.Connection",
+                        "",
+                        "Public Sub AbrirConexao()",
+                        "    cn = New ADODB.Connection",
+                        "    cn.ConnectionString = \"Server=localhost;Database=escola;Uid=root;Pwd=1234;\"",
+                        "End Sub",
+                    ],
+                    "resposta_codigo": [
+                        "Public cn As ADODB.Connection",
+                        "",
+                        "Public Sub AbrirConexao()",
+                        "    Set cn = New ADODB.Connection",
+                        "    cn.ConnectionString = \"Driver={MySQL ODBC 8.0 Driver};\" & _",
+                        "                          \"Server=localhost;Database=escola;\" & _",
+                        "                          \"Uid=root;Pwd=1234;\"",
+                        "    cn.Open",
+                        "End Sub",
+                    ],
+                    "criterio": "1 pt por erro: (1) faltou Set; (2) faltou o Driver ODBC na string; "
+                                "(3) faltou cn.Open.",
+                },
+                {
+                    "tipo": "escrever_codigo",
+                    "enunciado": "Escreva uma Sub em VB6 que leia um vetor de 5 números inteiros digitados "
+                                 "(InputBox), calcule a média e adicione ao List1 apenas os valores acima "
+                                 "da média, usando For...Next.",
+                    "resposta_codigo": [
+                        "Public Sub AcimaDaMedia()",
+                        "    Dim v(1 To 5) As Integer",
+                        "    Dim i As Integer, soma As Single, media As Single",
+                        "",
+                        "    For i = 1 To 5",
+                        "        v(i) = Val(InputBox(\"Número \" & i))",
+                        "        soma = soma + v(i)",
+                        "    Next i",
+                        "    media = soma / 5",
+                        "",
+                        "    For i = 1 To 5",
+                        "        If v(i) > media Then",
+                        "            List1.AddItem v(i)",
+                        "        End If",
+                        "    Next i",
+                        "End Sub",
+                    ],
+                    "criterio": "Declaração e leitura com laço (1,0) · média correta (1,0) · filtro com "
+                                "If e AddItems (1,0).",
+                },
+            ],
+        },
+    },
+}
+
+A2 = {
+    "id": "A2",
+    "titulo": "Avaliação 2 — prova de Strings, modularização, arquivos e Cliente/Servidor (30 pts)",
+    "periodo": "Semana 16 (S)",
+    "composicao": [
+        ("Prova obrigatória (pode ser em duplas ou com consulta — conforme o Plano de Ensino)", "30 pts",
+         "60% prática (leitura/escrita de código) + 40% conceitual"),
+    ],
+    "teste": {
+        "titulo": "Modelo de prova (S) — 10 questões × 3 pts",
+        "instrucoes": [
+            "Conteúdo: Strings, modularização (Sub/Function), arquivos/textos, ADO/ODBC e Cliente/Servidor.",
+            "Modalidade definida pelo professor conforme o Plano de Ensino (duplas e/ou consulta).",
+            "Questões 1–4: conceituais. Questões 5–10: práticas (prever saída, corrigir e escrever código).",
+            "Duração sugerida: 2 aulas (100 min).",
+        ],
+        "questoes": [
+            {"tipo": "objetiva",
+             "enunciado": "Em VB6, uma Function diferencia-se de uma Sub porque:",
+             "alt": ["não recebe parâmetros.", "retorna um valor ao chamador.",
+                     "só pode ficar em formulários.", "executa mais rápido."],
+             "resposta": 1,
+             "comentario": "Function devolve valor (retorno); Sub executa ações sem retornar."},
+            {"tipo": "objetiva",
+             "enunciado": "Para ACRESCENTAR linhas ao final de um arquivo texto existente, abre-se com:",
+             "alt": ["For Output", "For Input", "For Append", "For Random"],
+             "resposta": 2,
+             "comentario": "Append preserva o conteúdo e grava no fim; Output recria o arquivo vazio."},
+            {"tipo": "objetiva",
+             "enunciado": "No modelo Cliente/Servidor com banco de dados:",
+             "alt": ["o banco roda no formulário do VB6.",
+                     "a aplicação (cliente) envia comandos SQL e o SGBD (servidor) processa e responde.",
+                     "o servidor não valida nada.",
+                     "ODBC é o nome do banco de dados."],
+             "resposta": 1,
+             "comentario": "Cliente requisita (ADO/ODBC), servidor SGBD executa e devolve resultados."},
+            {"tipo": "objetiva",
+             "enunciado": "Mid$(\"LINGUAGEM\", 3, 4) retorna:",
+             "alt": ["\"LING\"", "\"NGUA\"", "\"GUAG\"", "\"AGEM\""],
+             "resposta": 1,
+             "comentario": "Mid$(texto, início, quantidade): posições 3 a 6 = N, G, U, A."},
+            {"tipo": "prever_saida",
+             "enunciado": "Qual é a saída exibida no List1?",
+             "codigo": [
+                "Dim s As String",
+                "s = \"  prova final  \"",
+                "List1.AddItem UCase$(Trim$(s))",
+                "List1.AddItem Len(s)",
+                "List1.AddItem Len(Trim$(s))",
+             ],
+             "resposta_texto": "PROVA FINAL · 15 · 11 (Trim remove os 4 espaços: 2 antes + 2 depois).",
+             "criterio": "1,5 pt pela linha em maiúsculas sem espaços; 1,5 pt pelos dois comprimentos corretos."},
+            {"tipo": "prever_saida",
+             "enunciado": "O que o código exibe?",
+             "codigo": [
+                "Public Type Aluno",
+                "    nome As String * 20",
+                "    nota As Single",
+                "End Type",
+                "",
+                "Dim a(1 To 2) As Aluno",
+                "a(1).nome = \"Ana\": a(1).nota = 8",
+                "a(2).nome = \"Beto\": a(2).nota = 5",
+                "",
+                "Dim i As Integer",
+                "For i = 1 To 2",
+                "    If a(i).nota >= 6 Then Debug.Print a(i).nome; \" aprovado\"",
+                "Next i",
+             ],
+             "resposta_texto": "Somente: 'Ana aprovado' — registro (Type) em vetor, com campo acessado por ponto.",
+             "criterio": "Saída correta (1,5) + explicação de Type/vetor de registros (1,5)."},
+            {"tipo": "corrigir_codigo",
+             "enunciado": "O código deveria gravar 3 nomes em alunos.txt, mas tem 2 erros. Corrija.",
+             "codigo": [
+                "Open \"c:\\dados\\alunos.txt\" For Input As #1",
+                "Print #1, \"Ana\"",
+                "Print #1, \"Beto\"",
+                "Print #1, \"Carla\"",
+             ],
+             "resposta_codigo": [
+                "Open \"c:\\dados\\alunos.txt\" For Output As #1",
+                "Print #1, \"Ana\"",
+                "Print #1, \"Beto\"",
+                "Print #1, \"Carla\"",
+                "Close #1",
+             ],
+             "criterio": "1,5 pt: For Output (Input só lê). 1,5 pt: faltou Close #1."},
+            {"tipo": "escrever_codigo",
+             "enunciado": "Escreva uma Function Media(n1 As Single, n2 As Single) As Single e uma Sub que a "
+                          "use: leia duas notas por InputBox e mostre MsgBox com a média e a situação "
+                          "(Aprovado >= 7, senão Recuperação).",
+             "resposta_codigo": [
+                "Public Function Media(n1 As Single, n2 As Single) As Single",
+                "    Media = (n1 + n2) / 2",
+                "End Function",
+                "",
+                "Public Sub Situacao()",
+                "    Dim m As Single",
+                "    m = Media(Val(InputBox(\"Nota 1\")), Val(InputBox(\"Nota 2\")))",
+                "    If m >= 7 Then",
+                "        MsgBox \"Média \" & m & \" - Aprovado\"",
+                "    Else",
+                "        MsgBox \"Média \" & m & \" - Recuperação\"",
+                "    End If",
+                "End Sub",
+             ],
+             "criterio": "Function com retorno (1,0) · chamada com Val/InputBox (1,0) · If/MsgBox corretos (1,0)."},
+            {"tipo": "escrever_codigo",
+             "enunciado": "Escreva o código VB6/ADO que consulte todos os alunos com nota >= 7 e adicione "
+                          "nome e nota ao List1, percorrendo o Recordset corretamente.",
+             "resposta_codigo": [
+                "Dim rs As ADODB.Recordset",
+                "Set rs = cn.Execute(\"SELECT nome, nota FROM alunos WHERE nota >= 7\")",
+                "Do While Not rs.EOF",
+                "    List1.AddItem rs!nome & \" - \" & rs!nota",
+                "    rs.MoveNext",
+                "Loop",
+                "rs.Close",
+             ],
+             "criterio": "Execute com SELECT (1,0) · laço Do While Not rs.EOF (1,0) · MoveNext + Close (1,0)."},
+            {"tipo": "escrever_codigo",
+             "enunciado": "Escreva uma Sub que LEIA o arquivo alunos.txt (uma linha por nome) até o fim e "
+                          "adicione cada linha ao List1.",
+             "resposta_codigo": [
+                "Public Sub CarregarLista()",
+                "    Dim linha As String",
+                "    Open \"c:\\dados\\alunos.txt\" For Input As #1",
+                "    Do While Not EOF(1)",
+                "        Line Input #1, linha",
+                "        List1.AddItem linha",
+                "    Loop",
+                "    Close #1",
+                "End Sub",
+             ],
+             "criterio": "For Input + EOF(1) (1,0) · Line Input e AddItem (1,0) · Close (1,0)."},
+        ],
+    },
+}
+
+A3 = {
+    "id": "A3",
+    "titulo": "Avaliação 3 — prova final cumulativa + projeto (40 pts)",
+    "periodo": "Semana 24",
+    "composicao": [
+        ("Prova escrita final individual e cumulativa (obrigatória — Plano de Ensino)", "30 pts", "Semana 24"),
+        ("Projeto integrador: entregas + apresentação (critério do professor)", "10 pts", "Aulas 95–96"),
+    ],
+    "teste": {
+        "titulo": "Modelo de prova final (S) — 10 questões × 3 pts — cumulativa",
+        "instrucoes": [
+            "Prova individual, sem consulta, cobrindo TODA a ementa (SGBD → gráficos/projeto).",
+            "Duração: 2 a 3 aulas (a definir pelo professor).",
+            "Questões 1–5: objetivas/conceituais. Questões 6–10: práticas.",
+        ],
+        "questoes": [
+            {"tipo": "objetiva",
+             "enunciado": "Backup e recuperação de banco de dados servem, respectivamente, para:",
+             "alt": ["acelerar consultas e indexar tabelas.",
+                     "gerar cópia de segurança dos dados e restaurá-los após perda/falha.",
+                     "criptografar senhas e criar usuários.",
+                     "imprimir relatórios e excluir tabelas."],
+             "resposta": 1,
+             "comentario": "Backup = cópia (ex.: mysqldump); recuperação = restaurar a cópia e validar."},
+            {"tipo": "objetiva",
+             "enunciado": "No VB6, o objeto usado para enviar saída formatada à impressora é:",
+             "alt": ["PictureBox", "Printer", "ListBox", "Timer"],
+             "resposta": 1,
+             "comentario": "Printer.Print / Printer.EndDoc; PictureBox é para recursos gráficos em tela."},
+            {"tipo": "objetiva",
+             "enunciado": "O Package & Deployment Wizard do VB6 é usado para:",
+             "alt": ["depurar erros de sintaxe.", "gerar o pacote/disco de instalação do programa.",
+                     "criar o banco de dados.", "desenhar formulários."],
+             "resposta": 1,
+             "comentario": "Ele empacota executável, DLLs e dependências para distribuição/instalação."},
+            {"tipo": "objetiva",
+             "enunciado": "Uma matriz Dim m(1 To 3, 1 To 4) As Double possui quantos elementos?",
+             "alt": ["7", "12", "34", "43"],
+             "resposta": 1,
+             "comentario": "3 linhas × 4 colunas = 12 células."},
+            {"tipo": "objetiva",
+             "enunciado": "Modularizar um programa significa:",
+             "alt": ["colocar todo o código em um único formulário.",
+                     "dividir o programa em partes (Sub/Function/Modules) reutilizáveis e organizadas.",
+                     "usar apenas variáveis globais.",
+                     "compilar em DOS."],
+             "resposta": 1,
+             "comentario": "Modularização = coesão, reuso e manutenção facilitada."},
+            {"tipo": "prever_saida",
+             "enunciado": "Resultado da consulta SQL abaixo na tabela alunos(nome, nota) com linhas "
+                          "('Ana',8), ('Beto',5), ('Carla',7):",
+             "codigo": [
+                "SELECT nome FROM alunos",
+                "WHERE nota >= 7",
+                "ORDER BY nota DESC;",
+             ],
+             "resposta_texto": "Ana e Carla, nesta ordem (8 antes de 7); Beto fica de fora pelo WHERE.",
+             "criterio": "Linhas corretas (1,5) + ordem DESC justificada (1,5)."},
+            {"tipo": "prever_saida",
+             "enunciado": "O que o código exibe?",
+             "codigo": [
+                "Dim m(1 To 2, 1 To 2) As Integer",
+                "Dim i As Integer, j As Integer",
+                "For i = 1 To 2",
+                "    For j = 1 To 2",
+                "        m(i, j) = i * j",
+                "    Next j",
+                "Next i",
+                "Debug.Print m(2, 2); m(1, 2); m(2, 1)",
+             ],
+             "resposta_texto": "4 2 2 — preenchimento de matriz com laços aninhados (i*j).",
+             "criterio": "Valores corretos (2,0) + identificação de m(i,j)=i*j (1,0)."},
+            {"tipo": "corrigir_codigo",
+             "enunciado": "O trecho ADO abaixo entra em laço infinito ou falha. Corrija os 2 problemas.",
+             "codigo": [
+                "Dim rs As ADODB.Recordset",
+                "Set rs = cn.Execute(\"SELECT nome FROM alunos\")",
+                "Do While Not rs.EOF",
+                "    List1.AddItem rs!nome",
+                "Loop",
+             ],
+             "resposta_codigo": [
+                "Dim rs As ADODB.Recordset",
+                "Set rs = cn.Execute(\"SELECT nome FROM alunos\")",
+                "Do While Not rs.EOF",
+                "    List1.AddItem rs!nome",
+                "    rs.MoveNext          ' 1) avançar o registro",
+                "Loop",
+                "rs.Close                 ' 2) fechar o Recordset",
+             ],
+             "criterio": "1,5 pt MoveNext (sem ele, laço infinito); 1,5 pt Close (liberação de recursos)."},
+            {"tipo": "escrever_codigo",
+             "enunciado": "Escreva os comandos (shell) de BACKUP e de RECUPERAÇÃO do banco escola em MySQL "
+                          "e explique em uma frase para que serve cada um.",
+             "resposta_codigo": [
+                "REM backup (cópia de segurança):",
+                "mysqldump -u root -p escola > escola_backup.sql",
+                "",
+                "REM recuperação (restauração da cópia):",
+                "mysql -u root -p escola < escola_backup.sql",
+             ],
+             "criterio": "mysqldump com redirecionamento (1,0) · mysql < para restaurar (1,0) · explicação "
+                         "correta de cada papel (1,0)."},
+            {"tipo": "escrever_codigo",
+             "enunciado": "Escreva uma Sub RelatorioAlunos() que imprima com o objeto Printer: título "
+                          "centralizado com Tab, linha separadora com String(60,\"-\"), os nomes de um vetor "
+                          "v(1 To 5) numerados e, ao final, Printer.EndDoc.",
+             "resposta_codigo": [
+                "Public Sub RelatorioAlunos(v() As String)",
+                "    Dim i As Integer",
+                "    Printer.Print Tab(25); \"RELATÓRIO DE ALUNOS\"",
+                "    Printer.Print String(60, \"-\")",
+                "    For i = 1 To 5",
+                "        Printer.Print i; \" - \"; v(i)",
+                "    Next i",
+                "    Printer.Print String(60, \"-\")",
+                "    Printer.EndDoc",
+                "End Sub",
+             ],
+             "criterio": "Cabeçalho com Tab (1,0) · separador String(60,\"-\") (0,5) · laço com dados (1,0) · "
+                         "EndDoc (0,5)."},
+        ],
+    },
+    "projeto_rubrica": {
+        "titulo": "Rubrica do projeto integrador (10 pts — critério do professor)",
+        "itens": PROJETO_FINAL["criterios_10pts"],
+        "observacoes": [
+            "As entregas 1–4 alimentam a nota de forma processual — acompanhe com vistos semanais.",
+            "Na apresentação, exija demonstração com o banco populado e um relatório gerado ao vivo.",
+            "O pacote de instalação (Entrega 4) pode ser demonstrado em máquina virtual se faltar tempo.",
+        ],
+    },
+}
+
+REFERENCIAS = {"A1": A1, "A2": A2, "A3": A3, "A1-teste": A1}

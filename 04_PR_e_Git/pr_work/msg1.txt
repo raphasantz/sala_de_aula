@@ -1,0 +1,23 @@
+feat(aulaviva): API com contas/senha, entregas de arquivos e histórico
+
+O quê: substitui o CONTEÚDO de aulaviva/api.php (mesmo caminho) e
+adiciona aulaviva/migracao_contas_entregas.sql + LEIA-ME_MIGRACAO.md.
+
+Por quê: ajustes pedidos pela professora: login com senha e nome único
+por disciplina, perfil ADM ("Juh"), entregas de arquivos pelos alunos,
+histórico de respostas p/ correção e retomada automática. As rotas do v1
+(get/put/lista/arq/arqup) foram mantidas com os mesmos nomes e campos
+(nome/turma/payload/token).
+
+Onde: aulaviva/api.php; tabelas novas no banco loja_turma (o mesmo do
+v1): aulaviva_contas / aulaviva_progresso / aulaviva_arquivos /
+aulaviva_entregas. nginx não muda.
+
+Notas de segurança (regras do repo): credenciais SOMENTE por ambiente
+(LOJA_DB_PASS / AULAVIVA_PROF_TOKEN, padrão do v1, fallback de dev);
+senha de aluno com password_hash; cookie httpOnly SameSite=Lax com
+Secure condicional (HTTPS/ngrok → Secure; HTTP puro continua ok);
+erros de BD → error_log + mensagem genérica; caminhos via __DIR__
+(sem path absoluto); download de entrega só via dlent+token.
+Mudança de comportamento: 'put' agora exige sessão (401 sem cookie) —
+aluno com aba do v1 aberta precisa recarregar a página uma vez.

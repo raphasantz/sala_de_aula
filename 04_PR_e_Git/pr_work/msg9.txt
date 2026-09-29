@@ -1,0 +1,25 @@
+apps: videoaula na trilha, áudio opcional por módulo e resolução passo a passo nos exercícios
+
+O QUÊ: os 4 apps (nuvem pi1/lp2 + offline pi1/lp2) ganham três novidades de sala de aula:
+  1) cartão dourado "🎬 Videoaula — <disciplina>" na tela inicial (trilha), ao lado dos
+     módulos; abre o mp4 da pasta irmã videoaulas/ num player interno (pausar/voltar);
+  2) botão verde "🔊 Ouvir o resumo deste módulo (opcional)" na abertura de cada módulo —
+     o botão SÓ é renderizado se existir audio/<disc>_mNN.mp3 em videoaulas/ no build,
+     e quem não quiser ouvir simplesmente não clica (escolha do aluno);
+  3) tela de exercícios: aviso "sem laboratório hoje?" + botão "👀 Ver resolução passo a
+     passo" em cada exercício, abrindo bloco visual com pseudocódigo/código/árvore de
+     pastas/passo a passo + gabarito (resposta esperada). O Módulo 1 de LP2 já vem com as
+     resoluções completas (média no papel, ola.vbp/Form_Load, botões par/ímpar e tabuada).
+     Junto: videoaulas/LEIA-ME_MEDIA.md (contrato da pasta de mídia). As notas de
+     deploy (seção de mídia + hotfix do título v1 do app LP2, que em produção
+     mostrava "PI-I") vão no commit 8, junto com o túnel, em DEPLOY_NOTES.md.
+POR QUÊ: a professora pediu (a) o vídeo MP4 na tela inicial com nome da disciplina,
+  (b) áudio nos módulos com opção de ouvir ou não, e (c) as respostas dos exercícios
+  visíveis na tela para demonstração no projetor em dia sem laboratório — os alunos
+  acompanham a resolução entendendo, não só copiam o "visto".
+ONDE: template material/build_aula_app.py (DATA.media escaneado de videoaulas/ no build;
+  funções videoCardHtml/abrirVideo/audioModHtml/abrirAudio/playerModal/mediaFalhou/
+  resHtml/verRes; CSS .videocard/.abtn/.resbtn/.resbox/.gab/.mplayer) e conteúdo
+  material/conteudo_lp2/m01_04.py (campo "resolucao" nos 3 exercícios do Módulo 1).
+  Mídia por caminho relativo ../videoaulas/ — nada de URL absoluta, nada de localStorage
+  no modo nuvem, nenhuma rota/credencial/campo de banco tocados.

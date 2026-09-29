@@ -1,0 +1,16 @@
+entrada: link da raiz do kit cai direto no app (login nome+senha) + acolhida na 1ª vez
+
+O QUÊ: cria Kit_Sala_de_Aula/index.php (302 para o app da disciplina; ?d=lp2 leva
+à LP2) e melhora o modal de login: se nome/senha falharem na aba "Já tenho
+conta", aparece o botão "🆕 É minha primeira vez — criar conta", que troca de aba
+sem perder o nome digitado (preNome/preTurma); "trocar de conta" limpa a memória.
+POR QUÊ: o link da raiz que vai pro grupo não tinha index — o aluno clicava e não
+caía no login; e aluno de primeira viagem travava em "Nome ou senha incorretos"
+sem entender que precisava criar conta antes.
+ONDE: index.php (novo); apps-nuvem/AulaViva_{pi1,lp2}_index.html e
+apps-offline/AulaViva_{PI-I,LP2}_offline.html reconstruídos a partir do BASE com
+a acolhida. Sem credenciais novas, sem localStorage, sem tocar em outros vhosts.
+OBS.: o rebuild dos 4 apps deste commit já embute a mídia de sala de aula
+(cartão 🎬 Videoaula na trilha, botão 🔊 opcional por módulo e botão 👀 de
+resolução passo a passo nos exercícios); o contrato da pasta de mídia
+(videoaulas/LEIA-ME_MEDIA.md) entra no commit 8 com as notas de deploy.

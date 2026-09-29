@@ -1,0 +1,14 @@
+[Unit]
+Description=Tunel publico cloudflared (quick tunnel) para o vhost pcs-replica (:8080)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# quick tunnel: sem conta, sem tela de aviso; o link aparece no journalctl
+ExecStart=/usr/local/bin/cloudflared tunnel --url http://127.0.0.1:8080 --no-autoupdate
+Restart=always
+RestartSec=3
+User=root
+
+[Install]
+WantedBy=multi-user.target

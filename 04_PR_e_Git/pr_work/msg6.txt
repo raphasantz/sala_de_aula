@@ -1,0 +1,30 @@
+feat(aulaviva): aluno não vê material exclusivo da professora (Painel/Guia/Apostila do Professor)
+
+O quê:
+- Rota `arq` (📎 Materiais da turma) agora FILTRA NO SERVIDOR: arquivos com
+  "professor" ou "painel" no nome (ex.: "Painel do Professor", "Guia da
+  Professora", "Apostila do Professor") só são retornados para sessão ADM
+  (conta cujo nome casa /juh/i — mesma regra do botão 👩‍ Painel do app).
+  Quem não logou ou logou como aluno recebe a lista sem esses itens.
+- Nos 4 apps (nuvem + offline), a tela 📎 Materiais aplica o mesmo filtro no
+  cliente (função visivelMaterial()): a partir do momento em que o usuário
+  coloca o nome, os itens só da professora somem da listagem.
+- Edge Functions do caminho alternativo Supabase (avpi1/avlp2, fora deste
+  repo — mesmo filtro no `arq`, usando a coluna adm/nome da sessão).
+
+Por quê:
+- Pedido da professora: o botão do painel já era restrito ao ADM, mas os
+  MATERIAIS enviados por ela (guia, apostila do professor, infos do painel)
+  continuavam visíveis para qualquer aluno logado na lista da turma.
+- Filtro duplo (servidor + cliente): só o cliente seria contornável chamando
+  a API direto; só o servidor deixaria a UI antiga mostrar os nomes.
+
+Onde:
+- aulaviva/api.php — case 'arq' (lê o nome da sessão pelo cookie e filtra
+  /professor|painel/i para não-ADM) + comentário do cabeçalho atualizado.
+- apps-nuvem/AulaViva_pi1_index.html e apps-nuvem/AulaViva_lp2_index.html
+- apps-offline/AulaViva_PI-I_offline.html e apps-offline/AulaViva_LP2_offline.html
+  (novos builds do mesmo gerador: função visivelMaterial() + filtro em
+  abrirMateriais(); paginador e demais funções do commit 5 intactos.)
+- Nenhuma rota/campo/caminho renomeado; nenhuma credencial nova; banco e
+  painéis intocados.
